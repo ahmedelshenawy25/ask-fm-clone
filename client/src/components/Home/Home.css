@@ -1,0 +1,33 @@
+.questionBox .userInfo.fullname, .questionBox .ask {
+    margin-top: -4%;
+}
+.questionBox .ui.right.floated.ask{
+    margin-right: 1%;
+}
+.questionBox .userInfo {
+    margin-left: 5%;
+}
+.questionBox .icon {
+    margin-top: 2%;
+    padding-left: 1%;
+}
+
+.sideBox .userInfo.fullname {
+    margin-top: -7%
+}
+.sideBox .icon {
+    padding-top: 1%;
+}
+.sideBox .userInfo {
+    margin-left: 10%
+}
+.sideBox .follow, .sideBox .ask{
+    margin-top: -10%;
+}
+
+.Home.card {
+    min-width: 100%;
+}
+.Home .ui.card.QuestionItem {
+    margin-top: -3%;
+}
