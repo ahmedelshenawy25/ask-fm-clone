@@ -3,8 +3,7 @@ import React from 'react';
 import axios from 'axios';
 import QuestionItem from '../Questions/QuestionItem';
 import SearchItem from '../Search/SearchItem';
-import Friends from '../Friends/Friends';
-import Discover from '../Discover/Discover';
+import RightSideBox from '../RightSideBox.js/RightSideBox';
 
 class Home extends React.Component {
     state = {
@@ -75,22 +74,7 @@ class Home extends React.Component {
           <div className="ui relaxed divided list questionBox leftFlexChild">
             {renderedUsersWithQuestions}
           </div>
-          <div
-            className="rightFlexChild"
-            style={{
-              display: 'flex', flexGrow: 0.3, marginLeft: '1%', flexDirection: 'column'
-            }}
-          >
-            <div className="sideBox">
-              {this.props.token && 'Friends'}
-              <Friends />
-            </div>
-            <br />
-            <div className="sideBox">
-              {this.props.token && 'Discover'}
-              <Discover />
-            </div>
-          </div>
+          {this.props.token && <RightSideBox />}
         </div>
       );
     }

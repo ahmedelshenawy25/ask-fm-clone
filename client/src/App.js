@@ -70,54 +70,57 @@ class App extends React.Component {
       );
     }
     return (
-      <div className="ui container">
+      <div>
         <Navbar
           isAuth={this.state.isAuth}
           username={this.state.username}
           onLogout={this.logoutHandler}
         />
-        <Switch>
-          <Route
-            path="/"
-            exact
-            render={() => <Redirect to="/home" />}
-          />
-          <Route
-            path="/home"
-            render={props => (
-              <Home key={props.location.key} {...props} token={this.state.token} />
-            )}
-          />
-          <Route
-            path="/account/inbox"
-            render={props => (
-              <Inbox {...props} token={this.state.token} username={this.state.username} />
-            )}
-          />
-          <Route
-            path="/user/:username"
-            render={props => (
-              <DisplayAnsweredQuestions
-                key={this.props.location.pathname}
-                {...props}
-                token={this.state.token}
-              />
-            )}
-          />
-          <Route
-            path="/search"
-            render={props => (
-              <SearchResult
-                key={props.history.location.search}
-                search={props.history.location.search.replace('?q=', '')}
-                {...props}
-                token={this.state.token}
-              />
-            )}
-          />
-          {routes}
-          <Route render={() => <h1 style={{ textAlign: 'center' }}>404 Page not found</h1>} />
-        </Switch>
+
+        <div className="ui container">
+          <Switch>
+            <Route
+              path="/"
+              exact
+              render={() => <Redirect to="/home" />}
+            />
+            <Route
+              path="/home"
+              render={props => (
+                <Home key={props.location.key} {...props} token={this.state.token} />
+              )}
+            />
+            <Route
+              path="/account/inbox"
+              render={props => (
+                <Inbox {...props} token={this.state.token} username={this.state.username} />
+              )}
+            />
+            <Route
+              path="/user/:username"
+              render={props => (
+                <DisplayAnsweredQuestions
+                  key={this.props.location.pathname}
+                  {...props}
+                  token={this.state.token}
+                />
+              )}
+            />
+            <Route
+              path="/search"
+              render={props => (
+                <SearchResult
+                  key={props.history.location.search}
+                  search={props.history.location.search.replace('?q=', '')}
+                  {...props}
+                  token={this.state.token}
+                />
+              )}
+            />
+            {routes}
+            <Route render={() => <h1 style={{ textAlign: 'center' }}>404 Page not found</h1>} />
+          </Switch>
+        </div>
       </div>
     );
   }

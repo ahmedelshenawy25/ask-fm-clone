@@ -42,7 +42,7 @@ class Friends extends React.Component {
       />
     ));
     return (
-      <div>
+      <div className="right section">
         {renderedFriends}
       </div>
     );

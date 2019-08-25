@@ -13,10 +13,12 @@
 }
 
 .sideBox .userInfo.fullname {
+    padding-top: 2%;
     margin-top: -7%
 }
 .sideBox .icon {
-    padding-top: 1%;
+    padding-left: 1.5%;
+    padding-top: 3.5%;
 }
 .sideBox .userInfo {
     margin-left: 10%
@@ -24,7 +26,9 @@
 .sideBox .follow, .sideBox .ask{
     margin-top: -10%;
 }
-
+.sideBox .right.section .button.ask {
+    margin-right: 2%;
+}
 .Home.card {
     min-width: 100%;
 }

@@ -42,7 +42,7 @@ class Discover extends React.Component {
       />
     ));
     return (
-      <div>
+      <div className="right section">
         {renderedDiscovery}
       </div>
     );

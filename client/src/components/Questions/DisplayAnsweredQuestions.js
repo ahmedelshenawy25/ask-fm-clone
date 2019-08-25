@@ -2,8 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import QuestionItem from './QuestionItem';
 import AskQuestion from './AskQuestion';
-import Friends from '../Friends/Friends';
-import Discover from '../Discover/Discover';
+import RightSideBox from '../RightSideBox.js/RightSideBox';
 
 class DisplayAnsweredQuestions extends React.Component {
   state = {
@@ -64,22 +63,7 @@ class DisplayAnsweredQuestions extends React.Component {
           />
           {renderedQuestions}
         </div>
-        <div
-          className="rightFlexChild"
-          style={{
-            display: 'flex', flexGrow: 0.3, marginLeft: '1%', flexDirection: 'column'
-          }}
-        >
-          <div className="sideBox">
-          Friends
-            <Friends />
-          </div>
-          <br />
-          <div className="sideBox">
-          Discover
-            <Discover />
-          </div>
-        </div>
+        <RightSideBox />
       </div>
     );
   }

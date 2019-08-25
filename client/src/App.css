@@ -1,3 +1,14 @@
+body {
+    background-color: #e9ebee;
+}
+.ui.secondary.pointing.menu {
+    padding-left: 5%;
+    padding-right: 5%;
+    background-color: #3CB371;
+}
+.sideBox {
+    background-color: white;
+}
 .FlexParent {
     display: flex;
 }
