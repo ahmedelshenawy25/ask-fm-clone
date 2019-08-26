@@ -11,20 +11,18 @@ class Inbox extends React.Component {
 
   async componentDidMount() {
     try {
-      if (localStorage.getItem('token')) {
-        const response = await axios.get('/api/account/inbox', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        });
-        if (response.status === 200) {
-          this.setState({
-            questions: response.data,
-            error: ''
-          });
-        } else {
-          throw new Error('Could not retrieve questions');
+      const response = await axios.get('/api/account/inbox', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
         }
+      });
+      if (response.status === 200) {
+        this.setState({
+          questions: response.data,
+          error: ''
+        });
+      } else {
+        throw new Error('Could not retrieve questions');
       }
     } catch (e) {
       this.setState({

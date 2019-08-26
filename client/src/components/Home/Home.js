@@ -13,23 +13,20 @@ class Home extends React.Component {
 
     async componentDidMount() {
       try {
-        // Couldn't use this.props.token because it's empty when componentDidMount is called
-        if (localStorage.getItem('token')) {
-          const response = await axios.get('/api/home', {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
-          });
-          if (response.status === 200) {
-            if (Array.isArray(response.data)) {
-              this.setState({
-                questions: response.data,
-                error: ''
-              });
-            }
-          } else {
-            throw new Error('Could not retrieve questions');
+        const response = await axios.get('/api/home', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
           }
+        });
+        if (response.status === 200) {
+          if (Array.isArray(response.data)) {
+            this.setState({
+              questions: response.data,
+              error: ''
+            });
+          }
+        } else {
+          throw new Error('Could not retrieve questions');
         }
       } catch (e) {
         this.setState({
