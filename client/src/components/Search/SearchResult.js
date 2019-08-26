@@ -29,6 +29,9 @@ class SearchResult extends React.Component {
         throw new Error('Search for user failed');
       }
     } catch (e) {
+      if (e.response.status === 401) {
+        this.props.logout();
+      }
       this.setState({
         error: e.response ? e.response.data.message : e.message
       });

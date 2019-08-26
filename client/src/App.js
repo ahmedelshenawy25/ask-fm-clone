@@ -46,6 +46,7 @@ class App extends React.Component {
       isAuth: false,
       token: ''
     });
+    this.props.history.push('/login');
   }
 
   render() {
@@ -87,13 +88,23 @@ class App extends React.Component {
             <Route
               path="/home"
               render={props => (
-                <Home key={props.location.key} {...props} token={this.state.token} />
+                <Home
+                  key={props.location.key}
+                  {...props}
+                  logout={this.logoutHandler}
+                  token={this.state.token}
+                />
               )}
             />
             <Route
               path="/account/inbox"
               render={props => (
-                <Inbox {...props} token={this.state.token} username={this.state.username} />
+                <Inbox
+                  {...props}
+                  logout={this.logoutHandler}
+                  token={this.state.token}
+                  username={this.state.username}
+                />
               )}
             />
             <Route
@@ -102,6 +113,7 @@ class App extends React.Component {
                 <DisplayAnsweredQuestions
                   key={this.props.location.pathname}
                   {...props}
+                  logout={this.logoutHandler}
                   token={this.state.token}
                 />
               )}
@@ -113,6 +125,7 @@ class App extends React.Component {
                   key={props.history.location.search}
                   search={props.history.location.search.replace('?q=', '')}
                   {...props}
+                  logout={this.logoutHandler}
                   token={this.state.token}
                 />
               )}

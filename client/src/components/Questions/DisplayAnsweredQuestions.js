@@ -30,6 +30,9 @@ class DisplayAnsweredQuestions extends React.Component {
         throw new Error('Could not retrieve questions');
       }
     } catch (e) {
+      if (e.response.status === 401) {
+        this.props.logout();
+      }
       this.setState({
         questions: [],
         error: e.response ? e.response.data.message : e.message
