@@ -34,8 +34,13 @@ const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
     mongoose.connection
-        // eslint-disable-next-line no-console
-        .once('open', () => console.log('connected'))
+        .once('open', () => {
+            if (process.env.NODE_ENV === 'development') {
+                require('./data/insertDummyData')();
+            }
+            // eslint-disable-next-line no-console
+            console.log('connected');
+        })
         // eslint-disable-next-line no-console
         .on('error', error => console.log(`connection error: ${error}`));
 });
