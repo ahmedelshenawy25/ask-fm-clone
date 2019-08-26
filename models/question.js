@@ -31,6 +31,7 @@ const questionSchema = new mongoose.Schema(
         },
         isAnonymous: {
             type: Boolean,
+            default: false,
             required: true
         }
     },
