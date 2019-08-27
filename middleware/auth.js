@@ -1,5 +1,11 @@
-require('dotenv').config();
+const path = require('path');
 const jwt = require('jsonwebtoken');
+
+const dotenvPath = process.env.NODE_ENV === 'development'
+    ? '../config/.env.dev'
+    : '../config/.env.prod';
+
+require('dotenv').config({ path: path.join(__dirname, dotenvPath) });
 
 const User = require('../models/user');
 

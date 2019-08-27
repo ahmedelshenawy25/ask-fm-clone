@@ -1,4 +1,3 @@
-require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -7,6 +6,12 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const userRouter = require('./routes/user');
 const questionRouter = require('./routes/question');
+
+const dotenvPath = process.env.NODE_ENV === 'development'
+    ? '/config/.env.dev'
+    : '/config/.env.prod';
+
+require('dotenv').config({ path: path.join(__dirname, dotenvPath) });
 
 const app = express();
 
