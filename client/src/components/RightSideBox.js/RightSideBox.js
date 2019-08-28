@@ -4,12 +4,7 @@ import Friends from '../Friends/Friends';
 import Discover from '../Discover/Discover';
 
 const RightSideBox = () => (
-  <div
-    className="rightFlexChild"
-    style={{
-      display: 'flex', flexGrow: 0.3, marginLeft: '1%', flexDirection: 'column'
-    }}
-  >
+  <div className="rightFlexChild">
     <div className="sideBox">
       <span className="header">Friends</span>
       <Friends />
