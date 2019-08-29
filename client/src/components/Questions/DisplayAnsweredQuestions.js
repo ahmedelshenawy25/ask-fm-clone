@@ -1,3 +1,4 @@
+import './DisplayAnsweredQuestions.css';
 import React from 'react';
 import axios from 'axios';
 import QuestionItem from './QuestionItem';
