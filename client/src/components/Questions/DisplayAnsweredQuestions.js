@@ -3,7 +3,7 @@ import React from 'react';
 import axios from 'axios';
 import QuestionItem from './QuestionItem';
 import AskQuestion from './AskQuestion';
-import RightSideBox from '../RightSideBox.js/RightSideBox';
+import RightSideBox from '../RightSideBox/RightSideBox';
 
 class DisplayAnsweredQuestions extends React.Component {
   state = {

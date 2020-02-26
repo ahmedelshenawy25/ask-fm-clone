@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import QuestionItem from './QuestionItem';
-import RightSideBox from '../RightSideBox.js/RightSideBox';
+import RightSideBox from '../RightSideBox/RightSideBox';
 
 class Inbox extends React.Component {
   state = {
