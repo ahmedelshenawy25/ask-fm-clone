@@ -125,7 +125,6 @@ class App extends React.Component {
                   search={props.history.location.search.replace('?q=', '')}
                   {...props}
                   logout={this.logoutHandler}
-                  token={this.state.token}
                 />
               )}
             />
