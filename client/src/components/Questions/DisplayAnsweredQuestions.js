@@ -1,73 +1,71 @@
 import './DisplayAnsweredQuestions.css';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import PropTypes from 'prop-types';
+import { useParams } from 'react-router-dom';
+
 import QuestionItem from './QuestionItem';
 import AskQuestion from './AskQuestion';
 import RightSideBox from '../RightSideBox/RightSideBox';
 
-class DisplayAnsweredQuestions extends React.Component {
-  state = {
-    questions: [],
-    isFollowed: true,
-    renderButton: false,
-    error: ''
-  };
 
-  async componentDidMount() {
-    try {
-      const response = await axios.get(`/api/user/${this.props.match.params.username}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      if (response.status === 200) {
-        this.setState({
-          questions: response.data.modifiedQuestions,
-          isFollowed: response.data.isFollowed,
-          renderButton: response.data.renderFollowButton,
-          error: ''
+function DisplayAnsweredQuestions({ logout, token }) {
+  const { username } = useParams();
+  const [questions, setQuestions] = useState([]);
+  const [isFollowed, setIsFollowed] = useState(true);
+  const [renderButton, setRenderButton] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const response = await axios.get(`/api/user/${username}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
         });
-      } else {
-        throw new Error('Could not retrieve questions');
-      }
-    } catch (e) {
-      if (e.response.status === 401) {
-        this.props.logout();
-      }
-      this.setState({
-        questions: [],
-        error: e.response ? e.response.data.message : e.message
-      });
-    }
-  }
+        setQuestions(response.data.modifiedQuestions);
+        setIsFollowed(response.data.isFollowed);
+        setRenderButton(response.data.renderFollowButton);
+      } catch (e) {
+        if (e.response.status === 401) return logout();
 
-  render() {
-    const renderedQuestions = this.state.questions.map(({
-      _id, question, answer, sender, updatedAt
-    }) => (
-      <QuestionItem
-        key={_id}
-        question={question}
-        answer={answer}
-        sender={sender}
-        time={new Date(updatedAt).toLocaleString()}
-        isAnswered
-      />
-    ));
-    return (
-      <div className="FlexParent">
-        <div className="leftFlexChild">
-          <AskQuestion
-            username={this.props.match.params.username}
-            isFollowed={this.state.isFollowed}
-            renderButton={this.state.renderButton}
-          />
-          {renderedQuestions}
-        </div>
-        <RightSideBox />
+        setError(e.response ? e.response.data.message : e.message);
+      }
+    }
+
+    fetchProfile();
+  }, []);
+
+  const renderedQuestions = questions.map(({
+    _id, question, answer, sender, updatedAt
+  }) => (
+    <QuestionItem
+      key={_id}
+      question={question}
+      answer={answer}
+      sender={sender}
+      time={new Date(updatedAt).toLocaleString()}
+      isAnswered
+    />
+  ));
+  return (
+    <div className="FlexParent">
+      <div className="leftFlexChild">
+        <AskQuestion
+          username={username}
+          isFollowed={isFollowed}
+          renderButton={renderButton}
+        />
+        {renderedQuestions}
       </div>
-    );
-  }
+      {token && <RightSideBox />}
+    </div>
+  );
 }
 
+DisplayAnsweredQuestions.propTypes = {
+  logout: PropTypes.func.isRequired,
+  token: PropTypes.string.isRequired
+};
 export default DisplayAnsweredQuestions;
