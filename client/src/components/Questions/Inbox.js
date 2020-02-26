@@ -1,69 +1,66 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import PropTypes from 'prop-types';
+
 import QuestionItem from './QuestionItem';
 import RightSideBox from '../RightSideBox/RightSideBox';
 
-class Inbox extends React.Component {
-  state = {
-    questions: [],
-    error: ''
+
+function Inbox({ logout, token }) {
+  const [questions, setQuestions] = useState([]);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    async function fetchInbox() {
+      try {
+        const response = await axios.get('/api/account/inbox', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        setQuestions(response.data);
+      } catch (e) {
+        if (e.response.status === 401) return logout();
+
+        setError(e.response ? e.response.data.message : e.message);
+      }
+    }
+
+    fetchInbox();
+  }, []);
+
+  const removeQuestion = (id) => {
+    const filteredQuestions = questions.filter((question) => question._id !== id);
+    setQuestions(filteredQuestions);
   };
 
-  async componentDidMount() {
-    try {
-      const response = await axios.get('/api/account/inbox', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      if (response.status === 200) {
-        this.setState({
-          questions: response.data,
-          error: ''
-        });
-      } else {
-        throw new Error('Could not retrieve questions');
-      }
-    } catch (e) {
-      if (e.response.status === 401) {
-        this.props.logout();
-      }
-      this.setState({
-        questions: [],
-        error: e.response ? e.response.data.message : e.message
-      });
-    }
-  }
-
-  removeQuestion = (id) => {
-    const questions = this.state.questions.filter(question => question._id !== id);
-    this.setState({ questions });
-  }
-
-  render() {
-    const renderedQuestions = this.state.questions.map(({
-      _id, question, answer, sender, createdAt
-    }) => (
-      <QuestionItem
-        key={_id}
-        id={_id}
-        question={question}
-        answer={answer}
-        sender={sender}
-        time={new Date(createdAt).toLocaleString()}
-        isAnswered={false}
-        removeQuestion={this.removeQuestion}
-      />
-    ));
-    return (
-      <div className="FlexParent">
-        <div className="leftFlexChild">
-          {renderedQuestions}
-        </div>
-        <RightSideBox />
+  const renderedQuestions = questions.map(({
+    _id, question, answer, sender, createdAt
+  }) => (
+    <QuestionItem
+      key={_id}
+      id={_id}
+      question={question}
+      answer={answer}
+      sender={sender}
+      time={new Date(createdAt).toLocaleString()}
+      isAnswered={false}
+      removeQuestion={removeQuestion}
+    />
+  ));
+  return (
+    <div className="FlexParent">
+      <div className="leftFlexChild">
+        {renderedQuestions}
       </div>
-    );
-  }
+      {token && <RightSideBox />}
+    </div>
+  );
 }
+
+Inbox.propTypes = {
+  logout: PropTypes.func.isRequired,
+  token: PropTypes.string.isRequired
+};
 
 export default Inbox;

@@ -103,7 +103,6 @@ class App extends React.Component {
                   {...props}
                   logout={this.logoutHandler}
                   token={this.state.token}
-                  username={this.state.username}
                 />
               )}
             />
