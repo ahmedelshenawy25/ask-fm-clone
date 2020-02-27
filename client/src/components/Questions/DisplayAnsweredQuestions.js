@@ -9,7 +9,7 @@ import AskQuestion from './AskQuestion';
 import RightSideBox from '../RightSideBox/RightSideBox';
 
 
-function DisplayAnsweredQuestions({ logout, token }) {
+const DisplayAnsweredQuestions = ({ logout, token }) => {
   const { username } = useParams();
   const [questions, setQuestions] = useState([]);
   const [isFollowed, setIsFollowed] = useState(true);
@@ -62,7 +62,7 @@ function DisplayAnsweredQuestions({ logout, token }) {
       {token && <RightSideBox />}
     </div>
   );
-}
+};
 
 DisplayAnsweredQuestions.propTypes = {
   logout: PropTypes.func.isRequired,

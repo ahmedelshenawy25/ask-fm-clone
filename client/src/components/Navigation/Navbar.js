@@ -1,5 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
 import SearchBar from '../Search/SearchBar';
 
 const Navbar = ({ isAuth, onLogout, username }) => {
@@ -31,6 +33,12 @@ const Navbar = ({ isAuth, onLogout, username }) => {
       { authNavItems }
     </div>
   );
+};
+
+Navbar.propTypes = {
+  isAuth: PropTypes.bool.isRequired,
+  onLogout: PropTypes.func.isRequired,
+  username: PropTypes.string.isRequired
 };
 
 export default Navbar;

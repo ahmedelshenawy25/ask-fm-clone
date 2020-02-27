@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import SearchItem from './SearchItem';
 
 
-function SearchResult({ search, logout }) {
+const SearchResult = ({ search, logout }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [error, setError] = useState('');
 
@@ -54,7 +54,7 @@ function SearchResult({ search, logout }) {
       </div>
     </div>
   );
-}
+};
 
 SearchResult.propTypes = {
   search: PropTypes.string.isRequired,

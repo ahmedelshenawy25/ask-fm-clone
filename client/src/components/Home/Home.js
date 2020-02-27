@@ -8,7 +8,7 @@ import SearchItem from '../Search/SearchItem';
 import RightSideBox from '../RightSideBox/RightSideBox';
 
 
-function Home({ logout, token }) {
+const Home = ({ logout, token }) => {
   const [questions, setQuestions] = useState([]);
   const [error, setError] = useState('');
 
@@ -68,7 +68,7 @@ function Home({ logout, token }) {
       {token && <RightSideBox />}
     </div>
   );
-}
+};
 
 Home.propTypes = {
   logout: PropTypes.func.isRequired,

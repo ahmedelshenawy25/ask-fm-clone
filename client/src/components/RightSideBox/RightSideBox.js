@@ -1,7 +1,9 @@
 import './RightSideBox.css';
 import React from 'react';
+
 import Friends from '../Friends/Friends';
 import Discover from '../Discover/Discover';
+
 
 const RightSideBox = () => (
   <div className="rightFlexChild">

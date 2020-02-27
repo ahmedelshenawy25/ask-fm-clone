@@ -1,55 +1,47 @@
-import React from 'react';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+import React, { useState } from 'react';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
-class Follow extends React.Component {
-  state = {
-    isFollowed: this.props.isFollowed,
-    error: ''
-  }
 
-  followHandler = async () => {
+const Follow = ({ isFollowed: isUserFollowed, username }) => {
+  const [isFollowed, setIsFollowed] = useState(isUserFollowed);
+  const [error, setError] = useState('');
+
+  const followHandler = async () => {
     try {
-      if (!this.state.isFollowed) {
-        const response = await axios.post(`/api/follow/${this.props.username}`,
+      if (!isFollowed) {
+        await axios.post(`/api/follow/${username}`,
           null,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`
             }
           });
-        if (response.status !== 201) {
-          throw new Error('Could not follow user');
-        }
       } else {
-        const response = await axios.delete(`/api/unfollow/${this.props.username}`, {
+        await axios.delete(`/api/unfollow/${username}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
         });
-        if (response.status !== 204) {
-          throw new Error('Could not unfollow user');
-        }
       }
-      this.setState(prevState => ({
-        isFollowed: !prevState.isFollowed
-      }));
+      setIsFollowed((prevState) => !prevState);
     } catch (e) {
-      this.setState({
-        error: e.response ? e.response.data.message : e.message
-      });
+      setError(e.response ? e.response.data.message : e.message);
     }
-  }
+  };
 
-  render() {
-    return (
-      <div
-        className="ui right floated button follow"
-        onClick={this.followHandler}
-      >
-        {this.state.isFollowed ? 'Unfollow' : 'Follow'}
-      </div>
-    );
-  }
-}
+  return (
+    <div className="ui right floated button follow" onClick={followHandler}>
+      {isFollowed ? 'Unfollow' : 'Follow'}
+    </div>
+  );
+};
+
+Follow.propTypes = {
+  username: PropTypes.string.isRequired,
+  isFollowed: PropTypes.bool.isRequired
+};
 
 export default Follow;

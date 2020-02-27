@@ -6,7 +6,7 @@ import QuestionItem from './QuestionItem';
 import RightSideBox from '../RightSideBox/RightSideBox';
 
 
-function Inbox({ logout, token }) {
+const Inbox = ({ logout, token }) => {
   const [questions, setQuestions] = useState([]);
   const [error, setError] = useState('');
 
@@ -56,7 +56,7 @@ function Inbox({ logout, token }) {
       {token && <RightSideBox />}
     </div>
   );
-}
+};
 
 Inbox.propTypes = {
   logout: PropTypes.func.isRequired,
