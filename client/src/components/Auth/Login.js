@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Formik, Field, Form } from 'formik';
+import { Formik, Form, Field } from 'formik';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -37,7 +37,7 @@ const Login = ({ onLogin }) => {
       >
         <Form className="ui form">
           <div className="field">
-            <Field type="text" name="login" placeholder="Username" />
+            <Field name="login" placeholder="Username" />
           </div>
           <div className="field">
             <Field type="password" name="password" placeholder="Password" />
