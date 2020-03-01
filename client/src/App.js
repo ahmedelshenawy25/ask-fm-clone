@@ -1,7 +1,7 @@
 import './App.css';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Route, Switch, withRouter, Redirect
+  Route, Switch, useHistory, Redirect, useLocation
 } from 'react-router-dom';
 import Navbar from './components/Navigation/Navbar';
 import Signup from './components/Auth/Signup';
@@ -11,130 +11,79 @@ import Inbox from './components/Questions/Inbox';
 import SearchResult from './components/Search/SearchResult';
 import Home from './components/Home/Home';
 
-class App extends React.Component {
-  state = {
-    isAuth: false,
-    token: '',
-    username: ''
-  }
+const App = () => {
+  const history = useHistory();
+  const location = useLocation();
+  const [isAuth, setIsAuth] = useState(false);
+  const [token, setToken] = useState('');
+  const [username, setUsername] = useState('');
 
-  componentDidMount() {
-    const token = localStorage.getItem('token');
-    const username = localStorage.getItem('username');
-    if (!token || !username) {
-      return this.logoutHandler();
-    }
-    return this.setState({
-      isAuth: true,
-      token,
-      username
-    });
-  }
-
-  AuthHandler = () => {
-    this.setState({
-      isAuth: true,
-      token: localStorage.getItem('token'),
-      username: localStorage.getItem('username')
-    });
-  }
-
-  logoutHandler = () => {
+  const logoutHandler = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
-    this.setState({
-      isAuth: false,
-      token: ''
-    });
-    this.props.history.push('/login');
-  }
+    setIsAuth(false);
+    setToken('');
+    history.push('/login');
+  };
 
-  render() {
-    let routes;
-    if (!this.state.isAuth) {
-      routes = (
-        <Switch>
-          <Route
-            path="/signup"
-            render={props => (
-              <Signup {...props} />
-            )}
-          />
-          <Route
-            path="/login"
-            render={props => (
-              <Login {...props} onLogin={this.AuthHandler} />
-            )}
-          />
-          <Redirect to="/login" />
-        </Switch>
-      );
+  useEffect(() => {
+    const storageToken = localStorage.getItem('token');
+    const storageUsername = localStorage.getItem('username');
+    if (!storageToken || !storageUsername) {
+      return logoutHandler();
     }
-    return (
-      <div>
-        <Navbar
-          isAuth={this.state.isAuth}
-          username={this.state.username}
-          onLogout={this.logoutHandler}
-        />
+    setIsAuth(true);
+    setToken(storageToken);
+    setUsername(storageUsername);
+  }, []);
 
-        <div className="ui container">
-          <Switch>
-            <Route
-              path="/"
-              exact
-              render={() => <Redirect to="/home" />}
-            />
-            <Route
-              path="/home"
-              render={props => (
-                <Home
-                  key={props.location.key}
-                  {...props}
-                  logout={this.logoutHandler}
-                  token={this.state.token}
-                />
-              )}
-            />
-            <Route
-              path="/account/inbox"
-              render={props => (
-                <Inbox
-                  {...props}
-                  logout={this.logoutHandler}
-                  token={this.state.token}
-                />
-              )}
-            />
-            <Route
-              path="/user/:username"
-              render={props => (
-                <DisplayAnsweredQuestions
-                  key={this.props.location.pathname}
-                  {...props}
-                  logout={this.logoutHandler}
-                  token={this.state.token}
-                />
-              )}
-            />
-            <Route
-              path="/search"
-              render={props => (
-                <SearchResult
-                  key={props.history.location.search}
-                  search={props.history.location.search.replace('?q=', '')}
-                  {...props}
-                  logout={this.logoutHandler}
-                />
-              )}
-            />
-            {routes}
-            <Route render={() => <h1 style={{ textAlign: 'center' }}>404 Page not found</h1>} />
-          </Switch>
-        </div>
-      </div>
+  const authHandler = () => {
+    setIsAuth(true);
+    setToken(localStorage.getItem('token'));
+    setUsername(localStorage.getItem('username'));
+  };
+
+
+  let routes;
+  if (!isAuth) {
+    routes = (
+      <Switch>
+        <Route path="/signup">
+          <Signup />
+        </Route>
+        <Route path="/login">
+          <Login onLogin={authHandler} />
+        </Route>
+        <Redirect to="/" />
+      </Switch>
     );
   }
-}
+  return (
+    <div>
+      <Navbar isAuth={isAuth} username={username} onLogout={logoutHandler} />
+      <div className="ui container">
+        <Switch>
+          <Redirect from="/" to="/home" exact />
+          <Route path="/home">
+            <Home key={location.key} logout={logoutHandler} token={token} />
+          </Route>
+          <Route path="/account/inbox">
+            <Inbox logout={logoutHandler} token={token} />
+          </Route>
+          <Route path="/user/:username">
+            <DisplayAnsweredQuestions key={location.pathname} logout={logoutHandler} token={token} />
+          </Route>
+          <Route path="/search">
+            <SearchResult key={location.search} search={location.search.replace('?q=', '')} logout={logoutHandler} />
+          </Route>
+          {routes}
+          <Route>
+            <h1 style={{ textAlign: 'center' }}>404 Page not found</h1>
+          </Route>
+        </Switch>
+      </div>
+    </div>
+  );
+};
 
-export default withRouter(App);
+export default App;
