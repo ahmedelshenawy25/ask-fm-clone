@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Formik, Form, Field } from 'formik';
 import PropTypes from 'prop-types';
 
 import QuestionLayout from './QuestionLayout';
@@ -10,24 +11,7 @@ import QuestionLayout from './QuestionLayout';
 const QuestionItem = ({
   id, removeQuestion, question, answer: userAnswer, sender, time, isAnswered
 }) => {
-  const [answer, setAnswer] = useState('');
   const [error, setError] = useState('');
-
-  const answerSubmitHandler = async (event) => {
-    event.preventDefault();
-    try {
-      await axios.put(`/api/answer/${id}`,
-        { answer },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        });
-      removeQuestion(id);
-    } catch (e) {
-      setError(e.response ? e.response.data.message : e.message);
-    }
-  };
 
   const questionDeleteHandler = async () => {
     removeQuestion(id);
@@ -47,35 +31,54 @@ const QuestionItem = ({
     displayAnswerOrForm = <p style={{ fontSize: '1.2rem', lineHeight: '1.5rem' }}>{userAnswer}</p>;
   } else {
     displayAnswerOrForm = (
-      <form className="ui form">
-        <div className="field">
-          <textarea
-            rows="2"
-            className="item"
-            name="answer"
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
-          />
-          <div
-            style={{ marginTop: '10px' }}
-            className={`ui right floated button ${answer.length > 3000 || answer.length === 0
-              ? 'disabled' : ''}`}
-            onClick={answerSubmitHandler}
-          >
-            Answer
-          </div>
-          <div style={{ paddingTop: '17px', paddingRight: '10px' }} className="ui right floated">
-            {3000 - answer.length}
-          </div>
-          <div
-            style={{ marginTop: '10px' }}
-            className="ui left floated button"
-            onClick={questionDeleteHandler}
-          >
-            Delete
-          </div>
-        </div>
-      </form>
+      <Formik
+        initialValues={{ answer: '' }}
+        onSubmit={async (values) => {
+          try {
+            await axios.put(`/api/answer/${id}`,
+              { ...values },
+              {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+              });
+            removeQuestion(id);
+          } catch (e) {
+            setError(e.response ? e.response.data.message : e.message);
+          }
+        }}
+      >
+        {({ values }) => (
+          <Form className="ui form">
+            <div className="field">
+              <Field
+                as="textarea"
+                rows="2"
+                className="item"
+                name="answer"
+              />
+              <button
+                style={{ marginTop: '10px' }}
+                className={`ui right floated button ${values.answer.length > 3000 || values.answer.length === 0
+                  ? 'disabled' : ''}`}
+                type="submit"
+              >
+                Answer
+              </button>
+              <div style={{ paddingTop: '17px', paddingRight: '10px' }} className="ui right floated">
+                {3000 - values.answer.length}
+              </div>
+              <div
+                style={{ marginTop: '10px' }}
+                className="ui left floated button"
+                onClick={questionDeleteHandler}
+              >
+                Delete
+              </div>
+            </div>
+          </Form>
+        )}
+      </Formik>
     );
   }
   return (
