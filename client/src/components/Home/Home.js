@@ -1,6 +1,7 @@
 import './Home.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import QuestionItem from '../Questions/QuestionItem';
@@ -9,6 +10,7 @@ import RightSideBox from '../RightSideBox/RightSideBox';
 
 
 const Home = ({ logout, token }) => {
+  const location = useLocation();
   const [questions, setQuestions] = useState([]);
   const [error, setError] = useState('');
 
@@ -29,7 +31,7 @@ const Home = ({ logout, token }) => {
     }
 
     fetchHomePage();
-  }, []);
+  }, [location]);
 
   const renderedQuestions = questions.map(({
     _id, question, answer, sender, updatedAt

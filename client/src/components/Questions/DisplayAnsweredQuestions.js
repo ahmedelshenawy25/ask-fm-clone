@@ -1,8 +1,8 @@
 import './DisplayAnsweredQuestions.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import QuestionItem from './QuestionItem';
 import AskQuestion from './AskQuestion';
@@ -35,7 +35,7 @@ const DisplayAnsweredQuestions = ({ logout, token }) => {
     }
 
     fetchProfile();
-  }, []);
+  }, [username]);
 
   const renderedQuestions = questions.map(({
     _id, question, answer, sender, updatedAt

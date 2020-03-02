@@ -1,8 +1,9 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import {
-  Route, Switch, useHistory, Redirect, useLocation
+  Route, Switch, useHistory, Redirect
 } from 'react-router-dom';
+
 import Navbar from './components/Navigation/Navbar';
 import Signup from './components/Auth/Signup';
 import Login from './components/Auth/Login';
@@ -13,7 +14,6 @@ import Home from './components/Home/Home';
 
 const App = () => {
   const history = useHistory();
-  const location = useLocation();
   const [isAuth, setIsAuth] = useState(false);
   const [token, setToken] = useState('');
   const [username, setUsername] = useState('');
@@ -43,7 +43,6 @@ const App = () => {
     setUsername(localStorage.getItem('username'));
   };
 
-
   let routes;
   if (!isAuth) {
     routes = (
@@ -65,16 +64,16 @@ const App = () => {
         <Switch>
           <Redirect from="/" to="/home" exact />
           <Route path="/home">
-            <Home key={location.key} logout={logoutHandler} token={token} />
+            <Home logout={logoutHandler} token={token} />
           </Route>
           <Route path="/account/inbox">
             <Inbox logout={logoutHandler} token={token} />
           </Route>
           <Route path="/user/:username">
-            <DisplayAnsweredQuestions key={location.pathname} logout={logoutHandler} token={token} />
+            <DisplayAnsweredQuestions logout={logoutHandler} token={token} />
           </Route>
           <Route path="/search">
-            <SearchResult key={location.search} search={location.search.replace('?q=', '')} logout={logoutHandler} />
+            <SearchResult logout={logoutHandler} />
           </Route>
           {routes}
           <Route>
