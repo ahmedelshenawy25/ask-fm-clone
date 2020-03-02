@@ -35,11 +35,11 @@ exports.login = async (req, res) => {
 
 exports.search = async (req, res) => {
     try {
-        const search = req.query.search.trim();
-        const searchRegex = new RegExp(search, 'gi');
+        const searchTerm = req.query.q.trim();
+        const searchRegex = new RegExp(searchTerm, 'gi');
 
         // FIND all users WHERE _id !== req.user._id AND
-        // (fullName === search keyword OR username === search keyword)
+        // (fullName === searchTerm OR username === searchTerm)
         const users = await User.aggregate()
             .project({
                 fullName: {
