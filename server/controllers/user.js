@@ -38,7 +38,7 @@ exports.search = async (req, res) => {
         const searchTerm = req.query.q.trim();
         const searchRegex = new RegExp(searchTerm, 'gi');
 
-        // FIND all users WHERE _id !== req.user._id AND
+        // FIND all users WHERE _id !== req.userId AND
         // (fullName === searchTerm OR username === searchTerm)
         const users = await User.aggregate()
             .project({
@@ -51,7 +51,7 @@ exports.search = async (req, res) => {
                 $and: [
                     {
                         _id: {
-                            $ne: req.user._id
+                            $ne: req.userId
                         }
                     },
                     {
@@ -66,10 +66,10 @@ exports.search = async (req, res) => {
                     }
                 ]
             });
-        // add isFollowed property to users being followed by req.user._id
+        // add isFollowed property to users being followed by req.userId
         const modifiedUsers = await Promise.all(users.map(async (user) => {
             const found = await Follow.findOne({
-                followingUser: req.user._id,
+                followingUser: req.userId,
                 followedUser: user._id
             });
             if (found) {
@@ -92,7 +92,7 @@ exports.search = async (req, res) => {
 exports.friends = async (req, res) => {
     try {
         const followedUsers = await Follow.find({
-            followingUser: req.user._id
+            followingUser: req.userId
         }, '-_id followedUser')
             .populate('followedUser', 'username firstName lastName');
 
@@ -105,10 +105,10 @@ exports.friends = async (req, res) => {
 exports.discover = async (req, res) => {
     try {
         const followedUsers = await Follow.find({
-            followingUser: req.user._id
+            followingUser: req.userId
         }, '-_id followedUser')
             .distinct('followedUser');
-        followedUsers.push(req.user._id);
+        followedUsers.push(req.userId);
 
         const suggestedUsers = await User.find({
             _id: { $nin: followedUsers }
@@ -122,7 +122,7 @@ exports.discover = async (req, res) => {
 exports.follow = async (req, res) => {
     try {
         const followedUser = await User.findOne({ username: req.params.username }, '_id');
-        const followingUser = await User.findOne({ _id: req.user._id }, '_id');
+        const followingUser = await User.findOne({ _id: req.userId }, '_id');
         if (!followedUser || !followingUser) {
             throw new Error('User not found');
         }
@@ -147,7 +147,7 @@ exports.follow = async (req, res) => {
 exports.unfollow = async (req, res) => {
     try {
         const followedUser = await User.findOne({ username: req.params.username }, '_id');
-        const followingUser = await User.findOne({ _id: req.user._id }, '_id');
+        const followingUser = await User.findOne({ _id: req.userId }, '_id');
         if (!followedUser || !followingUser) {
             throw new Error('User not found');
         }

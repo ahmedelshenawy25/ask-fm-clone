@@ -14,7 +14,7 @@ const removeAnonymousSenderInfo = questions => questions.map((question) => {
 exports.getFriendsQuestions = async (req, res) => {
     try {
         const followedUser = await Follow.find({
-            followingUser: req.user._id
+            followingUser: req.userId
         },
         '-_id followedUser');
         const followedUsersId = followedUser.map(userId => userId.followedUser);
@@ -45,7 +45,7 @@ exports.getFriendsQuestions = async (req, res) => {
 exports.getUnansweredQuestions = async (req, res) => {
     try {
         const questions = await Question.find({
-            recipient: req.user._id,
+            recipient: req.userId,
             answered: false
         }, 'sender question createdAt isAnonymous')
             .populate('sender', '-_id firstName lastName')
@@ -76,11 +76,11 @@ exports.getAnsweredQuestions = async (req, res) => {
         const modifiedQuestions = removeAnonymousSenderInfo(questions);
         const followed = await Follow.findOne({
             followedUser: recipient,
-            followingUser: req.user._id
+            followingUser: req.userId
         });
 
         const isFollowed = !!followed;
-        const renderFollowButton = req.user._id.toString() !== recipient._id.toString();
+        const renderFollowButton = req.userId.toString() !== recipient._id.toString();
         res.status(200).send({ modifiedQuestions, isFollowed, renderFollowButton });
     } catch (e) {
         res.status(400).send({ message: e.message });
@@ -88,7 +88,7 @@ exports.getAnsweredQuestions = async (req, res) => {
 };
 
 exports.askQuestion = async (req, res) => {
-    const sender = req.user._id;
+    const sender = req.userId;
     try {
         const recipient = await User.findOne({ username: req.params.username }, '_id');
         if (!recipient) {
