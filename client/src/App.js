@@ -11,77 +11,84 @@ import DisplayAnsweredQuestions from './components/Questions/DisplayAnsweredQues
 import Inbox from './components/Questions/Inbox';
 import SearchResult from './components/Search/SearchResult';
 import Home from './components/Home/Home';
+import AuthenticatedRoute from './components/AuthenticatedRoute/AuthenticatedRoute';
+import UnauthenticatedRoute from './components/UnauthenticatedRoute/UnauthenticatedRoute';
+import AuthContext from './components/AuthContext/AuthContext';
 
 const App = () => {
   const history = useHistory();
   const [isAuth, setIsAuth] = useState(false);
-  const [token, setToken] = useState('');
   const [username, setUsername] = useState('');
+  const [isLoadingInitialState, setIsLoadingInitialState] = useState(true);
 
   const logoutHandler = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
+    localStorage.clear();
     setIsAuth(false);
-    setToken('');
+    setIsLoadingInitialState(false);
     history.push('/login');
   };
 
   useEffect(() => {
-    const storageToken = localStorage.getItem('token');
-    const storageUsername = localStorage.getItem('username');
-    if (!storageToken || !storageUsername) {
+    const { token } = localStorage;
+    const parsedToken = token ? JSON.parse(
+      atob(token.split('.')[1])
+    ) : null;
+    const tokenExpirationTime = parsedToken && parsedToken.exp;
+    const tokenUsername = parsedToken && parsedToken.username;
+
+    const currentTime = Math.trunc(new Date() / 1000);
+
+    if (!token || currentTime > tokenExpirationTime) {
       return logoutHandler();
     }
     setIsAuth(true);
-    setToken(storageToken);
-    setUsername(storageUsername);
+    setUsername(tokenUsername);
+    setIsLoadingInitialState(false);
   }, []);
 
   const authHandler = () => {
     setIsAuth(true);
-    setToken(localStorage.getItem('token'));
     setUsername(localStorage.getItem('username'));
   };
 
-  let routes;
-  if (!isAuth) {
-    routes = (
-      <Switch>
-        <Route path="/signup">
-          <Signup />
-        </Route>
-        <Route path="/login">
-          <Login onLogin={authHandler} />
-        </Route>
-        <Redirect to="/" />
-      </Switch>
-    );
+  if (isLoadingInitialState) {
+    return <div>Spinner placeholder...</div>;
   }
   return (
-    <div>
-      <Navbar isAuth={isAuth} username={username} onLogout={logoutHandler} />
-      <div className="ui container">
-        <Switch>
-          <Redirect from="/" to="/home" exact />
-          <Route path="/home">
-            <Home logout={logoutHandler} token={token} />
-          </Route>
-          <Route path="/account/inbox">
-            <Inbox logout={logoutHandler} token={token} />
-          </Route>
-          <Route path="/user/:username">
-            <DisplayAnsweredQuestions logout={logoutHandler} token={token} />
-          </Route>
-          <Route path="/search">
-            <SearchResult logout={logoutHandler} />
-          </Route>
-          {routes}
-          <Route>
-            <h1 style={{ textAlign: 'center' }}>404 Page not found</h1>
-          </Route>
-        </Switch>
+    <AuthContext.Provider value={isAuth}>
+      <div>
+        <Navbar username={username} onLogout={logoutHandler} />
+        <div className="ui container">
+          <Switch>
+            <Redirect from="/" to="/home" exact />
+
+            <UnauthenticatedRoute path="/signup">
+              <Signup />
+            </UnauthenticatedRoute>
+            <UnauthenticatedRoute path="/login">
+              <Login onLogin={authHandler} />
+            </UnauthenticatedRoute>
+
+            <AuthenticatedRoute path="/home">
+              <Home logout={logoutHandler} />
+            </AuthenticatedRoute>
+            <AuthenticatedRoute path="/account/inbox">
+              <Inbox logout={logoutHandler} />
+            </AuthenticatedRoute>
+            <AuthenticatedRoute path="/user/:username">
+              <DisplayAnsweredQuestions logout={logoutHandler} />
+            </AuthenticatedRoute>
+            <AuthenticatedRoute path="/search">
+              <SearchResult logout={logoutHandler} />
+            </AuthenticatedRoute>
+
+            <Route>
+              <h1 style={{ textAlign: 'center' }}>404 Page not found</h1>
+            </Route>
+          </Switch>
+        </div>
       </div>
-    </div>
+    </AuthContext.Provider>
   );
 };
 

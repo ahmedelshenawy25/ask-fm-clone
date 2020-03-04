@@ -6,7 +6,7 @@ import QuestionItem from './QuestionItem';
 import RightSideBox from '../RightSideBox/RightSideBox';
 
 
-const Inbox = ({ logout, token }) => {
+const Inbox = ({ logout }) => {
   const [questions, setQuestions] = useState([]);
   const [error, setError] = useState('');
 
@@ -53,14 +53,13 @@ const Inbox = ({ logout, token }) => {
       <div className="leftFlexChild">
         {renderedQuestions}
       </div>
-      {token && <RightSideBox />}
+      <RightSideBox />
     </div>
   );
 };
 
 Inbox.propTypes = {
-  logout: PropTypes.func.isRequired,
-  token: PropTypes.string.isRequired
+  logout: PropTypes.func.isRequired
 };
 
 export default Inbox;

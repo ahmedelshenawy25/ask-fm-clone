@@ -29,7 +29,7 @@ const Login = ({ onLogin }) => {
             localStorage.setItem('username', response.data.username);
 
             onLogin();
-            history.push('/');
+            history.push('/home');
           } catch (e) {
             setError(e.response ? e.response.data.message : e.message);
           }

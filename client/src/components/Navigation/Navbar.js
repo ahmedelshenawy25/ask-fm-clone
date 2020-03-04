@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+import AuthContext from '../AuthContext/AuthContext';
 import SearchBar from '../Search/SearchBar';
 
-const Navbar = ({ isAuth, onLogout, username }) => {
+const Navbar = ({ onLogout, username }) => {
+  const isAuth = useContext(AuthContext);
   let authNavItems;
   if (!isAuth) {
     authNavItems = (
@@ -36,7 +38,6 @@ const Navbar = ({ isAuth, onLogout, username }) => {
 };
 
 Navbar.propTypes = {
-  isAuth: PropTypes.bool.isRequired,
   onLogout: PropTypes.func.isRequired,
   username: PropTypes.string.isRequired
 };

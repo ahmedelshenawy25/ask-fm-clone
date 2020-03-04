@@ -9,7 +9,7 @@ import SearchItem from '../Search/SearchItem';
 import RightSideBox from '../RightSideBox/RightSideBox';
 
 
-const Home = ({ logout, token }) => {
+const Home = ({ logout }) => {
   const location = useLocation();
   const [questions, setQuestions] = useState([]);
   const [error, setError] = useState('');
@@ -67,14 +67,13 @@ const Home = ({ logout, token }) => {
       <div className="ui relaxed divided list questionBox leftFlexChild">
         {renderedUsersWithQuestions}
       </div>
-      {token && <RightSideBox />}
+      <RightSideBox />
     </div>
   );
 };
 
 Home.propTypes = {
-  logout: PropTypes.func.isRequired,
-  token: PropTypes.string.isRequired
+  logout: PropTypes.func.isRequired
 };
 
 export default Home;
