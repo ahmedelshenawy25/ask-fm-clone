@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const cors = require('cors');
 const userRouter = require('./routes/user');
 const questionRouter = require('./routes/question');
 
@@ -15,10 +16,10 @@ require('dotenv').config({ path: path.join(__dirname, dotenvPath) });
 
 const app = express();
 
+app.use(cors());
 app.use(helmet());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(morgan('common'));
+app.use(morgan('dev'));
 
 app.use(express.static(path.join(__dirname, '../client/build')));
 
