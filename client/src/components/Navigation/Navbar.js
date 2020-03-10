@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import AuthContext from '../AuthContext/AuthContext';
+import AuthContext from '../../context/AuthContext/AuthContext';
 import SearchBar from '../Search/SearchBar';
 
 const Navbar = ({ onLogout, username }) => {

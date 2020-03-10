@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import SearchItem from '../Search/SearchItem';
+
+import axiosInstance from '../../axiosInstance/axiosInstance';
 
 const Discover = () => {
   const [discoveredUsers, setDiscoveredUsers] = useState([]);
@@ -9,11 +10,7 @@ const Discover = () => {
   useEffect(() => {
     async function fetchDiscoverUsers() {
       try {
-        const response = await axios.get('/api/discover', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        });
+        const response = await axiosInstance.get('/discover');
         setDiscoveredUsers(response.data);
       } catch (e) {
         setError(e.response ? e.response.data.message : e.message);

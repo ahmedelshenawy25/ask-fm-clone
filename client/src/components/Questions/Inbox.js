@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import PropTypes from 'prop-types';
 
+import axiosInstance from '../../axiosInstance/axiosInstance';
 import QuestionItem from './QuestionItem';
 import RightSideBox from '../RightSideBox/RightSideBox';
 
@@ -13,11 +13,7 @@ const Inbox = ({ logout }) => {
   useEffect(() => {
     async function fetchInbox() {
       try {
-        const response = await axios.get('/api/account/inbox', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        });
+        const response = await axiosInstance.get('/account/inbox');
         setQuestions(response.data);
       } catch (e) {
         if (e.response.status === 401) return logout();

@@ -2,10 +2,10 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Formik, Form, Field } from 'formik';
 import PropTypes from 'prop-types';
 
+import axiosInstance from '../../axiosInstance/axiosInstance';
 import Follow from '../Follow/Follow';
 
 
@@ -18,15 +18,7 @@ const AskQuestion = ({ username, isFollowed, renderButton }) => {
         initialValues={{ question: '', isAnonymous: true }}
         onSubmit={async (values, { resetForm }) => {
           try {
-            await axios.post(`/api/${username}/ask`,
-              {
-                ...values
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem('token')}`
-                }
-              });
+            await axiosInstance.post(`/${username}/ask`, { ...values });
             resetForm({ values: { question: '', isAnonymous: values.isAnonymous } });
           } catch (e) {
             setError(e.response ? e.response.data.message : e.message);

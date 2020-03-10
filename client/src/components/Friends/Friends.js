@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 
+import axiosInstace from '../../axiosInstance/axiosInstance';
 import SearchItem from '../Search/SearchItem';
 
 
@@ -11,11 +11,7 @@ const Friends = () => {
   useEffect(() => {
     async function fetchFriends() {
       try {
-        const response = await axios.get('/api/friends', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        });
+        const response = await axiosInstace.get('/friends');
         setFriends(response.data);
       } catch (e) {
         setError(e.response ? e.response.data.message : e.message);

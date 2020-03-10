@@ -1,9 +1,9 @@
 import './SearchResult.css';
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+import axiosInstance from '../../axiosInstance/axiosInstance';
 import SearchItem from './SearchItem';
 
 
@@ -15,11 +15,7 @@ const SearchResult = ({ logout }) => {
   useEffect(() => {
     async function fetchSearchResult() {
       try {
-        const response = await axios.get(`/api/search${search}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        });
+        const response = await axiosInstance.get(`/search${search}`);
         setSearchResults(response.data);
       } catch (e) {
         if (e.response.status === 401) return logout();

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Formik, Form, Field } from 'formik';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+import axiosInstance from '../../axiosInstance/axiosInstance';
 
 const Login = ({ onLogin }) => {
   const history = useHistory();
@@ -22,11 +22,11 @@ const Login = ({ onLogin }) => {
         initialValues={{ login: '', password: '' }}
         onSubmit={async (values) => {
           try {
-            const response = await axios.post('/api/login', {
+            const response = await axiosInstance.post('/login', {
               ...values
             });
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('username', response.data.username);
+            localStorage.token = response.data.token;
+            localStorage.username = response.data.username;
 
             onLogin();
             history.push('/home');

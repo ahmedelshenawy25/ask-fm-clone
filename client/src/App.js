@@ -1,8 +1,6 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
-import {
-  Route, Switch, useHistory, Redirect
-} from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 import Navbar from './components/Navigation/Navbar';
 import Signup from './components/Auth/Signup';
@@ -13,10 +11,9 @@ import SearchResult from './components/Search/SearchResult';
 import Home from './components/Home/Home';
 import AuthenticatedRoute from './components/AuthenticatedRoute/AuthenticatedRoute';
 import UnauthenticatedRoute from './components/UnauthenticatedRoute/UnauthenticatedRoute';
-import AuthContext from './components/AuthContext/AuthContext';
+import AuthContext from './context/AuthContext/AuthContext';
 
 const App = () => {
-  const history = useHistory();
   const [isAuth, setIsAuth] = useState(false);
   const [username, setUsername] = useState('');
   const [isLoadingInitialState, setIsLoadingInitialState] = useState(true);
@@ -25,12 +22,11 @@ const App = () => {
     localStorage.clear();
     setIsAuth(false);
     setIsLoadingInitialState(false);
-    history.push('/login');
   };
 
   useEffect(() => {
     const { token } = localStorage;
-    const parsedToken = token ? JSON.parse(
+    const parsedToken = token && token.split('.')[1] ? JSON.parse(
       atob(token.split('.')[1])
     ) : null;
     const tokenExpirationTime = parsedToken && parsedToken.exp;
@@ -44,11 +40,11 @@ const App = () => {
     setIsAuth(true);
     setUsername(tokenUsername);
     setIsLoadingInitialState(false);
-  }, []);
+  }, [localStorage.token]);
 
   const authHandler = () => {
     setIsAuth(true);
-    setUsername(localStorage.getItem('username'));
+    setUsername(localStorage.username);
   };
 
   if (isLoadingInitialState) {
@@ -61,6 +57,7 @@ const App = () => {
         <div className="ui container">
           <Switch>
             <Redirect from="/" to="/home" exact />
+            <Redirect from="/logout" to="/login" />
 
             <UnauthenticatedRoute path="/signup">
               <Signup />

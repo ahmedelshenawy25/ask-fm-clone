@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Formik, Form, Field } from 'formik';
 import { useHistory } from 'react-router-dom';
 
+import axiosInstance from '../../axiosInstance/axiosInstance';
 
 const Signup = () => {
   const history = useHistory();
@@ -15,7 +15,7 @@ const Signup = () => {
       }}
       onSubmit={async (values) => {
         try {
-          await axios.post('/api/signup', {
+          await axiosInstance.post('/signup', {
             ...values
           });
           history.push('/login');

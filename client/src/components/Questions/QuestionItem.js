@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Formik, Form, Field } from 'formik';
 import PropTypes from 'prop-types';
 
+import axiosInstance from '../../axiosInstance/axiosInstance';
 import QuestionLayout from './QuestionLayout';
 
 
@@ -16,11 +16,7 @@ const QuestionItem = ({
   const questionDeleteHandler = async () => {
     removeQuestion(id);
     try {
-      await axios.delete(`/api/delete/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      await axiosInstance.delete(`/delete/${id}`);
     } catch (e) {
       setError(e.response ? e.response.data.message : e.message);
     }
@@ -35,13 +31,7 @@ const QuestionItem = ({
         initialValues={{ answer: '' }}
         onSubmit={async (values) => {
           try {
-            await axios.put(`/api/answer/${id}`,
-              { ...values },
-              {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem('token')}`
-                }
-              });
+            await axiosInstance.put(`/answer/${id}`, { ...values });
             removeQuestion(id);
           } catch (e) {
             setError(e.response ? e.response.data.message : e.message);

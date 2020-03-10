@@ -1,9 +1,9 @@
 import './DisplayAnsweredQuestions.css';
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+import axiosInstance from '../../axiosInstance/axiosInstance';
 import QuestionItem from './QuestionItem';
 import AskQuestion from './AskQuestion';
 import RightSideBox from '../RightSideBox/RightSideBox';
@@ -19,11 +19,7 @@ const DisplayAnsweredQuestions = ({ logout }) => {
   useEffect(() => {
     async function fetchProfile() {
       try {
-        const response = await axios.get(`/api/user/${username}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        });
+        const response = await axiosInstance.get(`/user/${username}`);
         setQuestions(response.data.modifiedQuestions);
         setIsFollowed(response.data.isFollowed);
         setRenderButton(response.data.renderFollowButton);

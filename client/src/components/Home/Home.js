@@ -1,9 +1,9 @@
 import './Home.css';
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
+import axiosInstance from '../../axiosInstance/axiosInstance';
 import QuestionItem from '../Questions/QuestionItem';
 import SearchItem from '../Search/SearchItem';
 import RightSideBox from '../RightSideBox/RightSideBox';
@@ -17,11 +17,7 @@ const Home = ({ logout }) => {
   useEffect(() => {
     async function fetchHomePage() {
       try {
-        const response = await axios.get('/api/home', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        });
+        const response = await axiosInstance.get('/home');
         setQuestions(response.data);
       } catch (e) {
         if (e.response.status === 401) return logout();
