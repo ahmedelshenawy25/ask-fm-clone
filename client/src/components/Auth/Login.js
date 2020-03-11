@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
-import { Formik, Form, Field } from 'formik';
+import {
+  Formik, Form, Field, ErrorMessage
+} from 'formik';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import * as Yup from 'yup';
 
 import axiosInstance from '../../axiosInstance/axiosInstance';
 
 const Login = ({ onLogin }) => {
   const history = useHistory();
   const [error, setError] = useState('');
+
+  const loginSchema = Yup.object().shape({
+    login: Yup.string().trim().required('Enter a username or an email'),
+    password: Yup.string().trim().required('Enter a password')
+  });
 
   return (
     <>
@@ -20,10 +28,12 @@ const Login = ({ onLogin }) => {
       )}
       <Formik
         initialValues={{ login: '', password: '' }}
+        validationSchema={loginSchema}
         onSubmit={async (values) => {
+          const castValues = loginSchema.cast(values);
           try {
             const response = await axiosInstance.post('/login', {
-              ...values
+              ...castValues
             });
             localStorage.token = response.data.token;
             localStorage.username = response.data.username;
@@ -35,15 +45,19 @@ const Login = ({ onLogin }) => {
           }
         }}
       >
-        <Form className="ui form">
-          <div className="field">
-            <Field name="login" placeholder="Username" />
-          </div>
-          <div className="field">
-            <Field type="password" name="password" placeholder="Password" />
-          </div>
-          <button className="ui button" type="submit">Login</button>
-        </Form>
+        {({ isValid, dirty, isSubmitting }) => (
+          <Form className="ui form">
+            <div className="field">
+              <Field name="login" placeholder="Username or email" />
+              <ErrorMessage name="login" />
+            </div>
+            <div className="field">
+              <Field type="password" name="password" placeholder="Password" />
+              <ErrorMessage name="password" />
+            </div>
+            <button className="ui button" disabled={!(isValid && dirty) || isSubmitting} type="submit">Login</button>
+          </Form>
+        )}
       </Formik>
     </>
   );

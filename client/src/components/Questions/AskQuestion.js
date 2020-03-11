@@ -4,6 +4,7 @@
 import React, { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
 import PropTypes from 'prop-types';
+import * as Yup from 'yup';
 
 import axiosInstance from '../../axiosInstance/axiosInstance';
 import Follow from '../Follow/Follow';
@@ -16,6 +17,9 @@ const AskQuestion = ({ username, isFollowed, renderButton }) => {
     <>
       <Formik
         initialValues={{ question: '', isAnonymous: true }}
+        validationSchema={Yup.object().shape({
+          question: Yup.string().min(1).max(300)
+        })}
         onSubmit={async (values, { resetForm }) => {
           try {
             await axiosInstance.post(`/${username}/ask`, { ...values });
@@ -25,7 +29,9 @@ const AskQuestion = ({ username, isFollowed, renderButton }) => {
           }
         }}
       >
-        {({ values }) => (
+        {({
+          values, isValid, dirty, isSubmitting
+        }) => (
           <Form className="ui form">
             <div className="field">
               <Field as="textarea" rows="4" className="item" name="question" />
@@ -41,7 +47,8 @@ const AskQuestion = ({ username, isFollowed, renderButton }) => {
             </div>
             <button
               style={{ marginTop: '-3.2%', marginBottom: '1%' }}
-              className={`ui right floated button ${values.question.length > 300 || values.question.length === 0 ? 'disabled' : ''}`}
+              className="ui right floated button"
+              disabled={!(isValid && dirty) || isSubmitting}
               type="submit"
             >
               Ask

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
 import PropTypes from 'prop-types';
+import * as Yup from 'yup';
 
 import axiosInstance from '../../axiosInstance/axiosInstance';
 import QuestionLayout from './QuestionLayout';
@@ -29,6 +30,9 @@ const QuestionItem = ({
     displayAnswerOrForm = (
       <Formik
         initialValues={{ answer: '' }}
+        validationSchema={Yup.object().shape({
+          answer: Yup.string().min(1).max(3000)
+        })}
         onSubmit={async (values) => {
           try {
             await axiosInstance.put(`/answer/${id}`, { ...values });
@@ -38,7 +42,9 @@ const QuestionItem = ({
           }
         }}
       >
-        {({ values }) => (
+        {({
+          values, isValid, dirty, isSubmitting
+        }) => (
           <Form className="ui form">
             <div className="field">
               <Field
@@ -49,8 +55,8 @@ const QuestionItem = ({
               />
               <button
                 style={{ marginTop: '10px' }}
-                className={`ui right floated button ${values.answer.length > 3000 || values.answer.length === 0
-                  ? 'disabled' : ''}`}
+                className="ui right floated button"
+                disabled={!(isValid && dirty) || isSubmitting}
                 type="submit"
               >
                 Answer
