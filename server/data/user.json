@@ -1,42 +1,42 @@
 [
-    {
-        "_id": "56cb91bdc3464f14678934ca",
-        "firstName": "Justin",
-        "lastName": "Macmillan",
-        "email": "JustinLMacmillan@dayrep.com",
-        "username": "Fastally",
-        "password": "ienoo2Iphoh"
-    },
-    {
-        "_id": "56cb91bdc3464f14678934cb",
-        "firstName": "George",
-        "lastName": "King",
-        "email": "GeorgeMKing@rhyta.com",
-        "username": "Hisis1986",
-        "password": "tohgee5ie7T"
-    },
-    {
-        "_id": "56cb91bdc3464f14678934cc",
-        "firstName": "David",
-        "lastName": "Holleran",
-        "email": "DavidWHolleran@dayrep.com",
-        "username": "Willond",
-        "password": "eeQuaephi5"
-    },
-    {
-        "_id": "56cb91bdc3464f14678934cd",
-        "firstName": "Daniel",
-        "lastName": "Smith",
-        "email": "DanielJSmith@armyspy.com",
-        "username": "Damers1984",
-        "password": "ohn5IeXah"
-    },
-    {
-        "_id": "56cb91bdc3464f14678934ce",
-        "firstName": "Stephenie",
-        "lastName": "Calhoun",
-        "email": "StephenieRCalhoun@dayrep.com",
-        "username": "Buly1988",
-        "password": "ac6Ahduif5"
-    }
+  {
+    "_id": "56cb91bdc3464f14678934ca",
+    "firstName": "Justin",
+    "lastName": "Macmillan",
+    "email": "JustinLMacmillan@dayrep.com",
+    "username": "Fastally",
+    "password": "ienoo2Iphoh"
+  },
+  {
+    "_id": "56cb91bdc3464f14678934cb",
+    "firstName": "George",
+    "lastName": "King",
+    "email": "GeorgeMKing@rhyta.com",
+    "username": "Hisis1986",
+    "password": "tohgee5ie7T"
+  },
+  {
+    "_id": "56cb91bdc3464f14678934cc",
+    "firstName": "David",
+    "lastName": "Holleran",
+    "email": "DavidWHolleran@dayrep.com",
+    "username": "Willond",
+    "password": "eeQuaephi5"
+  },
+  {
+    "_id": "56cb91bdc3464f14678934cd",
+    "firstName": "Daniel",
+    "lastName": "Smith",
+    "email": "DanielJSmith@armyspy.com",
+    "username": "Damers1984",
+    "password": "ohn5IeXah"
+  },
+  {
+    "_id": "56cb91bdc3464f14678934ce",
+    "firstName": "Stephenie",
+    "lastName": "Calhoun",
+    "email": "StephenieRCalhoun@dayrep.com",
+    "username": "Buly1988",
+    "password": "ac6Ahduif5"
+  }
 ]

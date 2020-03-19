@@ -2,7 +2,7 @@ const express = require('express');
 const auth = require('../middleware/auth');
 
 const {
-    signup, login, search, follow, unfollow, friends, discover
+  signup, login, search, follow, unfollow, friends, discover
 } = require('../controllers/user');
 
 const router = express.Router();

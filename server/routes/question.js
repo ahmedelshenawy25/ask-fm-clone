@@ -1,12 +1,12 @@
 const express = require('express');
 
 const {
-    askQuestion,
-    answerQuestion,
-    deleteQuestion,
-    getUnansweredQuestions,
-    getAnsweredQuestions,
-    getFriendsQuestions
+  askQuestion,
+  answerQuestion,
+  deleteQuestion,
+  getUnansweredQuestions,
+  getAnsweredQuestions,
+  getFriendsQuestions
 } = require('../controllers/question');
 const auth = require('../middleware/auth');
 
