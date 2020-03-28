@@ -1,6 +1,10 @@
+const path = require('path');
 const User = require('./users.model');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+
+const dotenvPath = process.env.NODE_ENV === 'development' ? '../../config/.env.dev' : '../config/.env.prod';
+require('dotenv').config({ path: path.join(__dirname, dotenvPath) });
 
 class UsersDAL {
   async createUser (userSignupForm) {
@@ -36,7 +40,7 @@ class UsersDAL {
   }
 
   generateAuthToken (user) {
-    const token = jwt.sign({ _id: user._id, username: user.username }, process.env.SECRET_KEY || 'supersecretkey', { expiresIn: '7d' });
+    const token = jwt.sign({ _id: user._id, username: user.username }, process.env.SECRET_KEY, { expiresIn: '7d' });
     return token;
   }
 
