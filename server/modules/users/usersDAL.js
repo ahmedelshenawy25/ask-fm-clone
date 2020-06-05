@@ -19,6 +19,11 @@ class UsersDAL {
     return user;
   }
 
+  async findUserByUsernameOrEmail (username, email) {
+    const user = await User.findOne({ username, email });
+    return user;
+  }
+
   async findUserById (_id) {
     const user = await User.findOne({ _id }, { _id: 1 });
     return user;

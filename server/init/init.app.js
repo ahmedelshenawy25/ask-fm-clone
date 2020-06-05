@@ -8,7 +8,7 @@ const app = express();
 
 const userRouter = require('../routes/user');
 const questionRouter = require('../routes/question');
-const testingRouter = require('../modules/users/users.routes');
+
 app.use(cors());
 app.use(helmet());
 app.use(bodyParser.json());
@@ -20,7 +20,6 @@ app.use(express.static(path.join(__dirname, '../../client/build')));
 
 app.use('/api', userRouter);
 app.use('/api', questionRouter);
-app.use('/testing', testingRouter);
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../../client/build/index.html'));

@@ -1,14 +1,14 @@
 const express = require('express');
 const auth = require('../middleware/auth');
-
+const usersControllers = require('../modules/users/controllers');
 const {
-  signup, login, search, follow, unfollow, friends, discover
+  search, follow, unfollow, friends, discover
 } = require('../controllers/user');
 
 const router = express.Router();
 
-router.post('/signup', signup);
-router.post('/login', login);
+router.post('/signup', usersControllers.signup);
+router.post('/login', usersControllers.login);
 
 router.get('/search', auth, search);
 router.get('/friends', auth, friends);

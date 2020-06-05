@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const User = require('../modules/users/users.model');
 const Question = require('../models/question');
 const Follow = require('../models/follow');
 
@@ -15,24 +15,23 @@ exports.getFriendsQuestions = async (req, res) => {
     const followedUser = await Follow.find({
       followingUser: req.userId
     },
-    '-_id followedUser');
+    '-_id followedUser'
+    );
     const followedUsersId = followedUser.map(userId => userId.followedUser);
-    if (!followedUser) {
-      throw new Error('Could not find followed users');
-    }
-    const questions = await Question.find({
-      answered: true,
-      recipient: {
-        $in: followedUsersId
-      }
-    })
+
+    const questions = await Question.find(
+      {
+        answered: true,
+        recipient: {
+          $in: followedUsersId
+        }
+      },
+      '-__v -createdAt'
+    )
       .populate('recipient', '-_id firstName lastName username')
       .populate('sender', '-_id firstName lastName username')
       .sort('-updatedAt');
 
-    if (!questions) {
-      throw new Error('Could not find questions');
-    }
     const modifiedQuestions = removeAnonymousSenderInfo(questions);
 
     res.status(200).send(modifiedQuestions);
@@ -69,9 +68,7 @@ exports.getAnsweredQuestions = async (req, res) => {
     }, 'sender question answer updatedAt isAnonymous')
       .populate('sender', '-_id firstName lastName username')
       .sort('-updatedAt');
-    if (!questions) {
-      throw new Error('Questions not found.');
-    }
+
     const modifiedQuestions = removeAnonymousSenderInfo(questions);
     const followed = await Follow.findOne({
       followedUser: recipient,
@@ -79,6 +76,7 @@ exports.getAnsweredQuestions = async (req, res) => {
     });
 
     const isFollowed = !!followed;
+    // could move that check to frontend if I send username
     const renderFollowButton = req.userId.toString() !== recipient._id.toString();
     res.status(200).send({ modifiedQuestions, isFollowed, renderFollowButton });
   } catch (e) {
@@ -126,7 +124,7 @@ exports.deleteQuestion = async (req, res) => {
       throw new Error('Question not found.');
     }
 
-    question.remove();
+    await question.remove();
     res.status(204).send();
   } catch (e) {
     res.status(400).send({ message: e.message });
