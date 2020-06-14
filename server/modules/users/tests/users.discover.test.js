@@ -21,6 +21,7 @@ describe('/discover', () => {
 
   beforeEach(async () => {
     user1 = {
+      _id: mongoose.Types.ObjectId(),
       firstName: 'John',
       lastName: 'Doe',
       email: 'john@doe.com',
@@ -28,6 +29,7 @@ describe('/discover', () => {
       password: 'Abcdefg1!'
     };
     user2 = {
+      _id: mongoose.Types.ObjectId(),
       firstName: 'Jane',
       lastName: 'Doe',
       email: 'jane@doe.com',
@@ -35,6 +37,7 @@ describe('/discover', () => {
       password: 'Abcdefg1!'
     };
     user3 = {
+      _id: mongoose.Types.ObjectId(),
       firstName: 'John',
       lastName: 'Smith',
       email: 'john@smith.com',

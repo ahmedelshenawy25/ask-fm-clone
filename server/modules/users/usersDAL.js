@@ -1,6 +1,7 @@
-const User = require('./users.model');
+const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const User = require('./users.model');
 
 class UsersDAL {
   async createUser (userSignupForm) {
@@ -55,7 +56,7 @@ class UsersDAL {
       },
       {
         $match: {
-          _id: { $ne: currentUserId },
+          _id: { $ne: mongoose.Types.ObjectId(currentUserId) },
           $or: [{ fullName: searchQueryRegex }, { username: searchQueryRegex }]
         }
       }

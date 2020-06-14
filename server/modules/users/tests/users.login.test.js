@@ -18,6 +18,7 @@ describe('/login', () => {
 
   beforeEach(async () => {
     user = {
+      _id: mongoose.Types.ObjectId(),
       firstName: 'John',
       lastName: 'Doe',
       email: 'john@doe.com',

@@ -22,6 +22,7 @@ describe('/signup', () => {
   describe('Create a new user', () => {
     it('User doesn\'t exist, expect to pass', async (done) => {
       const user = {
+        _id: mongoose.Types.ObjectId(),
         firstName: 'John',
         lastName: 'Doe',
         email: 'john@doe.com',
@@ -39,6 +40,7 @@ describe('/signup', () => {
 
     it('User exists, expect to fail', async (done) => {
       const user = {
+        _id: mongoose.Types.ObjectId(),
         firstName: 'John',
         lastName: 'Doe',
         email: 'john@doe.com',

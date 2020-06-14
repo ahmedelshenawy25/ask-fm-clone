@@ -21,6 +21,7 @@ describe('/search?q=', () => {
 
   beforeEach(async () => {
     user1 = {
+      _id: mongoose.Types.ObjectId(),
       firstName: 'John',
       lastName: 'Doe',
       email: 'john@doe.com',
@@ -28,6 +29,7 @@ describe('/search?q=', () => {
       password: 'Abcdefg1!'
     };
     user2 = {
+      _id: mongoose.Types.ObjectId(),
       firstName: 'Jane',
       lastName: 'Doe',
       email: 'jane@doe.com',
@@ -35,6 +37,7 @@ describe('/search?q=', () => {
       password: 'Abcdefg1!'
     };
     user3 = {
+      _id: mongoose.Types.ObjectId(),
       firstName: 'John',
       lastName: 'Smith',
       email: 'john@smith.com',
@@ -66,6 +69,21 @@ describe('/search?q=', () => {
         expect(user).toHaveProperty('username');
         expect(user).toHaveProperty('fullName');
         expect(user).toHaveProperty('isFollowed');
+      });
+      done();
+    });
+
+    it('doesn\'t return currently logged in user', async (done) => {
+      const searchTerm = 'j';
+
+      const res = await request(app)
+        .get('/api/search')
+        .query({ q: searchTerm })
+        .set('Authorization', token)
+        .expect(200);
+
+      res.body.forEach(({ username }) => {
+        expect(username).not.toEqual(user1.username);
       });
       done();
     });
