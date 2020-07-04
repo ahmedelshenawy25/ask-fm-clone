@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
 const UsersDAL = require('../../users/usersDAL');
-const Question = require('../../../models/question');
 const Follow = require('../../../models/follow');
+const QuestionsDAL = require('../questionsDAL');
 
 let app;
 let user1;
@@ -58,14 +58,14 @@ describe.only('/home', () => {
 
   describe('Get all answered questions by followed users', () => {
     it('isAnonymous set to false, expect to pass and have property sender', async (done) => {
-      await Question.create({
+      await QuestionsDAL.createQuestion({
         sender: user2._id,
         recipient: user2._id,
         question: 'aaaa',
         answered: true,
         answer: 'aaaa'
       });
-      await Question.create({
+      await QuestionsDAL.createQuestion({
         sender: user3._id,
         recipient: user3._id,
         question: 'bbbb',
@@ -100,7 +100,7 @@ describe.only('/home', () => {
     });
 
     it('isAnonymous set to true, expect to pass and not have property sender', async (done) => {
-      await Question.create({
+      await QuestionsDAL.createQuestion({
         sender: user2._id,
         recipient: user2._id,
         question: 'aaaa',
@@ -108,7 +108,7 @@ describe.only('/home', () => {
         answer: 'aaaa',
         isAnonymous: true
       });
-      await Question.create({
+      await QuestionsDAL.createQuestion({
         sender: user3._id,
         recipient: user3._id,
         question: 'bbbb',

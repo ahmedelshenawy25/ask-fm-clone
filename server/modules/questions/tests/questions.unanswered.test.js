@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
 const UsersDAL = require('../../users/usersDAL');
-const Question = require('../../../models/question');
+const QuestionsDAL = require('../questionsDAL');
 
 let app;
 let user;
@@ -37,12 +37,12 @@ describe('/account/inbox', () => {
 
   describe('Get unanswered questions for logged in user', () => {
     it('isAnonymous set to false, expect to pass and have property sender', async (done) => {
-      await Question.create({
+      await QuestionsDAL.createQuestion({
         sender: user._id,
         recipient: user._id,
         question: 'aaaa'
       });
-      await Question.create({
+      await QuestionsDAL.createQuestion({
         sender: user._id,
         recipient: user._id,
         question: 'bbbb'
@@ -64,13 +64,13 @@ describe('/account/inbox', () => {
     });
 
     it('isAnonymous set to true, expect to pass and not have property sender', async (done) => {
-      await Question.create({
+      await QuestionsDAL.createQuestion({
         sender: user._id,
         recipient: user._id,
         question: 'aaaa',
         isAnonymous: true
       });
-      await Question.create({
+      await QuestionsDAL.createQuestion({
         sender: user._id,
         recipient: user._id,
         question: 'bbbb',

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
 const UsersDAL = require('../../users/usersDAL');
-const Question = require('../../../models/question');
+const QuestionsDAL = require('../questionsDAL');
 
 let app;
 let user;
@@ -38,14 +38,14 @@ describe.only('/user/:username', () => {
   describe('Get answered questions for a user by username', () => {
     it('Valid username and isAnonymous set to false, expect to pass and have property sender', async (done) => {
       const { username } = user;
-      await Question.create({
+      await QuestionsDAL.createQuestion({
         sender: user._id,
         recipient: user._id,
         question: 'aaaa',
         answered: true,
         answer: 'aaaa'
       });
-      await Question.create({
+      await QuestionsDAL.createQuestion({
         sender: user._id,
         recipient: user._id,
         question: 'bbbb',
@@ -74,7 +74,7 @@ describe.only('/user/:username', () => {
 
     it('Valid username and isAnonymous set to true, expect to pass and not have property sender', async (done) => {
       const { username } = user;
-      await Question.create({
+      await QuestionsDAL.createQuestion({
         sender: user._id,
         recipient: user._id,
         question: 'aaaa',
@@ -82,7 +82,7 @@ describe.only('/user/:username', () => {
         answer: 'aaaa',
         isAnonymous: true
       });
-      await Question.create({
+      await QuestionsDAL.createQuestion({
         sender: user._id,
         recipient: user._id,
         question: 'bbbb',

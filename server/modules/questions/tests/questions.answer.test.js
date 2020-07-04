@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
 const UsersDAL = require('../../users/usersDAL');
-const Question = require('../../../models/question');
+const QuestionsDAL = require('../questionsDAL');
 
 let app;
 let user;
@@ -37,12 +37,13 @@ describe('/answer/:questionId', () => {
 
   describe('Answer a question', () => {
     it('Valid questionId and input, expect to pass', async (done) => {
-      const question = await Question.create({
+      const question = {
         _id: mongoose.Types.ObjectId(),
         sender: user._id,
         recipient: user._id,
         question: 'aaaa'
-      });
+      };
+      await QuestionsDAL.createQuestion(question);
       const questionId = question._id;
       const answer = {
         answer: 'aaaaaa'
