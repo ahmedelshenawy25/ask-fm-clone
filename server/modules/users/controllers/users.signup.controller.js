@@ -1,11 +1,18 @@
-const { userSignupService } = require('../services');
+const UsersDAL = require('../usersDAL');
 
 module.exports = async (req, res, next) => {
   try {
     const userSignupForm = req.body;
-    await userSignupService(userSignupForm);
+    const { username, email } = userSignupForm;
+
+    const user = await UsersDAL.findUserIdByUsernameOrEmail(username, email);
+    if (user && user.username === username) throw new Error('Username already exists');
+    if (user && user.email === email) throw new Error('Email already exists');
+
+    await UsersDAL.createUser(userSignupForm);
+
     return res.status(201).json();
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    return res.status(400).json({ message: error.message });
   }
 };

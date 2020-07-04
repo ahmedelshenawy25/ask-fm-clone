@@ -1,11 +1,16 @@
-const { userLoginService } = require('../services');
+const UsersDAL = require('../usersDAL');
 
 module.exports = async (req, res, next) => {
   try {
     const { usernameOrEmail, password } = req.body;
-    const { token, username } = await userLoginService(usernameOrEmail, password);
-    res.status(200).json({ token, username });
+
+    const user = await UsersDAL.login(usernameOrEmail, password);
+    if (!user) throw new Error('Invalid username or password');
+
+    const token = UsersDAL.generateAuthToken(user);
+
+    return res.status(200).json({ token, username: user.username });
   } catch (error) {
-    res.status(401).json({ message: error.message });
+    return res.status(401).json({ message: error.message });
   }
 };
