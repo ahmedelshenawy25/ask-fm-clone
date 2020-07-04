@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-const questionSchema = new mongoose.Schema(
+const questionSchema = new Schema(
   {
-    sender: { type: mongoose.Schema.Types.ObjectId, require: true, ref: 'User' },
-    recipient: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
+    sender: { type: Schema.Types.ObjectId, require: true, ref: 'User' },
+    recipient: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
     question: { type: String, required: true, trim: true, minlength: 1, maxlength: 300 },
     answer: { type: String, trim: true, minlength: 1, maxlength: 3000 },
     answered: { type: Boolean, default: false },

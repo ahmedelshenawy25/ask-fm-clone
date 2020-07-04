@@ -7,7 +7,7 @@ const cors = require('cors');
 const app = express();
 
 const userRouter = require('../routes/user');
-const questionRouter = require('../routes/question');
+const questionsRouter = require('../modules/questions/questions.routes');
 
 app.use(cors());
 app.use(helmet());
@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.static(path.join(__dirname, '../../client/build')));
 
 app.use('/api', userRouter);
-app.use('/api', questionRouter);
+app.use('/api', questionsRouter);
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../../client/build/index.html'));
