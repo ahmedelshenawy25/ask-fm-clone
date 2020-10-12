@@ -10,9 +10,7 @@ let token;
 
 describe('/search?q=', () => {
   beforeAll(() => {
-    require('../../../init/init.env');
-    require('../../../init/init.database');
-    app = require('../../../init/init.app');
+    app = require('../../../init/init.tests');
   });
 
   afterAll(async () => {
