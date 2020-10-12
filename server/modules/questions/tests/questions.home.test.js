@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
-const UsersDAL = require('../../users/usersDAL');
-const Follow = require('../../../models/follow');
-const QuestionsDAL = require('../questionsDAL');
+const UsersDAL = require('@UsersDAL');
+const QuestionsDAL = require('@QuestionsDAL');
+const FollowsDAL = require('@FollowsDAL');
 
 let app;
 let user1;
@@ -10,7 +10,7 @@ let user2;
 let user3;
 let token;
 
-describe.only('/home', () => {
+describe('/home', () => {
   beforeAll(() => {
     require('../../../init/init.env');
     require('../../../init/init.database');
@@ -72,14 +72,8 @@ describe.only('/home', () => {
         answered: true,
         answer: 'bbbb'
       });
-      await Follow.create({
-        followedUser: user2._id,
-        followingUser: user1._id
-      });
-      await Follow.create({
-        followedUser: user3._id,
-        followingUser: user1._id
-      });
+      await FollowsDAL.create(user2._id, user1._id);
+      await FollowsDAL.create(user3._id, user1._id);
 
       const res = await request(app)
         .get('/api/home')
@@ -116,14 +110,8 @@ describe.only('/home', () => {
         answer: 'bbbb',
         isAnonymous: true
       });
-      await Follow.create({
-        followedUser: user2._id,
-        followingUser: user1._id
-      });
-      await Follow.create({
-        followedUser: user3._id,
-        followingUser: user1._id
-      });
+      await FollowsDAL.create(user2._id, user1._id);
+      await FollowsDAL.create(user3._id, user1._id);
 
       const res = await request(app)
         .get('/api/home')

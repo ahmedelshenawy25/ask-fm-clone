@@ -84,7 +84,8 @@
           "MongodbMixin",
           "ExcelWriterMixin",
           "ObjectId",
-          "SyncToAlgolia"
+          "SyncToAlgolia",
+          "Router"
         ]
       }
     ],

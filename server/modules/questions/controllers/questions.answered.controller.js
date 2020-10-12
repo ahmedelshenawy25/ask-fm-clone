@@ -1,6 +1,6 @@
-const UsersDAL = require('../../users/usersDAL');
-const QuestionsDAL = require('../questionsDAL');
-const Follow = require('../../../models/follow');
+const UsersDAL = require('@UsersDAL');
+const QuestionsDAL = require('@QuestionsDAL');
+const FollowsDAL = require('@FollowsDAL');
 
 module.exports = async (req, res, next) => {
   try {
@@ -14,11 +14,7 @@ module.exports = async (req, res, next) => {
 
     const questions = await QuestionsDAL.findUserAnsweredQuestions(recipient);
 
-    const followed = await Follow.findOne({
-      followedUser: recipient,
-      followingUser: userId
-    });
-    const isFollowed = !!followed;
+    const isFollowed = await FollowsDAL.isFollowed(recipient, userId);
     // could move that check to frontend if I send username
     const renderFollowButton = userId.toString() !== recipient._id.toString();
 

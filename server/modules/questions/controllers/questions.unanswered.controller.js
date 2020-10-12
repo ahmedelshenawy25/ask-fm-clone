@@ -1,4 +1,4 @@
-const QuestionsDAL = require('../questionsDAL');
+const QuestionsDAL = require('@QuestionsDAL');
 
 module.exports = async (req, res, next) => {
   try {

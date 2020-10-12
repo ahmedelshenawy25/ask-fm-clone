@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
-const UsersDAL = require('../../users/usersDAL');
-const QuestionsDAL = require('../questionsDAL');
+const UsersDAL = require('@UsersDAL');
+const QuestionsDAL = require('@QuestionsDAL');
 
 let app;
 let user;

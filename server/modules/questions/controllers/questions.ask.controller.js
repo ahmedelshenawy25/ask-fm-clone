@@ -1,5 +1,5 @@
-const UsersDAL = require('../../users/usersDAL');
-const QuestionsDAL = require('../questionsDAL');
+const UsersDAL = require('@UsersDAL');
+const QuestionsDAL = require('@QuestionsDAL');
 
 module.exports = async (req, res, next) => {
   try {

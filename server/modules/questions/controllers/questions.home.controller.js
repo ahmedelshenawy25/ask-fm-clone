@@ -1,20 +1,15 @@
-const QuestionsDAL = require('../questionsDAL');
-const Follow = require('../../../models/follow');
+const QuestionsDAL = require('@QuestionsDAL');
+const FollowsDAL = require('@FollowsDAL');
 
 module.exports = async (req, res, next) => {
   try {
     const { userId } = req;
 
-    const followedUsersIds = await Follow.find({
-      followingUser: userId
-    },
-    '-_id followedUser'
-    ).distinct('followedUser');
-
+    const followedUsersIds = await FollowsDAL.findUserFriendsIds(userId);
     const questions = await QuestionsDAL.findFollowedUsersAnsweredQuestions(followedUsersIds);
 
-    return res.status(200).send(questions);
+    return res.status(200).json(questions);
   } catch (e) {
-    return res.status(400).send({ message: e.message });
+    return res.status(400).json({ message: e.message });
   }
 };
