@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
-const UsersDAL = require('../usersDAL');
-const Follow = require('../../../models/follow');
+const UsersDAL = require('@UsersDAL');
+const FollowsDAL = require('@FollowsDAL');
 
 let app;
 let user1;
@@ -57,14 +57,8 @@ describe('/friends', () => {
 
   describe('Get followed users', () => {
     it('User logged in, expect to pass', async (done) => {
-      await Follow.create({
-        followedUser: user2._id,
-        followingUser: user1._id
-      });
-      await Follow.create({
-        followedUser: user3._id,
-        followingUser: user1._id
-      });
+      await FollowsDAL.create(user2._id, user1._id);
+      await FollowsDAL.create(user3._id, user1._id);
 
       const res = await request(app)
         .get('/api/friends')

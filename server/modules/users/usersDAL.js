@@ -65,7 +65,11 @@ class UsersDAL {
   }
 
   async suggestUnfollowedUsers (followedUsersIds) {
-    const suggestedUsers = await User.find({ _id: { $nin: followedUsersIds } }, { username: 1, firstName: 1, lastName: 1 });
+    const suggestedUsers = await User.find({
+      _id: { $nin: followedUsersIds }
+    },
+    { username: 1, firstName: 1, lastName: 1 }
+    );
     return suggestedUsers;
   }
 }

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
-const UsersDAL = require('../usersDAL');
-const Follow = require('../../../models/follow');
+const UsersDAL = require('@UsersDAL');
+const FollowsDAL = require('@FollowsDAL');
 
 let app;
 let user1;
@@ -68,10 +68,7 @@ describe('/follow/:username', () => {
     });
     it('Valid username and user is followed, expect to fail', async (done) => {
       const { username } = user2;
-      await Follow.create({
-        followedUser: user2._id,
-        followingUser: user1._id
-      });
+      await FollowsDAL.create(user2._id, user1._id);
 
       await request(app)
         .post(`/api/follow/${username}`)

@@ -6,7 +6,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const app = express();
 
-const userRouter = require('../routes/user');
+const usersRouter = require('../modules/users/users.routes');
 const questionsRouter = require('../modules/questions/questions.routes');
 
 app.use(cors());
@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.static(path.join(__dirname, '../../client/build')));
 
-app.use('/api', userRouter);
+app.use('/api', usersRouter);
 app.use('/api', questionsRouter);
 
 app.get('*', (req, res) => {

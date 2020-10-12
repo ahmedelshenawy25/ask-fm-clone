@@ -1,4 +1,4 @@
-const UsersDAL = require('../usersDAL');
+const UsersDAL = require('@UsersDAL');
 
 module.exports = async (req, res, next) => {
   try {

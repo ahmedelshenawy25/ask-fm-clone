@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
-const UsersDAL = require('../usersDAL');
-const Follow = require('../../../models/follow');
+const UsersDAL = require('@UsersDAL');
+const FollowsDAL = require('@FollowsDAL');
 
 let app;
 let user1;
@@ -48,10 +48,7 @@ describe('/unfollow/:username', () => {
   describe('Unfollowed a user', () => {
     it('Valid username and user is followed, expect to pass', async (done) => {
       const { username } = user2;
-      await Follow.create({
-        followedUser: user2._id,
-        followingUser: user1._id
-      });
+      await FollowsDAL.create(user2._id, user1._id);
 
       await request(app)
         .delete(`/api/unfollow/${username}`)
@@ -70,7 +67,7 @@ describe('/unfollow/:username', () => {
 
       done();
     });
-    it('Valid username and user isn\'t followed, expect to pass', async (done) => {
+    it('Valid username and user isn\'t followed, expect to fail', async (done) => {
       const { username } = user2;
 
       await request(app)
