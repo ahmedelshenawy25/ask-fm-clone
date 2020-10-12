@@ -4,6 +4,6 @@ module.exports = {
   moduleNameMapper: {
     '@UsersDAL': '<rootDir>/modules/users/usersDAL.js',
     '@QuestionsDAL': '<rootDir>/modules/questions/questionsDAL.js',
-    '@FollowsDAL': '<rootDir>/modules/users/followsDAL.js'
+    '@FollowsDAL': '<rootDir>/modules/friends/followsDAL.js'
   }
 };

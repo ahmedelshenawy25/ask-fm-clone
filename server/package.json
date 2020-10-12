@@ -6,7 +6,7 @@
   "_moduleAliases": {
     "@UsersDAL": "modules/users/usersDAL.js",
     "@QuestionsDAL": "modules/questions/questionsDAL.js",
-    "@FollowsDAL": "modules/users/followsDAL.js"
+    "@FollowsDAL": "modules/friends/followsDAL.js"
   },
   "scripts": {
     "test": "jest --detectOpenHandles --forceExit",
