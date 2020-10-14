@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
-const UsersDAL = require('@UsersDAL');
+const { usersGenerator, random } = require('../../../fake-data-generator');
 
 let app;
-let user;
 
-describe('/login', () => {
+describe('Log user in -> #POST /api/login', () => {
   beforeAll(() => {
     app = require('../../../init/init.tests');
   });
@@ -14,52 +13,103 @@ describe('/login', () => {
     await mongoose.connection.close();
   });
 
-  beforeEach(async () => {
-    user = {
-      _id: mongoose.Types.ObjectId(),
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john@doe.com',
-      username: 'johndoe',
-      password: 'Abcdefg1!'
-    };
-    await UsersDAL.createUser(user);
-  });
-
   afterEach(async () => {
     await mongoose.connection.db.dropDatabase();
   });
 
-  describe('Log user in', () => {
-    it('Valid login input, expect to pass', async (done) => {
-      const validLoginData = {
-        usernameOrEmail: 'johndoe',
-        password: 'Abcdefg1!'
-      };
+  it('Valid username and password, expect to pass', async (done) => {
+    const user = await usersGenerator();
+    const validLoginData = {
+      usernameOrEmail: user.username,
+      password: user.password
+    };
 
-      const res = await request(app)
-        .post('/api/login')
-        .send(validLoginData)
-        .expect(200);
+    const res = await request(app)
+      .post('/api/login')
+      .send(validLoginData)
+      .expect(200);
 
-      expect(res.body).toHaveProperty('token');
-      expect(res.body).toHaveProperty('username', user.username);
-      done();
-    });
+    expect(res.body).toHaveProperty('token');
+    expect(res.body).toHaveProperty('username', user.username);
+    done();
+  });
 
-    it('Invalid login input, expect to fail', async (done) => {
-      const invalidLoginData = {
-        username: 'aaaaa',
-        password: 'Abcdefg1!'
-      };
+  it('Valid email and password, expect to pass', async (done) => {
+    const user = await usersGenerator();
+    const validLoginData = {
+      usernameOrEmail: user.email,
+      password: user.password
+    };
 
-      const res = await request(app)
-        .post('/api/login')
-        .send(invalidLoginData)
-        .expect(401);
+    const res = await request(app)
+      .post('/api/login')
+      .send(validLoginData)
+      .expect(200);
 
-      expect(res.body).toHaveProperty('message');
-      done();
-    });
+    expect(res.body).toHaveProperty('token');
+    expect(res.body).toHaveProperty('username', user.username);
+    done();
+  });
+
+  it('Valid username and invalid password, expect to fail', async (done) => {
+    const user = await usersGenerator();
+    const invalidLoginData = {
+      usernameOrEmail: user.username,
+      password: random.randomPassword()
+    };
+
+    const res = await request(app)
+      .post('/api/login')
+      .send(invalidLoginData)
+      .expect(401);
+
+    expect(res.body).toHaveProperty('message');
+    done();
+  });
+
+  it('Valid email and invalid password, expect to fail', async (done) => {
+    const user = await usersGenerator();
+    const invalidLoginData = {
+      usernameOrEmail: user.email,
+      password: random.randomPassword()
+    };
+
+    const res = await request(app)
+      .post('/api/login')
+      .send(invalidLoginData)
+      .expect(401);
+
+    expect(res.body).toHaveProperty('message');
+    done();
+  });
+
+  it('Invalid username and password, expect to fail', async (done) => {
+    const invalidLoginData = {
+      usernameOrEmail: random.randomUsername(),
+      password: random.randomPassword()
+    };
+
+    const res = await request(app)
+      .post('/api/login')
+      .send(invalidLoginData)
+      .expect(401);
+
+    expect(res.body).toHaveProperty('message');
+    done();
+  });
+
+  it('Invalid email and password, expect to fail', async (done) => {
+    const invalidLoginData = {
+      usernameOrEmail: random.randomEmail(),
+      password: random.randomPassword()
+    };
+
+    const res = await request(app)
+      .post('/api/login')
+      .send(invalidLoginData)
+      .expect(401);
+
+    expect(res.body).toHaveProperty('message');
+    done();
   });
 });

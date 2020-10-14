@@ -1,14 +1,11 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
 const UsersDAL = require('@UsersDAL');
+const { usersGenerator } = require('../../../fake-data-generator');
 
 let app;
-let user1;
-let user2;
-let user3;
-let token;
 
-describe('/discover', () => {
+describe('Get unfollowed users -> #GET /api/discover', () => {
   beforeAll(() => {
     app = require('../../../init/init.tests');
   });
@@ -17,55 +14,27 @@ describe('/discover', () => {
     await mongoose.connection.close();
   });
 
-  beforeEach(async () => {
-    user1 = {
-      _id: mongoose.Types.ObjectId(),
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john@doe.com',
-      username: 'johndoe',
-      password: 'Abcdefg1!'
-    };
-    user2 = {
-      _id: mongoose.Types.ObjectId(),
-      firstName: 'Jane',
-      lastName: 'Doe',
-      email: 'jane@doe.com',
-      username: 'janedoe',
-      password: 'Abcdefg1!'
-    };
-    user3 = {
-      _id: mongoose.Types.ObjectId(),
-      firstName: 'John',
-      lastName: 'Smith',
-      email: 'john@smith.com',
-      username: 'johnsmith',
-      password: 'Abcdefg1!'
-    };
-    await UsersDAL.createUser(user1);
-    await UsersDAL.createUser(user2);
-    await UsersDAL.createUser(user3);
-    token = `Bearer ${UsersDAL.generateAuthToken(user1)}`;
-  });
-
   afterEach(async () => {
     await mongoose.connection.db.dropDatabase();
   });
 
-  describe('Get unfollowed users', () => {
-    it('User logged in, expect to pass', async (done) => {
-      const res = await request(app)
-        .get('/api/discover')
-        .set('Authorization', token)
-        .expect(200);
+  it('User logged in, expect to get unfollowed users', async (done) => {
+    const usersCount = 10;
+    const [user1] = await usersGenerator(usersCount);
+    const token = `Bearer ${UsersDAL.generateAuthToken(user1)}`;
 
-      res.body.forEach((user) => {
-        expect(user).toHaveProperty('_id');
-        expect(user).toHaveProperty('username');
-        expect(user).toHaveProperty('firstName');
-        expect(user).toHaveProperty('lastName');
-      });
-      done();
+    const res = await request(app)
+      .get('/api/discover')
+      .set('Authorization', token)
+      .expect(200);
+
+    expect(res.body).toHaveLength(usersCount - 1);
+    res.body.forEach((user) => {
+      expect(user).toHaveProperty('_id');
+      expect(user).toHaveProperty('username');
+      expect(user).toHaveProperty('firstName');
+      expect(user).toHaveProperty('lastName');
     });
+    done();
   });
 });

@@ -1,16 +1,12 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
 const UsersDAL = require('@UsersDAL');
-const QuestionsDAL = require('@QuestionsDAL');
 const FollowsDAL = require('@FollowsDAL');
+const { usersGenerator, questionsGenerator } = require('../../../fake-data-generator');
 
 let app;
-let user1;
-let user2;
-let user3;
-let token;
 
-describe('/home', () => {
+describe('Get all answered questions by followed users -> #GET /api/home', () => {
   beforeAll(() => {
     app = require('../../../init/init.tests');
   });
@@ -19,115 +15,127 @@ describe('/home', () => {
     await mongoose.connection.close();
   });
 
-  beforeEach(async () => {
-    user1 = {
-      _id: mongoose.Types.ObjectId(),
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john@doe.com',
-      username: 'johndoe',
-      password: 'Abcdefg1!'
-    };
-    user2 = {
-      _id: mongoose.Types.ObjectId(),
-      firstName: 'Jane',
-      lastName: 'Doe',
-      email: 'jane@doe.com',
-      username: 'janedoe',
-      password: 'Abcdefg1!'
-    };
-    user3 = {
-      _id: mongoose.Types.ObjectId(),
-      firstName: 'John',
-      lastName: 'Smith',
-      email: 'john@smith.com',
-      username: 'johnsmith',
-      password: 'Abcdefg1!'
-    };
-    await UsersDAL.createUser(user1);
-    await UsersDAL.createUser(user2);
-    await UsersDAL.createUser(user3);
-    token = `Bearer ${UsersDAL.generateAuthToken(user1)}`;
-  });
-
   afterEach(async () => {
     await mongoose.connection.db.dropDatabase();
   });
 
-  describe('Get all answered questions by followed users', () => {
-    it('isAnonymous set to false, expect to pass and have property sender', async (done) => {
-      await QuestionsDAL.createQuestion({
-        sender: user2._id,
-        recipient: user2._id,
-        question: 'aaaa',
-        answered: true,
-        answer: 'aaaa'
-      });
-      await QuestionsDAL.createQuestion({
-        sender: user3._id,
-        recipient: user3._id,
-        question: 'bbbb',
-        answered: true,
-        answer: 'bbbb'
-      });
-      await FollowsDAL.create(user2._id, user1._id);
-      await FollowsDAL.create(user3._id, user1._id);
-
-      const res = await request(app)
-        .get('/api/home')
-        .set('Authorization', token)
-        .expect(200);
-
-      res.body.forEach((question) => {
-        expect(question).toHaveProperty('isAnonymous', false);
-        expect(question).toHaveProperty('_id');
-        expect(question).toHaveProperty('question');
-        expect(question).toHaveProperty('answer');
-        expect(question).toHaveProperty('updatedAt');
-        expect(question).toHaveProperty('sender');
-        expect(question).toHaveProperty('recipient');
-        expect(question).toHaveProperty('answered');
-      });
-      done();
+  it('isAnonymous set to false, expect to pass and have property sender', async (done) => {
+    const [user1, user2, user3] = await usersGenerator(3);
+    const token = `Bearer ${UsersDAL.generateAuthToken(user1)}`;
+    await questionsGenerator({
+      senderId: user2._id,
+      recipientId: user2._id,
+      isAnswered: true,
+      isAnonymous: false,
+      questionsCount: 1
     });
-
-    it('isAnonymous set to true, expect to pass and not have property sender', async (done) => {
-      await QuestionsDAL.createQuestion({
-        sender: user2._id,
-        recipient: user2._id,
-        question: 'aaaa',
-        answered: true,
-        answer: 'aaaa',
-        isAnonymous: true
-      });
-      await QuestionsDAL.createQuestion({
-        sender: user3._id,
-        recipient: user3._id,
-        question: 'bbbb',
-        answered: true,
-        answer: 'bbbb',
-        isAnonymous: true
-      });
-      await FollowsDAL.create(user2._id, user1._id);
-      await FollowsDAL.create(user3._id, user1._id);
-
-      const res = await request(app)
-        .get('/api/home')
-        .set('Authorization', token)
-        .expect(200);
-
-      res.body.forEach((question) => {
-        expect(question).toHaveProperty('isAnonymous', true);
-        expect(question).toHaveProperty('_id');
-        expect(question).toHaveProperty('question');
-        expect(question).toHaveProperty('answer');
-        expect(question).toHaveProperty('updatedAt');
-        expect(question).not.toHaveProperty('sender');
-        expect(question).toHaveProperty('recipient');
-        expect(question).toHaveProperty('answered');
-      });
-      done();
+    await questionsGenerator({
+      senderId: user3._id,
+      recipientId: user3._id,
+      isAnswered: true,
+      isAnonymous: false,
+      questionsCount: 1
     });
+    await questionsGenerator({
+      senderId: user3._id,
+      recipientId: user1._id,
+      isAnswered: true,
+      isAnonymous: false,
+      questionsCount: 1
+    });
+    await FollowsDAL.create(user2._id, user1._id);
+    await FollowsDAL.create(user3._id, user1._id);
+
+    const res = await request(app)
+      .get('/api/home')
+      .set('Authorization', token)
+      .expect(200);
+
+    res.body.forEach((question) => {
+      expect(question).toHaveProperty('isAnonymous', false);
+      expect(question).toHaveProperty('_id');
+      expect(question).toHaveProperty('question');
+      expect(question).toHaveProperty('answer');
+      expect(question).toHaveProperty('updatedAt');
+      expect(question).toHaveProperty('sender');
+      expect(question).toHaveProperty('recipient');
+      expect(question).toHaveProperty('answered');
+      expect(question.recipient.username).not.toEqual(user1.username);
+    });
+    done();
   });
 
+  it('isAnonymous set to true, expect to pass and not have property sender', async (done) => {
+    const [user1, user2, user3] = await usersGenerator(3);
+    const token = `Bearer ${UsersDAL.generateAuthToken(user1)}`;
+    await questionsGenerator({
+      senderId: user2._id,
+      recipientId: user2._id,
+      isAnswered: true,
+      isAnonymous: true,
+      questionsCount: 1
+    });
+    await questionsGenerator({
+      senderId: user3._id,
+      recipientId: user3._id,
+      isAnswered: true,
+      isAnonymous: true,
+      questionsCount: 1
+    });
+    await questionsGenerator({
+      senderId: user3._id,
+      recipientId: user1._id,
+      isAnswered: true,
+      isAnonymous: true,
+      questionsCount: 1
+    });
+    await FollowsDAL.create(user2._id, user1._id);
+    await FollowsDAL.create(user3._id, user1._id);
+
+    const res = await request(app)
+      .get('/api/home')
+      .set('Authorization', token)
+      .expect(200);
+
+    res.body.forEach((question) => {
+      expect(question).toHaveProperty('isAnonymous', true);
+      expect(question).toHaveProperty('_id');
+      expect(question).toHaveProperty('question');
+      expect(question).toHaveProperty('answer');
+      expect(question).toHaveProperty('updatedAt');
+      expect(question).not.toHaveProperty('sender');
+      expect(question).toHaveProperty('recipient');
+      expect(question).toHaveProperty('answered');
+    });
+    done();
+  });
+
+  it('No answered questions, expect to get an empty array', async (done) => {
+    const [user1, user2, user3] = await usersGenerator(3);
+    const token = `Bearer ${UsersDAL.generateAuthToken(user1)}`;
+    await questionsGenerator({
+      senderId: user2._id,
+      recipientId: user2._id,
+      isAnswered: false,
+      isAnonymous: true,
+      questionsCount: 1
+    });
+    await questionsGenerator({
+      senderId: user3._id,
+      recipientId: user3._id,
+      isAnswered: false,
+      isAnonymous: false,
+      questionsCount: 1
+    });
+    await FollowsDAL.create(user2._id, user1._id);
+    await FollowsDAL.create(user3._id, user1._id);
+
+    const res = await request(app)
+      .get('/api/home')
+      .set('Authorization', token)
+      .expect(200);
+
+    expect(res.body).toHaveLength(0);
+    done();
+  });
 });

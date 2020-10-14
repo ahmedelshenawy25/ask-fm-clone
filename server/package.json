@@ -30,6 +30,7 @@
   "devDependencies": {
     "@types/jest": "^25.2.1",
     "dotenv": "^8.2.0",
+    "faker": "^5.1.0",
     "jest": "^25.2.4",
     "nodemon": "^1.19.1",
     "supertest": "^4.0.2"

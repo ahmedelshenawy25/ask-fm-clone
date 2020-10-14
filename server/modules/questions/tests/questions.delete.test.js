@@ -1,13 +1,11 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
 const UsersDAL = require('@UsersDAL');
-const QuestionsDAL = require('@QuestionsDAL');
+const { usersGenerator, questionsGenerator } = require('../../../fake-data-generator');
 
 let app;
-let user;
-let token;
 
-describe('/delete/:questionId', () => {
+describe('Delete a question -> #DELETE /api/delete/:questionId', () => {
   beforeAll(() => {
     app = require('../../../init/init.tests');
   });
@@ -16,52 +14,60 @@ describe('/delete/:questionId', () => {
     await mongoose.connection.close();
   });
 
-  beforeEach(async () => {
-    user = {
-      _id: mongoose.Types.ObjectId(),
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john@doe.com',
-      username: 'johndoe',
-      password: 'Abcdefg1!'
-    };
-    await UsersDAL.createUser(user);
-    token = `Bearer ${UsersDAL.generateAuthToken(user)}`;
-  });
-
   afterEach(async () => {
     await mongoose.connection.db.dropDatabase();
   });
 
-  describe('Delete a question', () => {
-    it('Valid questionId, expect to pass', async (done) => {
-      const question = {
-        _id: mongoose.Types.ObjectId(),
-        sender: user._id,
-        recipient: user._id,
-        question: 'aaaa'
-      };
-      await QuestionsDAL.createQuestion(question);
-      const questionId = question._id;
-
-
-      await request(app)
-        .delete(`/api/delete/${questionId}`)
-        .set('Authorization', token)
-        .expect(204);
-
-      done();
+  it('Valid questionId, expect to pass', async (done) => {
+    const user = await usersGenerator();
+    const token = `Bearer ${UsersDAL.generateAuthToken(user)}`;
+    const question = await questionsGenerator({
+      senderId: user._id,
+      recipientId: user._id,
+      isAnswered: false,
+      isAnonymous: true,
+      questionsCount: 1
     });
+    const questionId = question._id;
 
-    it('Invalid questionId, expect to fail', async (done) => {
-      const invalidQuestionId = 'zzzzzzzzzzz';
+    await request(app)
+      .delete(`/api/delete/${questionId}`)
+      .set('Authorization', token)
+      .expect(204);
 
-      await request(app)
-        .delete(`/api/delete/${invalidQuestionId}`)
-        .set('Authorization', token)
-        .expect(400);
+    done();
+  });
 
-      done();
+  it('Valid questionId and another user tries to delete the question, expect to fail', async (done) => {
+    const [user1, user2] = await usersGenerator(2);
+    const token = `Bearer ${UsersDAL.generateAuthToken(user1)}`;
+    const question = await questionsGenerator({
+      senderId: user1._id,
+      recipientId: user2._id,
+      isAnswered: false,
+      isAnonymous: true,
+      questionsCount: 1
     });
+    const questionId = question._id;
+
+    await request(app)
+      .delete(`/api/delete/${questionId}`)
+      .set('Authorization', token)
+      .expect(400);
+
+    done();
+  });
+
+  it('Invalid questionId, expect to fail', async (done) => {
+    const invalidQuestionId = mongoose.Types.ObjectId();
+    const user = await usersGenerator();
+    const token = `Bearer ${UsersDAL.generateAuthToken(user)}`;
+
+    await request(app)
+      .delete(`/api/delete/${invalidQuestionId}`)
+      .set('Authorization', token)
+      .expect(400);
+
+    done();
   });
 });

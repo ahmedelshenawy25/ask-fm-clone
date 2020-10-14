@@ -27,7 +27,7 @@ class FollowsDAL {
   async findUserFriendsIds (userId) {
     const followedUsersIds = await Follow.find({
       followingUser: userId
-    }, '-_id followedUser')
+    })
       .distinct('followedUser');
 
     return followedUsersIds;

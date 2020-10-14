@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
       throw new Error('User not found.');
     }
 
-    await QuestionsDAL.createQuestion({
+    await QuestionsDAL.create({
       recipient: recipient._id,
       sender,
       question,

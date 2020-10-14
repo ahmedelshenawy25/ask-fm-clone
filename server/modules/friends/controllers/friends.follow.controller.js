@@ -7,17 +7,16 @@ module.exports = async (req, res) => {
     const { username } = req.params;
 
     const followedUser = await UsersDAL.findUserIdByUsername(username);
-    const followingUser = await UsersDAL.findUserById(userId);
-    if (!followedUser || !followingUser) {
+    if (!followedUser || userId === followedUser._id.toString()) {
       throw new Error('User not found');
     }
 
-    const isFollowed = await FollowsDAL.isFollowed(followedUser, followingUser);
+    const isFollowed = await FollowsDAL.isFollowed(followedUser, userId);
     if (isFollowed) {
       throw new Error('User is already being followed');
     }
 
-    await FollowsDAL.create(followedUser, followingUser);
+    await FollowsDAL.create(followedUser, userId);
 
     return res.status(201).json();
   } catch (e) {

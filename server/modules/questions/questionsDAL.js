@@ -1,20 +1,23 @@
 const Question = require('./questions.model');
 
 class QuestionsDAL {
-  async findQuestionById (questionId) {
-    const question = await Question.findOne({ _id: questionId });
+  async findQuestionById (questionId, recipientId) {
+    const question = await Question.findOne({
+      _id: questionId,
+      recipient: recipientId
+    });
     return question;
   }
 
-  async createQuestion (question) {
+  async create (question) {
     await Question.create(question);
   }
 
-  async answerQuestion (questionId, answer) {
+  async answer (questionId, answer) {
     await Question.updateOne({ _id: questionId }, { answer, answered: true });
   }
 
-  async deleteQuestion (questionId) {
+  async delete (questionId) {
     await Question.deleteOne({ _id: questionId });
   }
 
@@ -34,7 +37,7 @@ class QuestionsDAL {
       .populate('sender', '-_id firstName lastName')
       .sort('-createdAt');
 
-    return this.removeAnonymousSender(unansweredQuestions);
+    return this._removeAnonymousSender(unansweredQuestions);
   }
 
   async findUserAnsweredQuestions (recipientId) {
@@ -54,7 +57,7 @@ class QuestionsDAL {
       .populate('sender', '-_id firstName lastName username')
       .sort('-updatedAt');
 
-    return this.removeAnonymousSender(answeredQuestions);
+    return this._removeAnonymousSender(answeredQuestions);
   }
 
   async findFollowedUsersAnsweredQuestions (recipientIds) {
@@ -72,10 +75,10 @@ class QuestionsDAL {
       .populate('sender', '-_id firstName lastName username')
       .sort('-updatedAt');
 
-    return this.removeAnonymousSender(followedUsersAnsweredQuestions);
+    return this._removeAnonymousSender(followedUsersAnsweredQuestions);
   }
 
-  removeAnonymousSender (questions) {
+  _removeAnonymousSender (questions) {
     return questions.map((question) => {
       question.sender = question.isAnonymous ? undefined : question.sender;
       return question;

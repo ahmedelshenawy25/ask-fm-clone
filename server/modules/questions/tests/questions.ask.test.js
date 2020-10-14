@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
 const UsersDAL = require('@UsersDAL');
+const { usersGenerator, random } = require('../../../fake-data-generator');
 
 let app;
-let user;
-let token;
 
-describe('/question/ask', () => {
+describe('Ask a question -> #POST /api/:username/ask', () => {
   beforeAll(() => {
     app = require('../../../init/init.tests');
   });
@@ -15,54 +14,61 @@ describe('/question/ask', () => {
     await mongoose.connection.close();
   });
 
-  beforeEach(async () => {
-    user = {
-      _id: mongoose.Types.ObjectId(),
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john@doe.com',
-      username: 'johndoe',
-      password: 'Abcdefg1!'
-    };
-    await UsersDAL.createUser(user);
-    token = `Bearer ${UsersDAL.generateAuthToken(user)}`;
-  });
-
   afterEach(async () => {
     await mongoose.connection.db.dropDatabase();
   });
 
-  describe('Ask a question', () => {
-    it('Valid username and input, expect to pass', async (done) => {
-      const question = {
-        question: 'aaaaaa',
-        isAnonymous: true
-      };
-      const { username } = user;
+  it('User asks another user, expect to pass', async (done) => {
+    const [user1, user2] = await usersGenerator(2);
+    const token = `Bearer ${UsersDAL.generateAuthToken(user1)}`;
+    const question = {
+      question: random.randomText(300),
+      isAnonymous: true
+    };
+    const { username } = user2;
 
-      await request(app)
-        .post(`/api/${username}/ask`)
-        .set('Authorization', token)
-        .send(question)
-        .expect(201);
+    await request(app)
+      .post(`/api/${username}/ask`)
+      .set('Authorization', token)
+      .send(question)
+      .expect(201);
 
-      done();
-    });
+    done();
+  });
 
-    it('Invalid username, expect to fail', async (done) => {
-      const question = {
-        question: 'aaaaaa',
-        isAnonymous: true
-      };
-      const invalidUsername = 'zzzzzzzzzzzzzzz';
+  it('User asks him/herself, expect to pass', async (done) => {
+    const user = await usersGenerator();
+    const token = `Bearer ${UsersDAL.generateAuthToken(user)}`;
+    const question = {
+      question: random.randomText(300),
+      isAnonymous: false
+    };
+    const { username } = user;
 
-      await request(app)
-        .post(`/api/${invalidUsername}/ask`)
-        .set('Authorization', token)
-        .send(question)
-        .expect(400);
+    await request(app)
+      .post(`/api/${username}/ask`)
+      .set('Authorization', token)
+      .send(question)
+      .expect(201);
 
-      done();
-    });
+    done();
+  });
+
+  it('Invalid username, expect to fail', async (done) => {
+    const user = await usersGenerator();
+    const token = `Bearer ${UsersDAL.generateAuthToken(user)}`;
+    const question = {
+      question: random.randomText(300),
+      isAnonymous: true
+    };
+    const invalidUsername = random.randomUsername();
+
+    await request(app)
+      .post(`/api/${invalidUsername}/ask`)
+      .set('Authorization', token)
+      .send(question)
+      .expect(400);
+
+    done();
   });
 });

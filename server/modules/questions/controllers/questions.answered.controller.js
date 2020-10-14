@@ -16,7 +16,7 @@ module.exports = async (req, res, next) => {
 
     const isFollowed = await FollowsDAL.isFollowed(recipient, userId);
     // could move that check to frontend if I send username
-    const renderFollowButton = userId.toString() !== recipient._id.toString();
+    const renderFollowButton = userId !== recipient._id.toString();
 
     return res.status(200).json({ modifiedQuestions: questions, isFollowed, renderFollowButton });
   } catch (error) {

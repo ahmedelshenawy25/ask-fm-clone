@@ -2,14 +2,11 @@ const mongoose = require('mongoose');
 const request = require('supertest');
 const UsersDAL = require('@UsersDAL');
 const FollowsDAL = require('@FollowsDAL');
+const { usersGenerator } = require('../../../fake-data-generator');
 
 let app;
-let user1;
-let user2;
-let user3;
-let token;
 
-describe('/friends', () => {
+describe('Get followed users -> #GET /api/friends', () => {
   beforeAll(() => {
     app = require('../../../init/init.tests');
   });
@@ -18,59 +15,41 @@ describe('/friends', () => {
     await mongoose.connection.close();
   });
 
-  beforeEach(async () => {
-    user1 = {
-      _id: mongoose.Types.ObjectId(),
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john@doe.com',
-      username: 'johndoe',
-      password: 'Abcdefg1!'
-    };
-    user2 = {
-      _id: mongoose.Types.ObjectId(),
-      firstName: 'Jane',
-      lastName: 'Doe',
-      email: 'jane@doe.com',
-      username: 'janedoe',
-      password: 'Abcdefg1!'
-    };
-    user3 = {
-      _id: mongoose.Types.ObjectId(),
-      firstName: 'John',
-      lastName: 'Smith',
-      email: 'john@smith.com',
-      username: 'johnsmith',
-      password: 'Abcdefg1!'
-    };
-    await UsersDAL.createUser(user1);
-    await UsersDAL.createUser(user2);
-    await UsersDAL.createUser(user3);
-    token = `Bearer ${UsersDAL.generateAuthToken(user1)}`;
-  });
-
   afterEach(async () => {
     await mongoose.connection.db.dropDatabase();
   });
 
-  describe('Get followed users', () => {
-    it('User logged in, expect to pass', async (done) => {
-      await FollowsDAL.create(user2._id, user1._id);
-      await FollowsDAL.create(user3._id, user1._id);
+  it('User following other users, expect to get these users', async (done) => {
+    const [user1, user2, user3] = await usersGenerator(3);
+    const token = `Bearer ${UsersDAL.generateAuthToken(user1)}`;
+    await FollowsDAL.create(user2._id, user1._id);
+    await FollowsDAL.create(user3._id, user1._id);
 
-      const res = await request(app)
-        .get('/api/friends')
-        .set('Authorization', token)
-        .expect(200);
+    const res = await request(app)
+      .get('/api/friends')
+      .set('Authorization', token)
+      .expect(200);
 
-      res.body.forEach((user) => {
-        expect(user).toHaveProperty('followedUser');
-        expect(user.followedUser).toHaveProperty('_id');
-        expect(user.followedUser).toHaveProperty('username');
-        expect(user.followedUser).toHaveProperty('firstName');
-        expect(user.followedUser).toHaveProperty('lastName');
-      });
-      done();
+    res.body.forEach((user) => {
+      expect(user).toHaveProperty('followedUser');
+      expect(user.followedUser).toHaveProperty('_id');
+      expect(user.followedUser).toHaveProperty('username');
+      expect(user.followedUser).toHaveProperty('firstName');
+      expect(user.followedUser).toHaveProperty('lastName');
     });
+    done();
+  });
+
+  it('User not following any user, expect to get an empty array', async (done) => {
+    const user1 = await usersGenerator();
+    const token = `Bearer ${UsersDAL.generateAuthToken(user1)}`;
+
+    const res = await request(app)
+      .get('/api/friends')
+      .set('Authorization', token)
+      .expect(200);
+
+    expect(res.body).toHaveLength(0);
+    done();
   });
 });

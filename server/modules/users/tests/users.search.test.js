@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
 const UsersDAL = require('@UsersDAL');
+const { random } = require('../../../fake-data-generator');
 
 let app;
 let user1;
@@ -8,7 +9,8 @@ let user2;
 let user3;
 let token;
 
-describe('/search?q=', () => {
+// TODO: modify test cases
+describe('Search for users -> #GET /api/search', () => {
   beforeAll(() => {
     app = require('../../../init/init.tests');
   });
@@ -22,25 +24,25 @@ describe('/search?q=', () => {
       _id: mongoose.Types.ObjectId(),
       firstName: 'John',
       lastName: 'Doe',
-      email: 'john@doe.com',
+      email: random.randomEmail(),
       username: 'johndoe',
-      password: 'Abcdefg1!'
+      password: random.randomPassword()
     };
     user2 = {
       _id: mongoose.Types.ObjectId(),
       firstName: 'Jane',
       lastName: 'Doe',
-      email: 'jane@doe.com',
+      email: random.randomEmail(),
       username: 'janedoe',
-      password: 'Abcdefg1!'
+      password: random.randomPassword()
     };
     user3 = {
       _id: mongoose.Types.ObjectId(),
       firstName: 'John',
       lastName: 'Smith',
-      email: 'john@smith.com',
+      email: random.randomEmail(),
       username: 'johnsmith',
-      password: 'Abcdefg1!'
+      password: random.randomPassword()
     };
     await UsersDAL.createUser(user1);
     await UsersDAL.createUser(user2);
@@ -51,48 +53,45 @@ describe('/search?q=', () => {
   afterEach(async () => {
     await mongoose.connection.db.dropDatabase();
   });
+  it('Valid query param, expect to pass', async (done) => {
+    const searchTerm = 'j';
 
-  describe('Search for users', () => {
-    it('Valid query param, expect to pass', async (done) => {
-      const searchTerm = 'j';
+    const res = await request(app)
+      .get('/api/search')
+      .query({ q: searchTerm })
+      .set('Authorization', token)
+      .expect(200);
 
-      const res = await request(app)
-        .get('/api/search')
-        .query({ q: searchTerm })
-        .set('Authorization', token)
-        .expect(200);
-
-      res.body.forEach((user) => {
-        expect(user).toHaveProperty('_id');
-        expect(user).toHaveProperty('username');
-        expect(user).toHaveProperty('fullName');
-        expect(user).toHaveProperty('isFollowed');
-      });
-      done();
+    res.body.forEach((user) => {
+      expect(user).toHaveProperty('_id');
+      expect(user).toHaveProperty('username');
+      expect(user).toHaveProperty('fullName');
+      expect(user).toHaveProperty('isFollowed');
     });
+    done();
+  });
 
-    it('doesn\'t return currently logged in user', async (done) => {
-      const searchTerm = 'j';
+  it('doesn\'t return currently logged in user', async (done) => {
+    const searchTerm = 'j';
 
-      const res = await request(app)
-        .get('/api/search')
-        .query({ q: searchTerm })
-        .set('Authorization', token)
-        .expect(200);
+    const res = await request(app)
+      .get('/api/search')
+      .query({ q: searchTerm })
+      .set('Authorization', token)
+      .expect(200);
 
-      res.body.forEach(({ username }) => {
-        expect(username).not.toEqual(user1.username);
-      });
-      done();
+    res.body.forEach(({ username }) => {
+      expect(username).not.toEqual(user1.username);
     });
+    done();
+  });
 
-    it('No query param, expect to fail', async (done) => {
-      await request(app)
-        .get('/api/search')
-        .set('Authorization', token)
-        .expect(400);
+  it('No query param, expect to fail', async (done) => {
+    await request(app)
+      .get('/api/search')
+      .set('Authorization', token)
+      .expect(400);
 
-      done();
-    });
+    done();
   });
 });
