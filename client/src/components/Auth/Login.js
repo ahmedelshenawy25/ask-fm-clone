@@ -13,7 +13,7 @@ const Login = ({ onLogin }) => {
   const [error, setError] = useState('');
 
   const loginSchema = Yup.object().shape({
-    login: Yup.string().trim().required('Enter a username or an email'),
+    usernameOrEmail: Yup.string().trim().required('Enter a username or an email'),
     password: Yup.string().trim().required('Enter a password')
   });
 
@@ -27,7 +27,7 @@ const Login = ({ onLogin }) => {
         </div>
       )}
       <Formik
-        initialValues={{ login: '', password: '' }}
+        initialValues={{ usernameOrEmail: '', password: '' }}
         validationSchema={loginSchema}
         onSubmit={async (values) => {
           const castValues = loginSchema.cast(values);
@@ -48,8 +48,8 @@ const Login = ({ onLogin }) => {
         {({ isValid, dirty, isSubmitting }) => (
           <Form className="ui form">
             <div className="field">
-              <Field name="login" placeholder="Username or email" />
-              <ErrorMessage name="login" />
+              <Field name="usernameOrEmail" placeholder="Username or email" />
+              <ErrorMessage name="usernameOrEmail" />
             </div>
             <div className="field">
               <Field type="password" name="password" placeholder="Password" />
