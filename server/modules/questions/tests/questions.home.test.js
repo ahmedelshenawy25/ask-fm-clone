@@ -51,7 +51,9 @@ describe('Get all answered questions by followed users -> #GET /api/home', () =>
       .set('Authorization', token)
       .expect(200);
 
-    res.body.forEach((question) => {
+    expect(res.body).toHaveProperty('questions');
+    expect(res.body).toHaveProperty('questionsCount');
+    res.body.questions.forEach((question) => {
       expect(question).toHaveProperty('isAnonymous', false);
       expect(question).toHaveProperty('_id');
       expect(question).toHaveProperty('question');
@@ -62,6 +64,7 @@ describe('Get all answered questions by followed users -> #GET /api/home', () =>
       expect(question).toHaveProperty('answered');
       expect(question.recipient.username).not.toEqual(user1.username);
     });
+    expect(res.body.questionsCount).toBeGreaterThanOrEqual(0);
     done();
   });
 
@@ -97,7 +100,9 @@ describe('Get all answered questions by followed users -> #GET /api/home', () =>
       .set('Authorization', token)
       .expect(200);
 
-    res.body.forEach((question) => {
+    expect(res.body).toHaveProperty('questions');
+    expect(res.body).toHaveProperty('questionsCount');
+    res.body.questions.forEach((question) => {
       expect(question).toHaveProperty('isAnonymous', true);
       expect(question).toHaveProperty('_id');
       expect(question).toHaveProperty('question');
@@ -107,6 +112,7 @@ describe('Get all answered questions by followed users -> #GET /api/home', () =>
       expect(question).toHaveProperty('recipient');
       expect(question).toHaveProperty('answered');
     });
+    expect(res.body.questionsCount).toBeGreaterThanOrEqual(0);
     done();
   });
 
@@ -135,7 +141,10 @@ describe('Get all answered questions by followed users -> #GET /api/home', () =>
       .set('Authorization', token)
       .expect(200);
 
-    expect(res.body).toHaveLength(0);
+    expect(res.body).toHaveProperty('questions');
+    expect(res.body).toHaveProperty('questionsCount');
+    expect(res.body.questions).toHaveLength(0);
+    expect(res.body.questionsCount).toEqual(0);
     done();
   });
 });

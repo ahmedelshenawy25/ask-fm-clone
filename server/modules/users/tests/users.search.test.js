@@ -58,16 +58,23 @@ describe('Search for users -> #GET /api/search', () => {
 
     const res = await request(app)
       .get('/api/search')
-      .query({ q: searchTerm })
+      .query({
+        q: searchTerm,
+        page: 1,
+        limit: 10
+      })
       .set('Authorization', token)
       .expect(200);
 
-    res.body.forEach((user) => {
+    expect(res.body).toHaveProperty('users');
+    expect(res.body).toHaveProperty('usersCount');
+    res.body.users.forEach((user) => {
       expect(user).toHaveProperty('_id');
       expect(user).toHaveProperty('username');
       expect(user).toHaveProperty('fullName');
       expect(user).toHaveProperty('isFollowed');
     });
+    expect(res.body.usersCount).toBeGreaterThanOrEqual(0);
     done();
   });
 
@@ -76,13 +83,20 @@ describe('Search for users -> #GET /api/search', () => {
 
     const res = await request(app)
       .get('/api/search')
-      .query({ q: searchTerm })
+      .query({
+        q: searchTerm,
+        page: 1,
+        limit: 10
+      })
       .set('Authorization', token)
       .expect(200);
 
-    res.body.forEach(({ username }) => {
+    expect(res.body).toHaveProperty('users');
+    expect(res.body).toHaveProperty('usersCount');
+    res.body.users.forEach(({ username }) => {
       expect(username).not.toEqual(user1.username);
     });
+    expect(res.body.usersCount).toBeGreaterThanOrEqual(0);
     done();
   });
 

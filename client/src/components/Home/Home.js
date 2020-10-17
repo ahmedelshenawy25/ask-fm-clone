@@ -1,33 +1,47 @@
 import './Home.css';
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
+import InfiniteScroll from 'react-infinite-scroll-component';
 import axiosInstance from '../../axiosInstance/axiosInstance';
 import QuestionItem from '../Questions/QuestionItem';
 import SearchItem from '../Search/SearchItem';
 import RightSideBox from '../RightSideBox/RightSideBox';
 
-
 const Home = ({ logout }) => {
-  const location = useLocation();
   const [questions, setQuestions] = useState([]);
+  const [questionsCount, setQuestionsCount] = useState(1);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    async function fetchHomePage() {
-      try {
-        const response = await axiosInstance.get('/home');
-        setQuestions(response.data);
-      } catch (e) {
-        if (e.response.status === 401) return logout();
-
-        setError(e.response ? e.response.data.message : e.message);
-      }
+  async function fetchHomePage() {
+    if (questions.length >= questionsCount) {
+      setHasMore(false);
+      return;
     }
 
+    try {
+      const response = await axiosInstance.get('/home', {
+        params: {
+          page,
+          limit: 15
+        }
+      });
+
+      setHasMore(true);
+      setQuestions((prevState) => [...prevState, ...response.data.questions]);
+      setQuestionsCount(response.data.questionsCount);
+      setPage((prevSate) => prevSate + 1);
+    } catch (e) {
+      if (e.response.status === 401) return logout();
+
+      setError(e.response ? e.response.data.message : e.message);
+    }
+  }
+
+  useEffect(() => {
     fetchHomePage();
-  }, [location]);
+  }, []);
 
   const renderedQuestions = questions.map(({
     _id, question, answer, sender, updatedAt
@@ -61,7 +75,16 @@ const Home = ({ logout }) => {
   return (
     <div className="FlexParent">
       <div className="ui relaxed divided list questionBox leftFlexChild">
-        {renderedUsersWithQuestions}
+        <InfiniteScroll
+          dataLength={questions.length}
+          next={fetchHomePage}
+          hasMore={hasMore}
+          scrollThreshold={1}
+          loader={<h2 style={{ textAlign: 'center' }}>Loading...</h2>}
+          endMessage={<p style={{ textAlign: 'center' }}><strong>No more content</strong></p>}
+        >
+          {renderedUsersWithQuestions}
+        </InfiniteScroll>
       </div>
       <RightSideBox />
     </div>
