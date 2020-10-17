@@ -46,9 +46,10 @@ describe('Get answered questions for a user by username -> #GET /api/user/:usern
 
     expect(res.body).toHaveProperty('isFollowed');
     expect(res.body).toHaveProperty('renderFollowButton');
-    expect(res.body).toHaveProperty('modifiedQuestions');
+    expect(res.body).toHaveProperty('questions');
+    expect(res.body).toHaveProperty('questionsCount');
     expect(res.body.isFollowed).toBeTruthy();
-    res.body.modifiedQuestions.forEach((question) => {
+    res.body.questions.forEach((question) => {
       expect(question).toHaveProperty('isAnonymous', false);
       expect(question).toHaveProperty('_id');
       expect(question).toHaveProperty('question');
@@ -56,6 +57,7 @@ describe('Get answered questions for a user by username -> #GET /api/user/:usern
       expect(question).toHaveProperty('updatedAt');
       expect(question).toHaveProperty('sender');
     });
+    expect(res.body.questionsCount).toBeGreaterThanOrEqual(0);
     done();
   });
 
@@ -85,8 +87,9 @@ describe('Get answered questions for a user by username -> #GET /api/user/:usern
 
     expect(res.body).toHaveProperty('isFollowed');
     expect(res.body).toHaveProperty('renderFollowButton');
-    expect(res.body).toHaveProperty('modifiedQuestions');
-    res.body.modifiedQuestions.forEach((question) => {
+    expect(res.body).toHaveProperty('questions');
+    expect(res.body).toHaveProperty('questionsCount');
+    res.body.questions.forEach((question) => {
       expect(question).toHaveProperty('isAnonymous', true);
       expect(question).toHaveProperty('_id');
       expect(question).toHaveProperty('question');
@@ -94,6 +97,7 @@ describe('Get answered questions for a user by username -> #GET /api/user/:usern
       expect(question).toHaveProperty('updatedAt');
       expect(question).not.toHaveProperty('sender');
     });
+    expect(res.body.questionsCount).toBeGreaterThanOrEqual(0);
     done();
   });
 
@@ -115,7 +119,8 @@ describe('Get answered questions for a user by username -> #GET /api/user/:usern
       .expect(200);
 
     expect(res.body.isFollowed).toBeFalsy();
-    expect(res.body.modifiedQuestions).toHaveLength(0);
+    expect(res.body.questions).toHaveLength(0);
+    expect(res.body.questionsCount).toEqual(0);
     done();
   });
 

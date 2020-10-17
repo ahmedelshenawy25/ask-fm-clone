@@ -21,7 +21,7 @@ class QuestionsDAL {
     await Question.deleteOne({ _id: questionId });
   }
 
-  async findUserUnansweredQuestions (recipientId) {
+  async findUserUnansweredQuestions ({ recipientId, skip, limit }) {
     const unansweredQuestions = await Question.find(
       {
         recipient: recipientId,
@@ -34,13 +34,26 @@ class QuestionsDAL {
         isAnonymous: 1
       }
     )
-      .populate('sender', '-_id firstName lastName')
-      .sort('-createdAt');
+      .sort('-createdAt')
+      .skip(skip)
+      .limit(limit)
+      .populate('sender', '-_id firstName lastName');
 
     return this._removeAnonymousSender(unansweredQuestions);
   }
 
-  async findUserAnsweredQuestions (recipientId) {
+  async findUserUnansweredQuestionsCount (recipientId) {
+    const unansweredQuestionsCount = await Question.countDocuments(
+      {
+        recipient: recipientId,
+        answered: false
+      }
+    );
+
+    return unansweredQuestionsCount;
+  }
+
+  async findUserAnsweredQuestions ({ recipientId, skip, limit }) {
     const answeredQuestions = await Question.find(
       {
         recipient: recipientId,
@@ -54,13 +67,26 @@ class QuestionsDAL {
         isAnonymous: 1
       }
     )
-      .populate('sender', '-_id firstName lastName username')
-      .sort('-updatedAt');
+      .sort('-updatedAt')
+      .skip(skip)
+      .limit(limit)
+      .populate('sender', '-_id firstName lastName username');
 
     return this._removeAnonymousSender(answeredQuestions);
   }
 
-  async findFollowedUsersAnsweredQuestions (recipientIds) {
+  async findUserAnsweredQuestionsCount (recipientId) {
+    const answeredQuestionsCount = await Question.countDocuments(
+      {
+        recipient: recipientId,
+        answered: true
+      }
+    );
+
+    return answeredQuestionsCount;
+  }
+
+  async findFollowedUsersAnsweredQuestions ({ recipientIds, skip, limit }) {
     const followedUsersAnsweredQuestions = await Question.find(
       {
         recipient: { $in: recipientIds },
@@ -71,11 +97,23 @@ class QuestionsDAL {
         createAt: 0
       }
     )
+      .sort('-updatedAt')
+      .skip(skip)
+      .limit(limit)
       .populate('recipient', '-_id firstName lastName username')
-      .populate('sender', '-_id firstName lastName username')
-      .sort('-updatedAt');
+      .populate('sender', '-_id firstName lastName username');
 
     return this._removeAnonymousSender(followedUsersAnsweredQuestions);
+  }
+
+  async findFollowedUsersAnsweredQuestionsCount ({ recipientIds }) {
+    const followedUsersAnsweredQuestionsCount = await Question.countDocuments(
+      {
+        recipient: { $in: recipientIds },
+        answered: true
+      }
+    );
+    return followedUsersAnsweredQuestionsCount;
   }
 
   _removeAnonymousSender (questions) {

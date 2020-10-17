@@ -35,14 +35,17 @@ describe('Get unanswered questions for logged in user -> #GET /api/account/inbox
       .set('Authorization', token)
       .expect(200);
 
-    expect(res.body).toHaveLength(questionsCount);
-    res.body.forEach((question) => {
+    expect(res.body).toHaveProperty('questions');
+    expect(res.body).toHaveProperty('questionsCount');
+    expect(res.body.questions).toHaveLength(questionsCount);
+    res.body.questions.forEach((question) => {
       expect(question).toHaveProperty('isAnonymous', false);
       expect(question).toHaveProperty('_id');
       expect(question).toHaveProperty('question');
       expect(question).toHaveProperty('createdAt');
       expect(question).toHaveProperty('sender');
     });
+    expect(res.body.questionsCount).toEqual(questionsCount);
     done();
   });
 
@@ -63,14 +66,17 @@ describe('Get unanswered questions for logged in user -> #GET /api/account/inbox
       .set('Authorization', token)
       .expect(200);
 
-    expect(res.body).toHaveLength(questionsCount);
-    res.body.forEach((question) => {
+    expect(res.body).toHaveProperty('questions');
+    expect(res.body).toHaveProperty('questionsCount');
+    expect(res.body.questions).toHaveLength(questionsCount);
+    res.body.questions.forEach((question) => {
       expect(question).toHaveProperty('isAnonymous', true);
       expect(question).toHaveProperty('_id');
       expect(question).toHaveProperty('question');
       expect(question).toHaveProperty('createdAt');
       expect(question).not.toHaveProperty('sender');
     });
+    expect(res.body.questionsCount).toEqual(questionsCount);
     done();
   });
 
@@ -83,7 +89,8 @@ describe('Get unanswered questions for logged in user -> #GET /api/account/inbox
       .set('Authorization', token)
       .expect(200);
 
-    expect(res.body).toHaveLength(0);
+    expect(res.body.questions).toHaveLength(0);
+    expect(res.body.questionsCount).toEqual(0);
     done();
   });
 });

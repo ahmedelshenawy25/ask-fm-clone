@@ -46,7 +46,7 @@ class UsersDAL {
     return token;
   }
 
-  async findUsersByFullnameOrUsernameRegEx (searchQueryRegex, currentUserId) {
+  async findUsersByFullnameOrUsernameRegEx ({ searchQueryRegex, currentUserId, skip, limit }) {
     const users = await User.aggregate([
       {
         $project: {
@@ -59,9 +59,37 @@ class UsersDAL {
           _id: { $ne: mongoose.Types.ObjectId(currentUserId) },
           $or: [{ fullName: searchQueryRegex }, { username: searchQueryRegex }]
         }
+      },
+      {
+        $skip: skip
+      },
+      {
+        $limit: limit
       }
     ]);
     return users;
+  }
+
+  async findUsersCountByFullnameOrUsernameRegEx ({ searchQueryRegex, currentUserId }) {
+    const usersCount = await User.aggregate([
+      {
+        $project: {
+          fullName: { $concat: ['$firstName', ' ', '$lastName'] },
+          username: 1
+        }
+      },
+      {
+        $match: {
+          _id: { $ne: mongoose.Types.ObjectId(currentUserId) },
+          $or: [{ fullName: searchQueryRegex }, { username: searchQueryRegex }]
+        }
+      },
+      {
+        $count: 'usersCount'
+      }
+    ]);
+
+    return usersCount.length === 0 ? 0 : usersCount[0].usersCount;
   }
 
   async suggestUnfollowedUsers (followedUsersIds) {
