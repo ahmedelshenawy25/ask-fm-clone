@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
       searchQueryRegex,
       currentUserId: userId,
       skip,
-      limit: +limit
+      limit
     });
     // add isFollowed property to users being followed by req.userId
     const modifiedUsers = await Promise.all(users.map(async (user) => {
