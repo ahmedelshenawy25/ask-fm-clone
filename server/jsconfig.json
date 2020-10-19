@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@UsersDAL": ["modules/users/usersDAL.js"],
+      "@QuestionsDAL": ["modules/questions/questionsDAL.js"],
+      "@FollowsDAL": ["modules/friends/followsDAL.js"],
+      "@validator": ["middleware/validator.js"],
+      "@helpers/*": ["helpers/*"]
+    }
+  },
+  "exclude": ["node_modules"]
+}
