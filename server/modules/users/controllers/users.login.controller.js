@@ -5,7 +5,7 @@ module.exports = async (req, res, next) => {
     const { usernameOrEmail, password } = req.body;
 
     const user = await UsersDAL.login(usernameOrEmail, password);
-    if (!user) throw new Error('Invalid username or password');
+    if (!user) throw new Error('Invalid username or password'); // 400
 
     const token = UsersDAL.generateAuthToken(user);
 

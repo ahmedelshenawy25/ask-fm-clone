@@ -5,8 +5,8 @@ const questionSchema = new Schema(
   {
     sender: { type: Schema.Types.ObjectId, require: true, ref: 'User' },
     recipient: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
-    question: { type: String, required: true, trim: true, minlength: 1, maxlength: 300 },
-    answer: { type: String, trim: true, minlength: 1, maxlength: 3000 },
+    question: { type: String, required: true },
+    answer: { type: String },
     answered: { type: Boolean, default: false },
     isAnonymous: { type: Boolean, default: false, required: true }
   },

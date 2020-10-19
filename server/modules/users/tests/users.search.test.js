@@ -9,7 +9,7 @@ let user2;
 let user3;
 let token;
 
-// TODO: modify test cases
+// TODO: modify test cases (what does this even mean? what were you thinking?)
 describe('Search for users -> #GET /api/search', () => {
   beforeAll(() => {
     app = require('../../../init/init.tests');

@@ -21,12 +21,12 @@ const Signup = () => {
       .max(50, 'Last name must be between 1 and 50 characters')
       .required('Please enter your last name'),
     username: Yup.string().label('Username').trim()
-      .matches(/^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{4,25}$/, 'Username must be between 4 and 25 characters')
+      .matches(/^(\w){4,25}$/, 'Username must be between 4 and 25 characters long and consist only of alphanumerics and underscores')
       .required('Please enter a username'),
     email: Yup.string().label('Email').trim().email('Enter a valid email')
       .required('Please enter an email'),
     password: Yup.string().trim().label('Password')
-      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,64}$/,
         'Password must be at least 8 characters long with at least 1 (lowercase letter, uppercase letter, number and special character)')
       .required('Password is required'),
     confirmPassword: Yup.string().label('Confirm password')

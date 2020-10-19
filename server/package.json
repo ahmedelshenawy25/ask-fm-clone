@@ -6,7 +6,9 @@
   "_moduleAliases": {
     "@UsersDAL": "modules/users/usersDAL.js",
     "@QuestionsDAL": "modules/questions/questionsDAL.js",
-    "@FollowsDAL": "modules/friends/followsDAL.js"
+    "@FollowsDAL": "modules/friends/followsDAL.js",
+    "@validator": "middleware/validator.js",
+    "@helpers": "helpers"
   },
   "scripts": {
     "test": "jest --detectOpenHandles --forceExit",
@@ -22,6 +24,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "helmet": "^3.21.3",
+    "joi": "^17.2.1",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
     "mongoose": "^5.9.2",

@@ -33,18 +33,19 @@ function randomLastName () {
 }
 
 function randomPassword () {
-  const passwordLength = faker.random.number({ min: 8, max: 128 });
+  const passwordLength = faker.random.number({ min: 8, max: 64 });
   const password = faker.internet.password(passwordLength);
   return password;
 }
 
 function randomUsername () {
-  const username = faker.internet.userName();
+  let username = faker.internet.userName().toLowerCase();
+  username = username.replace(/\./, '_');
   return username;
 }
 
 function randomEmail () {
-  const email = faker.internet.email();
+  const email = faker.internet.email().toLowerCase();
   return email;
 }
 

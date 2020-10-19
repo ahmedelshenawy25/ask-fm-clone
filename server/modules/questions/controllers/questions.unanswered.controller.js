@@ -13,7 +13,7 @@ module.exports = async (req, res, next) => {
     const questions = await QuestionsDAL.findUserUnansweredQuestions({
       recipientId: userId,
       skip,
-      limit: +limit
+      limit
     });
 
     return res.status(200).json({ questions, questionsCount });

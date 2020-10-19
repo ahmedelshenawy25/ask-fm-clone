@@ -22,7 +22,7 @@ module.exports = async (req, res, next) => {
       questions = await QuestionsDAL.findUserAnsweredQuestions({
         recipientId: recipient,
         skip,
-        limit: +limit
+        limit
       });
     }
 
