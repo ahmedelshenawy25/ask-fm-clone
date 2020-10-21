@@ -21,6 +21,7 @@ const bodySchema = joi.object({
     .max(25)
     .required(),
   email: joi.string()
+    .trim()
     .lowercase()
     .email()
     .required(),

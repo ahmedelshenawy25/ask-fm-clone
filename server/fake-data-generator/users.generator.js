@@ -33,8 +33,9 @@ function randomLastName () {
 }
 
 function randomPassword () {
-  const passwordLength = faker.random.number({ min: 8, max: 64 });
-  const password = faker.internet.password(passwordLength);
+  const passwordLength = faker.random.number({ min: 8, max: 62 });
+  // FIXME: temporary fix for password as faker regex  throws maximum call stack size exceeded
+  const password = `${faker.internet.password(passwordLength)}4&`;
   return password;
 }
 
