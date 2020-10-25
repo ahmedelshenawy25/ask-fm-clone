@@ -31,7 +31,7 @@ const QuestionItem = ({
       <Formik
         initialValues={{ answer: '' }}
         validationSchema={Yup.object().shape({
-          answer: Yup.string().min(1).max(3000)
+          answer: Yup.string().trim().min(1).max(3000)
         })}
         onSubmit={async (values) => {
           try {

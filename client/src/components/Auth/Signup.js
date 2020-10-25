@@ -40,7 +40,7 @@ const Signup = () => {
       }}
       validationSchema={signupSchema}
       onSubmit={async (values) => {
-        const castValues = signupSchema.cast(values);
+        const { confirmPassword, ...castValues } = signupSchema.cast(values);
         try {
           await axiosInstance.post('/signup', {
             ...castValues
