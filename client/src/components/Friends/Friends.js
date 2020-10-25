@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-
 import axiosInstace from '../../axiosInstance/axiosInstance';
-import SearchItem from '../Search/SearchItem';
+import UserItem from '../User/UserItem';
 
 
 const Friends = () => {
@@ -24,12 +23,10 @@ const Friends = () => {
   const renderedFriends = friends.map(({
     followedUser
   }) => (
-    <SearchItem
+    <UserItem
       key={`${followedUser._id}${followedUser.username}`}
       username={followedUser.username}
       fullName={`${followedUser.firstName} ${followedUser.lastName}`}
-      renderButtons
-      isFollowed
     />
   ));
   return (

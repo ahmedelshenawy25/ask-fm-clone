@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import SearchItem from '../Search/SearchItem';
-
+import UserItem from '../User/UserItem';
 import axiosInstance from '../../axiosInstance/axiosInstance';
 
 const Discover = () => {
@@ -23,12 +22,10 @@ const Discover = () => {
   const renderedDiscovery = discoveredUsers.map(({
     _id, username, firstName, lastName
   }) => (
-    <SearchItem
+    <UserItem
       key={`${_id}${username}`}
       username={username}
       fullName={`${firstName} ${lastName}`}
-      renderButtons
-      isFollowed={false}
     />
   ));
 

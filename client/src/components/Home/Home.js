@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import axiosInstance from '../../axiosInstance/axiosInstance';
 import QuestionItem from '../Questions/QuestionItem';
-import SearchItem from '../Search/SearchItem';
+import UserItem from '../User/UserItem';
 import RightSideBox from '../RightSideBox/RightSideBox';
 
 const Home = ({ logout }) => {
@@ -58,12 +58,10 @@ const Home = ({ logout }) => {
   const renderedUsers = questions.map(({
     _id, recipient
   }) => (
-    <SearchItem
+    <UserItem
       key={`${_id}${recipient.username}`}
       username={recipient.username}
       fullName={`${recipient.firstName} ${recipient.lastName}`}
-      renderButtons={false}
-      isFollowed
     />
   ));
   const renderedUsersWithQuestions = renderedUsers.map((user, i) => (

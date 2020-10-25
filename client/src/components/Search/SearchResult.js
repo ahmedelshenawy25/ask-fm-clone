@@ -4,8 +4,7 @@ import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import axiosInstance from '../../axiosInstance/axiosInstance';
-import SearchItem from './SearchItem';
-
+import UserItem from '../User/UserItem';
 
 const SearchResult = ({ logout }) => {
   const { search } = useLocation();
@@ -53,14 +52,12 @@ const SearchResult = ({ logout }) => {
   }, [search]);
 
   const renderedSearchResults = searchResults.map(({
-    _id, username, fullName, isFollowed
+    _id, username, fullName
   }) => (
-    <SearchItem
+    <UserItem
       key={_id}
       username={username}
       fullName={fullName}
-      isFollowed={isFollowed}
-      renderButtons
     />
   ));
   return (
