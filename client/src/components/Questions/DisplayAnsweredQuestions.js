@@ -89,4 +89,8 @@ const DisplayAnsweredQuestions = ({ logout }) => {
   );
 };
 
+DisplayAnsweredQuestions.propTypes = {
+  logout: PropTypes.func.isRequired
+};
+
 export default DisplayAnsweredQuestions;
