@@ -6,7 +6,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import axiosInstance from '../../axiosInstance/axiosInstance';
 import AnsweredQuestion from './AnsweredQuestion';
 import RightSideBox from '../RightSideBox/RightSideBox';
-import AskForm from '../Ask/AskFrom';
+import AskForm from '../Ask/AskForm';
 
 const DisplayAnsweredQuestions = ({ logout }) => {
   const { username } = useParams();
