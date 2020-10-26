@@ -1,4 +1,4 @@
-import './DisplayAnsweredQuestions.css';
+import './AnsweredQuestionsList.css';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -8,7 +8,7 @@ import AnsweredQuestion from './AnsweredQuestion';
 import RightSideBox from '../RightSideBox/RightSideBox';
 import AskForm from '../Ask/AskForm';
 
-const DisplayAnsweredQuestions = ({ logout }) => {
+const AnsweredQuestionsList = ({ logout }) => {
   const { username } = useParams();
   const [questions, setQuestions] = useState([]);
   const [isFollowed, setIsFollowed] = useState(true);
@@ -52,17 +52,6 @@ const DisplayAnsweredQuestions = ({ logout }) => {
     fetchProfile();
   }, [username]);
 
-  const renderedQuestions = questions.map(({
-    _id, question, answer, sender, updatedAt
-  }) => (
-    <AnsweredQuestion
-      key={_id}
-      question={question}
-      answer={answer}
-      sender={sender}
-      time={new Date(updatedAt).toLocaleString()}
-    />
-  ));
   return (
     <div className="FlexParent">
       <div className="leftFlexChild">
@@ -79,7 +68,17 @@ const DisplayAnsweredQuestions = ({ logout }) => {
           loader={<h2 style={{ textAlign: 'center' }}>Loading...</h2>}
           endMessage={<p style={{ textAlign: 'center' }}><strong>No more content</strong></p>}
         >
-          {renderedQuestions}
+          {questions.map(({
+            _id, question, answer, sender, updatedAt
+          }) => (
+            <AnsweredQuestion
+              key={_id}
+              question={question}
+              answer={answer}
+              sender={sender}
+              time={new Date(updatedAt).toLocaleString()}
+            />
+          ))}
         </InfiniteScroll>
       </div>
       <RightSideBox />
@@ -87,8 +86,8 @@ const DisplayAnsweredQuestions = ({ logout }) => {
   );
 };
 
-DisplayAnsweredQuestions.propTypes = {
+AnsweredQuestionsList.propTypes = {
   logout: PropTypes.func.isRequired
 };
 
-export default DisplayAnsweredQuestions;
+export default AnsweredQuestionsList;
