@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axiosInstace from '../../axiosInstance/axiosInstance';
 import UserItem from '../User/UserItem';
 
-
 const Friends = () => {
   const [friends, setFriends] = useState([]);
   const [error, setError] = useState('');
@@ -20,18 +19,19 @@ const Friends = () => {
     fetchFriends();
   }, []);
 
-  const renderedFriends = friends.map(({
-    followedUser
-  }) => (
-    <UserItem
-      key={`${followedUser._id}${followedUser.username}`}
-      username={followedUser.username}
-      fullName={`${followedUser.firstName} ${followedUser.lastName}`}
-    />
-  ));
   return (
     <div className="right section">
-      {renderedFriends}
+      {friends.map(({
+        followedUser: {
+          _id, username, firstName, lastName
+        }
+      }) => (
+        <UserItem
+          key={`${_id}${username}`}
+          username={username}
+          fullName={`${firstName} ${lastName}`}
+        />
+      ))}
     </div>
   );
 };

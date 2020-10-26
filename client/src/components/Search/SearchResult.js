@@ -51,15 +51,6 @@ const SearchResult = ({ logout }) => {
     fetchSearchResult();
   }, [search]);
 
-  const renderedSearchResults = searchResults.map(({
-    _id, username, fullName
-  }) => (
-    <UserItem
-      key={_id}
-      username={username}
-      fullName={fullName}
-    />
-  ));
   return (
     <div>
       <div className="ui info message">
@@ -73,7 +64,13 @@ const SearchResult = ({ logout }) => {
         loader={<h2 style={{ textAlign: 'center' }}>Loading...</h2>}
       >
         <div className="ui relaxed divided list results">
-          {renderedSearchResults}
+          {searchResults.map(({ _id, username, fullName }) => (
+            <UserItem
+              key={_id}
+              username={username}
+              fullName={fullName}
+            />
+          ))}
         </div>
       </InfiniteScroll>
     </div>

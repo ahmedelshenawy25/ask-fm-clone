@@ -3,7 +3,7 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Signup from '../components/Auth/Signup';
 import Login from '../components/Auth/Login';
-import DisplayAnsweredQuestions from '../components/Questions/DisplayAnsweredQuestions';
+import AnsweredQuestionsList from '../components/Questions/AnsweredQuestionsList';
 import Inbox from '../components/Questions/Inbox';
 import SearchResult from '../components/Search/SearchResult';
 import Home from '../components/Home/Home';
@@ -30,7 +30,7 @@ const AppRouter = ({ authHandler, logoutHandler }) => (
         <Inbox logout={logoutHandler} />
       </PrivateRoute>
       <PrivateRoute path="/user/:username">
-        <DisplayAnsweredQuestions logout={logoutHandler} />
+        <AnsweredQuestionsList logout={logoutHandler} />
       </PrivateRoute>
       <PrivateRoute path="/search">
         <SearchResult logout={logoutHandler} />

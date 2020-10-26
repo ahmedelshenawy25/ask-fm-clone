@@ -19,17 +19,19 @@ const Discover = () => {
     fetchDiscoverUsers();
   }, []);
 
-  const renderedDiscovery = discoveredUsers.map(({
-    _id, username, firstName, lastName
-  }) => (
-    <UserItem
-      key={`${_id}${username}`}
-      username={username}
-      fullName={`${firstName} ${lastName}`}
-    />
-  ));
-
-  return <div className="right section">{renderedDiscovery}</div>;
+  return (
+    <div className="right section">
+      {discoveredUsers.map(({
+        _id, username, firstName, lastName
+      }) => (
+        <UserItem
+          key={`${_id}${username}`}
+          username={username}
+          fullName={`${firstName} ${lastName}`}
+        />
+      ))}
+    </div>
+  );
 };
 
 export default Discover;

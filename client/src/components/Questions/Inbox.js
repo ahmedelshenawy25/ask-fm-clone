@@ -5,7 +5,6 @@ import axiosInstance from '../../axiosInstance/axiosInstance';
 import UnansweredQuestion from './UnansweredQuestion';
 import RightSideBox from '../RightSideBox/RightSideBox';
 
-
 const Inbox = ({ logout }) => {
   const [questions, setQuestions] = useState([]);
   const [questionsCount, setQuestionsCount] = useState(1);
@@ -46,18 +45,6 @@ const Inbox = ({ logout }) => {
     setQuestions(filteredQuestions);
   };
 
-  const renderedQuestions = questions.map(({
-    _id, question, sender, createdAt
-  }) => (
-    <UnansweredQuestion
-      key={_id}
-      id={_id}
-      question={question}
-      sender={sender}
-      time={new Date(createdAt).toLocaleString()}
-      removeQuestion={removeQuestion}
-    />
-  ));
   return (
     <div className="FlexParent">
       <div className="leftFlexChild">
@@ -69,7 +56,18 @@ const Inbox = ({ logout }) => {
           loader={<h2 style={{ textAlign: 'center' }}>Loading...</h2>}
           endMessage={<p style={{ textAlign: 'center' }}><strong>No more content</strong></p>}
         >
-          {renderedQuestions}
+          {questions.map(({
+            _id, question, sender, createdAt
+          }) => (
+            <UnansweredQuestion
+              key={_id}
+              id={_id}
+              question={question}
+              sender={sender}
+              time={new Date(createdAt).toLocaleString()}
+              removeQuestion={removeQuestion}
+            />
+          ))}
         </InfiniteScroll>
       </div>
       <RightSideBox />
