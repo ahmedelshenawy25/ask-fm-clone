@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import axiosInstance from '../../axiosInstance/axiosInstance';
-import QuestionItem from '../Questions/QuestionItem';
+import AnsweredQuestion from '../Questions/AnsweredQuestion';
 import UserItem from '../User/UserItem';
 import RightSideBox from '../RightSideBox/RightSideBox';
 
@@ -46,13 +46,12 @@ const Home = ({ logout }) => {
   const renderedQuestions = questions.map(({
     _id, question, answer, sender, updatedAt
   }) => (
-    <QuestionItem
+    <AnsweredQuestion
       key={_id}
       question={question}
       answer={answer}
       sender={sender}
       time={new Date(updatedAt).toLocaleString()}
-      isAnswered
     />
   ));
   const renderedUsers = questions.map(({

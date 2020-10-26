@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import axiosInstance from '../../axiosInstance/axiosInstance';
-import QuestionItem from './QuestionItem';
+import AnsweredQuestion from './AnsweredQuestion';
 import RightSideBox from '../RightSideBox/RightSideBox';
 import AskForm from '../Ask/AskFrom';
 
@@ -55,13 +55,12 @@ const DisplayAnsweredQuestions = ({ logout }) => {
   const renderedQuestions = questions.map(({
     _id, question, answer, sender, updatedAt
   }) => (
-    <QuestionItem
+    <AnsweredQuestion
       key={_id}
       question={question}
       answer={answer}
       sender={sender}
       time={new Date(updatedAt).toLocaleString()}
-      isAnswered
     />
   ));
   return (
