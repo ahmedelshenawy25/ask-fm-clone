@@ -5,9 +5,8 @@ import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import axiosInstance from '../../axiosInstance/axiosInstance';
 import QuestionItem from './QuestionItem';
-import AskQuestion from './AskQuestion';
 import RightSideBox from '../RightSideBox/RightSideBox';
-
+import AskForm from '../Ask/AskFrom';
 
 const DisplayAnsweredQuestions = ({ logout }) => {
   const { username } = useParams();
@@ -68,7 +67,7 @@ const DisplayAnsweredQuestions = ({ logout }) => {
   return (
     <div className="FlexParent">
       <div className="leftFlexChild">
-        <AskQuestion
+        <AskForm
           username={username}
           isFollowed={isFollowed}
           renderButton={renderButton}
