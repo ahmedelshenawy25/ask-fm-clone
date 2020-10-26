@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import axiosInstance from '../../axiosInstance/axiosInstance';
-import QuestionItem from './QuestionItem';
+import UnansweredQuestion from './UnansweredQuestion';
 import RightSideBox from '../RightSideBox/RightSideBox';
 
 
@@ -47,16 +47,14 @@ const Inbox = ({ logout }) => {
   };
 
   const renderedQuestions = questions.map(({
-    _id, question, answer, sender, createdAt
+    _id, question, sender, createdAt
   }) => (
-    <QuestionItem
+    <UnansweredQuestion
       key={_id}
       id={_id}
       question={question}
-      answer={answer}
       sender={sender}
       time={new Date(createdAt).toLocaleString()}
-      isAnswered={false}
       removeQuestion={removeQuestion}
     />
   ));
