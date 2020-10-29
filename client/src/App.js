@@ -1,22 +1,18 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
-
+import AppRouter from './router/AppRouter';
 import Navbar from './components/Navigation/Navbar';
-import Signup from './components/Auth/Signup';
-import Login from './components/Auth/Login';
-import DisplayAnsweredQuestions from './components/Questions/DisplayAnsweredQuestions';
-import Inbox from './components/Questions/Inbox';
-import SearchResult from './components/Search/SearchResult';
-import Home from './components/Home/Home';
-import AuthenticatedRoute from './components/AuthenticatedRoute/AuthenticatedRoute';
-import UnauthenticatedRoute from './components/UnauthenticatedRoute/UnauthenticatedRoute';
 import AuthContext from './context/AuthContext/AuthContext';
 
 const App = () => {
   const [isAuth, setIsAuth] = useState(false);
   const [username, setUsername] = useState('');
   const [isLoadingInitialState, setIsLoadingInitialState] = useState(true);
+
+  const authHandler = () => {
+    setIsAuth(true);
+    setUsername(localStorage.username);
+  };
 
   const logoutHandler = () => {
     localStorage.clear();
@@ -42,48 +38,15 @@ const App = () => {
     setIsLoadingInitialState(false);
   }, [localStorage.token]);
 
-  const authHandler = () => {
-    setIsAuth(true);
-    setUsername(localStorage.username);
-  };
-
   if (isLoadingInitialState) {
     return <div>Spinner placeholder...</div>;
   }
+
   return (
     <AuthContext.Provider value={isAuth}>
       <div>
         <Navbar username={username} onLogout={logoutHandler} />
-        <div className="ui container">
-          <Switch>
-            <Redirect from="/" to="/home" exact />
-            <Redirect from="/logout" to="/login" />
-
-            <UnauthenticatedRoute path="/signup">
-              <Signup />
-            </UnauthenticatedRoute>
-            <UnauthenticatedRoute path="/login">
-              <Login onLogin={authHandler} />
-            </UnauthenticatedRoute>
-
-            <AuthenticatedRoute path="/home">
-              <Home logout={logoutHandler} />
-            </AuthenticatedRoute>
-            <AuthenticatedRoute path="/account/inbox">
-              <Inbox logout={logoutHandler} />
-            </AuthenticatedRoute>
-            <AuthenticatedRoute path="/user/:username">
-              <DisplayAnsweredQuestions logout={logoutHandler} />
-            </AuthenticatedRoute>
-            <AuthenticatedRoute path="/search">
-              <SearchResult logout={logoutHandler} />
-            </AuthenticatedRoute>
-
-            <Route>
-              <h1 style={{ textAlign: 'center' }}>404 Page not found</h1>
-            </Route>
-          </Switch>
-        </div>
+        <AppRouter authHandler={authHandler} logoutHandler={logoutHandler} />
       </div>
     </AuthContext.Provider>
   );

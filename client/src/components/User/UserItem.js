@@ -2,11 +2,8 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import Follow from '../Follow/Follow';
-
-
-const SearchItem = ({
-  username, fullName, isFollowed, renderButtons
+const UserItem = ({
+  username, fullName
 }) => (
   <div className="item red">
     <i className="large user icon" />
@@ -14,19 +11,15 @@ const SearchItem = ({
       <NavLink to={`/user/${username}`}>
         <div className="userInfo fullname">{fullName}</div>
         <div className="userInfo">{`@${username}`}</div>
-        <div className="ui right floated button ask">Ask</div>
       </NavLink>
-      {renderButtons && <Follow username={username} isFollowed={isFollowed} />}
     </div>
     <br />
   </div>
 );
 
-SearchItem.propTypes = {
+UserItem.propTypes = {
   username: PropTypes.string.isRequired,
-  fullName: PropTypes.string.isRequired,
-  isFollowed: PropTypes.bool.isRequired,
-  renderButtons: PropTypes.bool.isRequired
+  fullName: PropTypes.string.isRequired
 };
 
-export default SearchItem;
+export default UserItem;

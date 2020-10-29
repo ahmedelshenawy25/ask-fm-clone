@@ -4,8 +4,7 @@ import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import axiosInstance from '../../axiosInstance/axiosInstance';
-import SearchItem from './SearchItem';
-
+import UserItem from '../User/UserItem';
 
 const SearchResult = ({ logout }) => {
   const { search } = useLocation();
@@ -52,17 +51,6 @@ const SearchResult = ({ logout }) => {
     fetchSearchResult();
   }, [search]);
 
-  const renderedSearchResults = searchResults.map(({
-    _id, username, fullName, isFollowed
-  }) => (
-    <SearchItem
-      key={_id}
-      username={username}
-      fullName={fullName}
-      isFollowed={isFollowed}
-      renderButtons
-    />
-  ));
   return (
     <div>
       <div className="ui info message">
@@ -76,7 +64,13 @@ const SearchResult = ({ logout }) => {
         loader={<h2 style={{ textAlign: 'center' }}>Loading...</h2>}
       >
         <div className="ui relaxed divided list results">
-          {renderedSearchResults}
+          {searchResults.map(({ _id, username, fullName }) => (
+            <UserItem
+              key={_id}
+              username={username}
+              fullName={fullName}
+            />
+          ))}
         </div>
       </InfiniteScroll>
     </div>

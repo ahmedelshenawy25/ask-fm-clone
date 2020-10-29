@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import axiosInstance from '../../axiosInstance/axiosInstance';
-import QuestionItem from '../Questions/QuestionItem';
-import SearchItem from '../Search/SearchItem';
+import AnsweredQuestion from '../Questions/AnsweredQuestion';
+import UserItem from '../User/UserItem';
 import RightSideBox from '../RightSideBox/RightSideBox';
 
 const Home = ({ logout }) => {
@@ -43,35 +43,6 @@ const Home = ({ logout }) => {
     fetchHomePage();
   }, []);
 
-  const renderedQuestions = questions.map(({
-    _id, question, answer, sender, updatedAt
-  }) => (
-    <QuestionItem
-      key={_id}
-      question={question}
-      answer={answer}
-      sender={sender}
-      time={new Date(updatedAt).toLocaleString()}
-      isAnswered
-    />
-  ));
-  const renderedUsers = questions.map(({
-    _id, recipient
-  }) => (
-    <SearchItem
-      key={`${_id}${recipient.username}`}
-      username={recipient.username}
-      fullName={`${recipient.firstName} ${recipient.lastName}`}
-      renderButtons={false}
-      isFollowed
-    />
-  ));
-  const renderedUsersWithQuestions = renderedUsers.map((user, i) => (
-    <div key={i} className="ui card Home">
-      {user}
-      {renderedQuestions[i]}
-    </div>
-  ));
   return (
     <div className="FlexParent">
       <div className="ui relaxed divided list questionBox leftFlexChild">
@@ -83,7 +54,25 @@ const Home = ({ logout }) => {
           loader={<h2 style={{ textAlign: 'center' }}>Loading...</h2>}
           endMessage={<p style={{ textAlign: 'center' }}><strong>No more content</strong></p>}
         >
-          {renderedUsersWithQuestions}
+          {questions.map(({
+            _id, question, answer, sender, recipient, updatedAt
+          }) => (
+            <div key={_id} className="ui card Home">
+              <UserItem
+                key={`${_id}${recipient.username}`}
+                username={recipient.username}
+                fullName={`${recipient.firstName} ${recipient.lastName}`}
+              />
+
+              <AnsweredQuestion
+                key={_id}
+                question={question}
+                answer={answer}
+                sender={sender}
+                time={new Date(updatedAt).toLocaleString()}
+              />
+            </div>
+          ))}
         </InfiniteScroll>
       </div>
       <RightSideBox />

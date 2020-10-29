@@ -4,18 +4,12 @@ import {
 } from 'formik';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
-
 import axiosInstance from '../../axiosInstance/axiosInstance';
+import loginValidationSchema from './login.validationSchema';
 
 const Login = ({ onLogin }) => {
   const history = useHistory();
   const [error, setError] = useState('');
-
-  const loginSchema = Yup.object().shape({
-    usernameOrEmail: Yup.string().trim().required('Enter a username or an email'),
-    password: Yup.string().trim().required('Enter a password')
-  });
 
   return (
     <>
@@ -27,10 +21,13 @@ const Login = ({ onLogin }) => {
         </div>
       )}
       <Formik
-        initialValues={{ usernameOrEmail: '', password: '' }}
-        validationSchema={loginSchema}
+        initialValues={{
+          usernameOrEmail: '',
+          password: ''
+        }}
+        validationSchema={loginValidationSchema}
         onSubmit={async (values) => {
-          const castValues = loginSchema.cast(values);
+          const castValues = loginValidationSchema.cast(values);
           try {
             const response = await axiosInstance.post('/login', {
               ...castValues
@@ -51,10 +48,12 @@ const Login = ({ onLogin }) => {
               <Field name="usernameOrEmail" placeholder="Username or email" />
               <ErrorMessage name="usernameOrEmail" />
             </div>
+
             <div className="field">
               <Field type="password" name="password" placeholder="Password" />
               <ErrorMessage name="password" />
             </div>
+
             <button className="ui button" disabled={!(isValid && dirty) || isSubmitting} type="submit">Login</button>
           </Form>
         )}

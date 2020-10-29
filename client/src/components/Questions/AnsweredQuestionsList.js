@@ -1,15 +1,14 @@
-import './DisplayAnsweredQuestions.css';
+import './AnsweredQuestionsList.css';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import axiosInstance from '../../axiosInstance/axiosInstance';
-import QuestionItem from './QuestionItem';
-import AskQuestion from './AskQuestion';
+import AnsweredQuestion from './AnsweredQuestion';
 import RightSideBox from '../RightSideBox/RightSideBox';
+import AskForm from '../Ask/AskForm';
 
-
-const DisplayAnsweredQuestions = ({ logout }) => {
+const AnsweredQuestionsList = ({ logout }) => {
   const { username } = useParams();
   const [questions, setQuestions] = useState([]);
   const [isFollowed, setIsFollowed] = useState(true);
@@ -53,22 +52,10 @@ const DisplayAnsweredQuestions = ({ logout }) => {
     fetchProfile();
   }, [username]);
 
-  const renderedQuestions = questions.map(({
-    _id, question, answer, sender, updatedAt
-  }) => (
-    <QuestionItem
-      key={_id}
-      question={question}
-      answer={answer}
-      sender={sender}
-      time={new Date(updatedAt).toLocaleString()}
-      isAnswered
-    />
-  ));
   return (
     <div className="FlexParent">
       <div className="leftFlexChild">
-        <AskQuestion
+        <AskForm
           username={username}
           isFollowed={isFollowed}
           renderButton={renderButton}
@@ -81,7 +68,17 @@ const DisplayAnsweredQuestions = ({ logout }) => {
           loader={<h2 style={{ textAlign: 'center' }}>Loading...</h2>}
           endMessage={<p style={{ textAlign: 'center' }}><strong>No more content</strong></p>}
         >
-          {renderedQuestions}
+          {questions.map(({
+            _id, question, answer, sender, updatedAt
+          }) => (
+            <AnsweredQuestion
+              key={_id}
+              question={question}
+              answer={answer}
+              sender={sender}
+              time={new Date(updatedAt).toLocaleString()}
+            />
+          ))}
         </InfiniteScroll>
       </div>
       <RightSideBox />
@@ -89,4 +86,8 @@ const DisplayAnsweredQuestions = ({ logout }) => {
   );
 };
 
-export default DisplayAnsweredQuestions;
+AnsweredQuestionsList.propTypes = {
+  logout: PropTypes.func.isRequired
+};
+
+export default AnsweredQuestionsList;
