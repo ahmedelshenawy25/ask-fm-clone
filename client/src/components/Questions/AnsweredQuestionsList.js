@@ -14,29 +14,26 @@ const AnsweredQuestionsList = ({ logout }) => {
   const [isFollowed, setIsFollowed] = useState(true);
   const [renderButton, setRenderButton] = useState(false);
   const [page, setPage] = useState(1);
-  const [questionsCount, setQuestionsCount] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState('');
 
-  async function fetchProfile() {
-    if (questions.length >= questionsCount) {
-      setHasMore(false);
-      return;
-    }
-
+  async function fetchProfile({ pageNum }) {
     try {
       const response = await axiosInstance.get(`/user/${username}`, {
         params: {
-          page,
+          page: pageNum,
           limit: 5
         }
       });
 
       setQuestions((prevState) => [...prevState, ...response.data.questions]);
-      setQuestionsCount(response.data.questionsCount);
       setIsFollowed(response.data.isFollowed);
       setRenderButton(response.data.renderFollowButton);
-      setPage((prevState) => prevState + 1);
+      setPage(pageNum + 1);
+
+      if (response.data.questionsCount === questions.length + response.data.questions.length) {
+        setHasMore(false);
+      }
     } catch (e) {
       if (e.response.status === 401) return logout();
 
@@ -45,11 +42,12 @@ const AnsweredQuestionsList = ({ logout }) => {
   }
 
   useEffect(() => {
-    setPage(1);
-    setQuestionsCount(1);
-    setQuestions([]);
-    setHasMore(true);
-    fetchProfile();
+    fetchProfile({ pageNum: 1 });
+
+    return () => {
+      setQuestions([]);
+      setHasMore(true);
+    };
   }, [username]);
 
   return (
@@ -62,7 +60,7 @@ const AnsweredQuestionsList = ({ logout }) => {
         />
         <InfiniteScroll
           dataLength={questions.length}
-          next={fetchProfile}
+          next={() => fetchProfile({ pageNum: page })}
           hasMore={hasMore}
           scrollThreshold={1}
           loader={<h2 style={{ textAlign: 'center' }}>Loading...</h2>}
