@@ -14,26 +14,21 @@ const SearchResult = ({ logout }) => {
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState('');
 
-  async function fetchSearchResult() {
-    if (searchResults.length >= searchResultsCount) {
-      setHasMore(false);
-      return;
-    }
-
+  async function fetchSearchResult({ searchQuery, pageNum }) {
     try {
-      const response = await axiosInstance.get(`/search${search}`, {
+      const response = await axiosInstance.get(`/search${searchQuery}`, {
         params: {
-          page,
-          limit: 30
+          page: pageNum || page,
+          limit: 10
         }
       });
 
       setHasMore(true);
       setSearchResults((prevState) => [...prevState, ...response.data.users]);
       setSearchResultsCount(response.data.usersCount);
-      setPage((prevState) => prevState + 1);
+      setPage(pageNum + 1);
 
-      if (response.data.usersCount === 0 || response.data.usersCount === response.data.users) {
+      if (response.data.usersCount === searchResults.length + response.data.users.length) {
         setHasMore(false);
       }
     } catch (e) {
@@ -44,11 +39,13 @@ const SearchResult = ({ logout }) => {
   }
 
   useEffect(() => {
-    setPage(1);
-    setSearchResultsCount(1);
-    setSearchResults([]);
-    setHasMore(true);
-    fetchSearchResult();
+    fetchSearchResult({ searchQuery: search, pageNum: 1 });
+
+    return () => {
+      setSearchResultsCount(1);
+      setSearchResults([]);
+      setHasMore(true);
+    };
   }, [search]);
 
   return (
@@ -58,10 +55,11 @@ const SearchResult = ({ logout }) => {
       </div>
       <InfiniteScroll
         dataLength={searchResults.length}
-        next={fetchSearchResult}
+        next={() => fetchSearchResult({ searchQuery: search, pageNum: page })}
         hasMore={hasMore}
         scrollThreshold={1}
         loader={<h2 style={{ textAlign: 'center' }}>Loading...</h2>}
+        endMessage={<p style={{ textAlign: 'center' }}><strong>No more content</strong></p>}
       >
         <div className="ui relaxed divided list results">
           {searchResults.map(({ _id, username, fullName }) => (

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import UserItem from '../User/UserItem';
 import axiosInstance from '../../axiosInstance/axiosInstance';
+import Follow from '../Follow/Follow';
 
 const Discover = () => {
   const [discoveredUsers, setDiscoveredUsers] = useState([]);
@@ -24,11 +25,14 @@ const Discover = () => {
       {discoveredUsers.map(({
         _id, username, firstName, lastName
       }) => (
-        <UserItem
-          key={`${_id}${username}`}
-          username={username}
-          fullName={`${firstName} ${lastName}`}
-        />
+        <div key={_id}>
+          <UserItem
+            key={`${_id}${username}`}
+            username={username}
+            fullName={`${firstName} ${lastName}`}
+          />
+          <Follow isFollowed={false} username={username} />
+        </div>
       ))}
     </div>
   );

@@ -1,34 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useLocation } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance/axiosInstance';
 import UnansweredQuestion from './UnansweredQuestion';
 import RightSideBox from '../RightSideBox/RightSideBox';
 
 const Inbox = ({ logout }) => {
+  const location = useLocation();
   const [questions, setQuestions] = useState([]);
-  const [questionsCount, setQuestionsCount] = useState(1);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState('');
 
-  async function fetchInbox() {
-    if (questions.length >= questionsCount) {
-      setHasMore(false);
-      return;
-    }
-
+  async function fetchInbox({ pageNum }) {
     try {
       const response = await axiosInstance.get('/account/inbox', {
         params: {
-          page,
+          page: pageNum,
           limit: 5
         }
       });
 
       setQuestions((prevState) => [...prevState, ...response.data.questions]);
-      setQuestionsCount(response.data.questionsCount);
-      setPage((prevState) => prevState + 1);
+      setPage(pageNum + 1);
+
+      if (response.data.questionsCount === questions.length + response.data.questions.length) {
+        setHasMore(false);
+      }
     } catch (e) {
       if (e.response.status === 401) return logout();
 
@@ -37,8 +36,13 @@ const Inbox = ({ logout }) => {
   }
 
   useEffect(() => {
-    fetchInbox();
-  }, []);
+    fetchInbox({ pageNum: 1 });
+
+    return () => {
+      setQuestions([]);
+      setHasMore(true);
+    };
+  }, [location.key]);
 
   const removeQuestion = (id) => {
     const filteredQuestions = questions.filter((question) => question._id !== id);
@@ -50,7 +54,7 @@ const Inbox = ({ logout }) => {
       <div className="leftFlexChild">
         <InfiniteScroll
           dataLength={questions.length}
-          next={fetchInbox}
+          next={() => fetchInbox({ pageNum: page })}
           hasMore={hasMore}
           scrollThreshold={1}
           loader={<h2 style={{ textAlign: 'center' }}>Loading...</h2>}
