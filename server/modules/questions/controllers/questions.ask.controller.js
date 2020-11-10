@@ -9,7 +9,7 @@ module.exports = async (req, res, next) => {
 
     const recipient = await UsersDAL.findUserIdByUsername(username);
     if (!recipient) {
-      throw new Error('User not found.');
+      return res.status(400).json({ message: 'User not found.' });
     }
 
     await QuestionsDAL.create({
@@ -20,7 +20,7 @@ module.exports = async (req, res, next) => {
     });
 
     return res.status(201).json();
-  } catch (e) {
-    return res.status(400).json({ message: e.message });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
   }
 };

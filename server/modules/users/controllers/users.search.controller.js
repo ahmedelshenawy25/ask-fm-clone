@@ -36,7 +36,7 @@ module.exports = async (req, res) => {
     }));
 
     return res.status(200).json({ users: modifiedUsers, usersCount });
-  } catch (e) {
-    return res.status(400).json({ message: e.message });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
   }
 };

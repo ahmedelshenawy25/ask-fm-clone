@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
 
     const suggestedUsers = await UsersDAL.suggestUnfollowedUsers(followedUsersIds);
     return res.status(200).json(suggestedUsers);
-  } catch (e) {
-    return res.status(400).json({ message: e.message });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
   }
 };

@@ -61,7 +61,7 @@ describe('Log user in -> #POST /api/login', () => {
     const res = await request(app)
       .post('/api/login')
       .send(invalidLoginData)
-      .expect(401);
+      .expect(400);
 
     expect(res.body).toHaveProperty('message');
     done();
@@ -77,7 +77,7 @@ describe('Log user in -> #POST /api/login', () => {
     const res = await request(app)
       .post('/api/login')
       .send(invalidLoginData)
-      .expect(401);
+      .expect(400);
 
     expect(res.body).toHaveProperty('message');
     done();
@@ -92,7 +92,7 @@ describe('Log user in -> #POST /api/login', () => {
     const res = await request(app)
       .post('/api/login')
       .send(invalidLoginData)
-      .expect(401);
+      .expect(400);
 
     expect(res.body).toHaveProperty('message');
     done();
@@ -107,7 +107,7 @@ describe('Log user in -> #POST /api/login', () => {
     const res = await request(app)
       .post('/api/login')
       .send(invalidLoginData)
-      .expect(401);
+      .expect(400);
 
     expect(res.body).toHaveProperty('message');
     done();

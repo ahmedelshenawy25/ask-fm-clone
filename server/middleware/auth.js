@@ -7,7 +7,7 @@ function auth (req, res, next) {
     req.userId = decoded._id;
 
     return next();
-  } catch (e) {
+  } catch (error) {
     return res.status(401).json({ message: 'Invalid token.' });
   }
 }

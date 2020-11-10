@@ -6,13 +6,17 @@ module.exports = async (req, res, next) => {
     const { username, email } = userSignupForm;
 
     const user = await UsersDAL.findUserIdByUsernameOrEmail(username, email);
-    if (user && user.username === username) throw new Error('Username already exists');
-    if (user && user.email === email) throw new Error('Email already exists');
+    if (user && user.username === username) {
+      return res.status(409).json({ message: 'Username already exists' });
+    }
+    if (user && user.email === email) {
+      return res.status(409).json({ message: 'Email already exists' });
+    }
 
     await UsersDAL.createUser(userSignupForm);
 
     return res.status(201).json();
   } catch (error) {
-    return res.status(400).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };

@@ -47,7 +47,7 @@ describe('Create a new user -> #POST /api/signup', () => {
     const res = await request(app)
       .post('/api/signup')
       .send(user2)
-      .expect(400);
+      .expect(409);
 
     expect(res.body).toHaveProperty('message');
     done();
@@ -66,7 +66,7 @@ describe('Create a new user -> #POST /api/signup', () => {
     const res = await request(app)
       .post('/api/signup')
       .send(user2)
-      .expect(400);
+      .expect(409);
 
     expect(res.body).toHaveProperty('message');
     done();
