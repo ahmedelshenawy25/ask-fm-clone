@@ -1,3 +1,4 @@
+const OperationalError = require('@helpers/error-management/operatinal.error');
 const jwt = require('jsonwebtoken');
 
 function auth (req, res, next) {
@@ -8,7 +9,7 @@ function auth (req, res, next) {
 
     return next();
   } catch (error) {
-    return res.status(401).json({ message: 'Invalid token.' });
+    next(new OperationalError('Invalid token.', 401));
   }
 }
 

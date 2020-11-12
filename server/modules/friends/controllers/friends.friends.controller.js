@@ -1,6 +1,6 @@
 const FollowsDAL = require('@FollowsDAL');
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
   try {
     const { userId } = req;
 
@@ -8,6 +8,6 @@ module.exports = async (req, res) => {
 
     return res.status(200).json(friends);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    next(error);
   }
 };

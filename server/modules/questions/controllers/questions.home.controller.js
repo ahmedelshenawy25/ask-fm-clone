@@ -6,15 +6,17 @@ module.exports = async (req, res, next) => {
     const { userId } = req;
     const { page, limit } = req.query;
 
+    let questions = [];
     const skip = (page - 1) * limit;
 
     const followedUsersIds = await FollowsDAL.findUserFriendsIds(userId);
     const questionsCount = await QuestionsDAL.findFollowedUsersAnsweredQuestionsCount({
       recipientIds: followedUsersIds
     });
-    if (!questionsCount) return res.status(200).json({ questions: [], questionsCount });
+    if (!questionsCount)
+      return res.status(200).json({ questions, questionsCount });
 
-    const questions = await QuestionsDAL.findFollowedUsersAnsweredQuestions({
+    questions = await QuestionsDAL.findFollowedUsersAnsweredQuestions({
       recipientIds: followedUsersIds,
       skip,
       limit
@@ -22,6 +24,6 @@ module.exports = async (req, res, next) => {
 
     return res.status(200).json({ questions, questionsCount });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    next(error);
   }
 };

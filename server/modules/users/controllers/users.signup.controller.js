@@ -1,3 +1,4 @@
+const OperationalError = require('@helpers/error-management/operatinal.error');
 const UsersDAL = require('@UsersDAL');
 
 module.exports = async (req, res, next) => {
@@ -6,17 +7,15 @@ module.exports = async (req, res, next) => {
     const { username, email } = userSignupForm;
 
     const user = await UsersDAL.findUserIdByUsernameOrEmail(username, email);
-    if (user && user.username === username) {
-      return res.status(409).json({ message: 'Username already exists' });
-    }
-    if (user && user.email === email) {
-      return res.status(409).json({ message: 'Email already exists' });
-    }
+    if (user && user.username === username)
+      throw new OperationalError('Username already exists', 409);
+    if (user && user.email === email)
+      throw new OperationalError('Email already exists', 409);
 
     await UsersDAL.createUser(userSignupForm);
 
     return res.status(201).json();
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    next(error);
   }
 };

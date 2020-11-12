@@ -1,6 +1,7 @@
 const UsersDAL = require('@UsersDAL');
 const QuestionsDAL = require('@QuestionsDAL');
 const FollowsDAL = require('@FollowsDAL');
+const OperationalError = require('@helpers/error-management/operatinal.error');
 
 module.exports = async (req, res, next) => {
   try {
@@ -13,26 +14,25 @@ module.exports = async (req, res, next) => {
     let isFollowed = false;
 
     const recipient = await UsersDAL.findUserIdByUsername(username);
-    if (!recipient) {
-      return res.status(400).json({ message: 'User not found.' });
-    }
+    if (!recipient)
+      throw new OperationalError('User not found', 400);
 
     const questionsCount = await QuestionsDAL.findUserAnsweredQuestionsCount(recipient);
-    if (questionsCount) {
+    if (questionsCount)
       questions = await QuestionsDAL.findUserAnsweredQuestions({
         recipientId: recipient,
         skip,
         limit
       });
-    }
 
+    // TODO: remove renderFollowButton
     const renderFollowButton = userId !== recipient._id.toString();
-    if (renderFollowButton) {
+    if (renderFollowButton)
       isFollowed = await FollowsDAL.isFollowed(recipient, userId);
-    }
+
 
     return res.status(200).json({ questions, questionsCount, isFollowed, renderFollowButton });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    next(error);
   }
 };
