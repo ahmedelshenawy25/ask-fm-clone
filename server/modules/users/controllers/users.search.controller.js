@@ -1,42 +1,42 @@
 const UsersDAL = require('@UsersDAL');
 const FollowsDAL = require('@FollowsDAL');
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
   try {
     const { userId } = req;
     const { q: searchTerm, page, limit } = req.query;
-    const searchQueryRegex = new RegExp(searchTerm, 'gi');
+
+    let users = [];
     const skip = (page - 1) * limit;
+    const searchQueryRegex = new RegExp(searchTerm, 'gi');
 
     const usersCount = await UsersDAL.findUsersCountByFullnameOrUsernameRegEx({
       searchQueryRegex,
       currentUserId: userId
     });
-    if (!usersCount) return res.status(200).json({ users: [], usersCount });
+    if (!usersCount)
+      return res.status(200).json({ users, usersCount });
 
-    const users = await UsersDAL.findUsersByFullnameOrUsernameRegEx({
+    users = await UsersDAL.findUsersByFullnameOrUsernameRegEx({
       searchQueryRegex,
       currentUserId: userId,
       skip,
       limit
     });
-    // add isFollowed property to users being followed by req.userId
-    const modifiedUsers = await Promise.all(users.map(async (user) => {
-      const isFollowed = await FollowsDAL.isFollowed(user._id, userId);
-      if (isFollowed) {
-        return ({
-          ...user,
-          isFollowed: true
-        });
-      }
-      return ({
-        ...user,
-        isFollowed: false
-      });
-    }));
+    users = await addIsFollowedProperty(users, userId);
 
-    return res.status(200).json({ users: modifiedUsers, usersCount });
-  } catch (e) {
-    return res.status(400).json({ message: e.message });
+    return res.status(200).json({ users, usersCount });
+  } catch (error) {
+    next(error);
   }
 };
+
+async function addIsFollowedProperty (users, userId) {
+  const usersPromises = users.map(async (user) => {
+    const isFollowed = await FollowsDAL.isFollowed(user._id, userId);
+    user.isFollowed = isFollowed;
+    return user;
+  });
+
+  return await Promise.all(usersPromises);
+}

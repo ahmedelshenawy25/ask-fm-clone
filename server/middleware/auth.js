@@ -1,3 +1,4 @@
+const OperationalError = require('@helpers/error-management/operatinal.error');
 const jwt = require('jsonwebtoken');
 
 function auth (req, res, next) {
@@ -7,8 +8,8 @@ function auth (req, res, next) {
     req.userId = decoded._id;
 
     return next();
-  } catch (e) {
-    return res.status(401).json({ message: 'Invalid token.' });
+  } catch (error) {
+    next(new OperationalError('Invalid token.', 401));
   }
 }
 

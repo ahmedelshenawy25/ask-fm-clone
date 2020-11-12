@@ -5,12 +5,14 @@ module.exports = async (req, res, next) => {
     const { userId } = req;
     const { page, limit } = req.query;
 
+    let questions = [];
     const skip = (page - 1) * limit;
 
     const questionsCount = await QuestionsDAL.findUserUnansweredQuestionsCount(userId);
-    if (!questionsCount) return res.status(200).json({ questions: [], questionsCount });
+    if (!questionsCount)
+      return res.status(200).json({ questions, questionsCount });
 
-    const questions = await QuestionsDAL.findUserUnansweredQuestions({
+    questions = await QuestionsDAL.findUserUnansweredQuestions({
       recipientId: userId,
       skip,
       limit
@@ -18,6 +20,6 @@ module.exports = async (req, res, next) => {
 
     return res.status(200).json({ questions, questionsCount });
   } catch (error) {
-    return res.status(400).json({ message: error.message });
+    next(error);
   }
 };

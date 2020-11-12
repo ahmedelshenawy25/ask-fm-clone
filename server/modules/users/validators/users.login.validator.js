@@ -15,7 +15,7 @@ const bodySchema = joi.object({
         .max(25)
     )
     .required()
-    .label('username or password'),
+    .label('username or email'),
   password: joi.string()
     .allow('')
     // max = 64 https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#maximum-password-lengths

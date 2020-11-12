@@ -1,5 +1,6 @@
 const UsersDAL = require('@UsersDAL');
 const QuestionsDAL = require('@QuestionsDAL');
+const OperationalError = require('@helpers/error-management/operatinal.error');
 
 module.exports = async (req, res, next) => {
   try {
@@ -8,9 +9,8 @@ module.exports = async (req, res, next) => {
     const { question, isAnonymous } = req.body;
 
     const recipient = await UsersDAL.findUserIdByUsername(username);
-    if (!recipient) {
-      throw new Error('User not found.');
-    }
+    if (!recipient)
+      throw new OperationalError('User not found.', 400);
 
     await QuestionsDAL.create({
       recipient: recipient._id,
@@ -20,7 +20,7 @@ module.exports = async (req, res, next) => {
     });
 
     return res.status(201).json();
-  } catch (e) {
-    return res.status(400).json({ message: e.message });
+  } catch (error) {
+    next(error);
   }
 };
