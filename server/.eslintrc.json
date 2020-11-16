@@ -85,7 +85,13 @@
           "ExcelWriterMixin",
           "ObjectId",
           "SyncToAlgolia",
-          "Router"
+          "Router",
+          "InvalidInputError",
+          "UnauthorizedError",
+          "OperationNotAllowedError",
+          "ResourceNotFoundError",
+          "ConflictError",
+          "UnknownError"
         ]
       }
     ],
