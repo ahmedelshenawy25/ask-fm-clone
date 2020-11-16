@@ -32,6 +32,6 @@ function isInvalidJoiSchema (schema) {
 function validate (schema, req, key) {
   const { value, error } = schema.validate(req[key]);
   if (error)
-    throw new OperationalError(error.message, 400);
+    throw new OperationalError(error.message, 400, 'ValidationError');
   req[key] = value;
 }
