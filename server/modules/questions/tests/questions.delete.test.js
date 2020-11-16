@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
 const UsersDAL = require('@UsersDAL');
-const { usersGenerator, questionsGenerator } = require('../../../fake-data-generator');
+const { usersGenerator, questionsGenerator, random } = require('../../../fake-data-generator');
+const { QUESTION_NOT_FOUND, INVALID_QUESTION_ID } = require('../errors');
 
 let app;
 
@@ -50,24 +51,43 @@ describe('Delete a question -> #DELETE /api/delete/:questionId', () => {
     });
     const questionId = question._id;
 
-    await request(app)
+    const res = await request(app)
       .delete(`/api/delete/${questionId}`)
       .set('Authorization', token)
-      .expect(400);
+      .expect(404);
 
+    expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toBe(QUESTION_NOT_FOUND);
     done();
   });
 
-  it('Invalid questionId, expect to fail', async (done) => {
+  it('Valid mongooseId but question doesn\'t exist, expect to fail', async (done) => {
     const invalidQuestionId = mongoose.Types.ObjectId();
     const user = await usersGenerator();
     const token = `Bearer ${UsersDAL.generateAuthToken(user)}`;
 
-    await request(app)
+    const res = await request(app)
+      .delete(`/api/delete/${invalidQuestionId}`)
+      .set('Authorization', token)
+      .expect(404);
+
+    expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toBe(QUESTION_NOT_FOUND);
+    done();
+  });
+
+  it('Invalid questionId, expect to fail', async (done) => {
+    const invalidQuestionId = random.randomText(12);
+    const user = await usersGenerator();
+    const token = `Bearer ${UsersDAL.generateAuthToken(user)}`;
+
+    const res = await request(app)
       .delete(`/api/delete/${invalidQuestionId}`)
       .set('Authorization', token)
       .expect(400);
 
+    expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toBe(INVALID_QUESTION_ID);
     done();
   });
 });

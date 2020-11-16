@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
 const { usersGenerator, random } = require('../../../fake-data-generator');
+const { INVALID_USERNAME_OR_PASSWORD } = require('../errors');
 
 let app;
 
@@ -64,6 +65,7 @@ describe('Log user in -> #POST /api/login', () => {
       .expect(400);
 
     expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toBe(INVALID_USERNAME_OR_PASSWORD);
     done();
   });
 
@@ -80,6 +82,7 @@ describe('Log user in -> #POST /api/login', () => {
       .expect(400);
 
     expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toBe(INVALID_USERNAME_OR_PASSWORD);
     done();
   });
 
@@ -95,6 +98,7 @@ describe('Log user in -> #POST /api/login', () => {
       .expect(400);
 
     expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toBe(INVALID_USERNAME_OR_PASSWORD);
     done();
   });
 
@@ -110,6 +114,7 @@ describe('Log user in -> #POST /api/login', () => {
       .expect(400);
 
     expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toBe(INVALID_USERNAME_OR_PASSWORD);
     done();
   });
 });

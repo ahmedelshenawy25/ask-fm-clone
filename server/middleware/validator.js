@@ -1,5 +1,5 @@
 const joi = require('joi');
-const OperationalError = require('@helpers/error-management/operatinal.error');
+const { InvalidInputError } = require('@helpers/error-management/common.errors');
 
 module.exports = ({ bodySchema, paramsSchema, querySchema }) => {
   if (!bodySchema && !paramsSchema && !querySchema)
@@ -32,6 +32,6 @@ function isInvalidJoiSchema (schema) {
 function validate (schema, req, key) {
   const { value, error } = schema.validate(req[key]);
   if (error)
-    throw new OperationalError(error.message, 400);
+    throw InvalidInputError(error.message);
   req[key] = value;
 }

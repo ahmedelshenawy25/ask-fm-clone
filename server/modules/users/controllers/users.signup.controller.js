@@ -1,5 +1,6 @@
-const OperationalError = require('@helpers/error-management/operatinal.error');
+const { ConflictError } = require('@helpers/error-management/common.errors');
 const UsersDAL = require('@UsersDAL');
+const { USERNAME_EXIST, EMAIL_EXIST } = require('../errors');
 
 module.exports = async (req, res, next) => {
   try {
@@ -8,9 +9,9 @@ module.exports = async (req, res, next) => {
 
     const user = await UsersDAL.findUserIdByUsernameOrEmail(username, email);
     if (user && user.username === username)
-      throw new OperationalError('Username already exists', 409);
+      throw ConflictError(USERNAME_EXIST);
     if (user && user.email === email)
-      throw new OperationalError('Email already exists', 409);
+      throw ConflictError(EMAIL_EXIST);
 
     await UsersDAL.createUser(userSignupForm);
 

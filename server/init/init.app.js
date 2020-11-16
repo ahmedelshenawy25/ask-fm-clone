@@ -7,7 +7,7 @@ const cors = require('cors');
 const usersRouter = require('../modules/users/users.routes');
 const questionsRouter = require('../modules/questions/questions.routes');
 const friendsRouter = require('../modules/friends/friends.routes');
-const OperationalError = require('@helpers/error-management/operatinal.error');
+const ErrorHandler = require('@helpers/error-management/error.handler');
 
 const app = express();
 
@@ -23,25 +23,7 @@ app.use(express.static(path.join(__dirname, '../../client/build')));
 app.use('/api', usersRouter);
 app.use('/api', questionsRouter);
 app.use('/api', friendsRouter);
-
-app.use((err, req, res, next) => {
-  if (err instanceof OperationalError)
-    return res.status(err.httpCode).json({ message: err.message });
-  // logger
-  res.status(500).json({ message: 'Internal Server Error' });
-  process.exit(1);
-});
-
-process.on('uncaughtException', (error) => {
-  // logger
-  console.log(error);
-  process.exit(1);
-});
-process.on('unhandledRejection', (reason) => {
-  // logger
-  console.log(reason);
-  process.exit(1);
-});
+new ErrorHandler().registerAllErrorHandlers(app);
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../../client/build/index.html'));

@@ -1,5 +1,6 @@
-const OperationalError = require('@helpers/error-management/operatinal.error');
 const QuestionsDAL = require('@QuestionsDAL');
+const { QUESTION_NOT_FOUND } = require('../errors');
+const { ResourceNotFoundError } = require('@helpers/error-management/common.errors');
 
 module.exports = async (req, res, next) => {
   try {
@@ -9,7 +10,7 @@ module.exports = async (req, res, next) => {
 
     const question = await QuestionsDAL.findQuestionById(questionId, userId);
     if (!question)
-      throw new OperationalError('Question not found', 400);
+      throw ResourceNotFoundError(QUESTION_NOT_FOUND);
 
     await QuestionsDAL.answer(questionId, answer);
 

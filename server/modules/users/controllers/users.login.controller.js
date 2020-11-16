@@ -1,5 +1,6 @@
-const OperationalError = require('@helpers/error-management/operatinal.error');
 const UsersDAL = require('@UsersDAL');
+const { INVALID_USERNAME_OR_PASSWORD } = require('../errors');
+const { InvalidInputError } = require('@helpers/error-management/common.errors');
 
 module.exports = async (req, res, next) => {
   try {
@@ -7,7 +8,7 @@ module.exports = async (req, res, next) => {
 
     const user = await UsersDAL.login(usernameOrEmail, password);
     if (!user)
-      throw new OperationalError('Invalid username or password!', 400);
+      throw InvalidInputError(INVALID_USERNAME_OR_PASSWORD);
 
     const token = UsersDAL.generateAuthToken(user);
 
