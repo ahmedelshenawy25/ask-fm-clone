@@ -1,7 +1,8 @@
 const UsersDAL = require('@UsersDAL');
 const QuestionsDAL = require('@QuestionsDAL');
 const FollowsDAL = require('@FollowsDAL');
-const OperationalError = require('@helpers/error-management/operatinal.error');
+const { USER_NOT_FOUND } = require('../errors');
+const { ResourceNotFoundError } = require('@helpers/error-management/common.errors');
 
 module.exports = async (req, res, next) => {
   try {
@@ -15,7 +16,7 @@ module.exports = async (req, res, next) => {
 
     const recipient = await UsersDAL.findUserIdByUsername(username);
     if (!recipient)
-      throw new OperationalError('User not found', 400);
+      throw ResourceNotFoundError(USER_NOT_FOUND);
 
     const questionsCount = await QuestionsDAL.findUserAnsweredQuestionsCount(recipient);
     if (questionsCount)

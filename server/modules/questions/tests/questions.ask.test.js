@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const request = require('supertest');
 const UsersDAL = require('@UsersDAL');
 const { usersGenerator, random } = require('../../../fake-data-generator');
+const { USER_NOT_FOUND, QUESTION_LENGTH } = require('../errors');
 
 let app;
 
@@ -54,6 +55,46 @@ describe('Ask a question -> #POST /api/:username/ask', () => {
     done();
   });
 
+  it('Question under min length, expect to fail', async (done) => {
+    const user = await usersGenerator();
+    const token = `Bearer ${UsersDAL.generateAuthToken(user)}`;
+    const question = {
+      question: 'a'.repeat(301),
+      isAnonymous: false
+    };
+    const { username } = user;
+
+    const res = await request(app)
+      .post(`/api/${username}/ask`)
+      .set('Authorization', token)
+      .send(question)
+      .expect(400);
+
+    expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toBe(QUESTION_LENGTH);
+    done();
+  });
+
+  it('Question exceeds max length, expect to fail', async (done) => {
+    const user = await usersGenerator();
+    const token = `Bearer ${UsersDAL.generateAuthToken(user)}`;
+    const question = {
+      question: 'a'.repeat(301),
+      isAnonymous: false
+    };
+    const { username } = user;
+
+    const res = await request(app)
+      .post(`/api/${username}/ask`)
+      .set('Authorization', token)
+      .send(question)
+      .expect(400);
+
+    expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toBe(QUESTION_LENGTH);
+    done();
+  });
+
   it('Invalid username, expect to fail', async (done) => {
     const user = await usersGenerator();
     const token = `Bearer ${UsersDAL.generateAuthToken(user)}`;
@@ -63,12 +104,14 @@ describe('Ask a question -> #POST /api/:username/ask', () => {
     };
     const invalidUsername = random.randomUsername();
 
-    await request(app)
+    const res = await request(app)
       .post(`/api/${invalidUsername}/ask`)
       .set('Authorization', token)
       .send(question)
-      .expect(400);
+      .expect(404);
 
+    expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toBe(USER_NOT_FOUND);
     done();
   });
 });

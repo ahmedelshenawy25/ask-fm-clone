@@ -3,6 +3,7 @@ const request = require('supertest');
 const UsersDAL = require('@UsersDAL');
 const FollowsDAL = require('@FollowsDAL');
 const { usersGenerator, questionsGenerator, random } = require('../../../fake-data-generator');
+const { USER_NOT_FOUND } = require('../errors');
 
 let app;
 
@@ -129,11 +130,13 @@ describe('Get answered questions for a user by username -> #GET /api/user/:usern
     const token = `Bearer ${UsersDAL.generateAuthToken(user)}`;
     const invalidUsername = random.randomUsername();
 
-    await request(app)
+    const res = await request(app)
       .get(`/api/user/${invalidUsername}`)
       .set('Authorization', token)
-      .expect(400);
+      .expect(404);
 
+    expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toBe(USER_NOT_FOUND);
     done();
   });
 });

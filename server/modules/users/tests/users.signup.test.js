@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
 const { usersGenerator, random } = require('../../../fake-data-generator');
+const { USERNAME_EXIST, EMAIL_EXIST } = require('../errors');
 
 let app;
 
@@ -50,6 +51,7 @@ describe('Create a new user -> #POST /api/signup', () => {
       .expect(409);
 
     expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toBe(USERNAME_EXIST);
     done();
   });
 
@@ -69,6 +71,7 @@ describe('Create a new user -> #POST /api/signup', () => {
       .expect(409);
 
     expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toBe(EMAIL_EXIST);
     done();
   });
 });

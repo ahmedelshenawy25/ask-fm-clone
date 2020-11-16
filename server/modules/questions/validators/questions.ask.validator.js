@@ -1,4 +1,5 @@
 const joi = require('joi');
+const { QUESTION_LENGTH } = require('../errors');
 
 const paramsSchema = joi.object({
   username: joi.string()
@@ -16,7 +17,7 @@ const bodySchema = joi.object({
     .min(1)
     .max(300)
     .required()
-    .error(() => new Error('Question must have a length between 1 and 300')),
+    .error(() => new Error(QUESTION_LENGTH)),
   isAnonymous: joi.boolean()
     .required()
 });

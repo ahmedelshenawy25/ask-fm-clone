@@ -1,21 +1,24 @@
 const UsersDAL = require('@UsersDAL');
 const FollowsDAL = require('@FollowsDAL');
-const OperationalError = require('@helpers/error-management/operatinal.error');
+const { USER_NOT_FOUND, USER_FOLLOWED, USER_CANT_FOLLOW } = require('../errors');
+const { ResourceNotFoundError, OperationNotAllowedError } = require('@helpers/error-management/common.errors');
 
 module.exports = async (req, res, next) => {
   try {
     const { userId } = req;
     const { username } = req.params;
 
-    const followedUser = await UsersDAL.findUserIdByUsername(username);
-    if (!followedUser || userId === followedUser._id.toString())
-      throw new OperationalError('User not found', 400);
+    const userToBeFollowed = await UsersDAL.findUserIdByUsername(username);
+    if (!userToBeFollowed)
+      throw ResourceNotFoundError(USER_NOT_FOUND);
+    if (userId === userToBeFollowed._id.toString())
+      throw OperationNotAllowedError(USER_CANT_FOLLOW);
 
-    const isFollowed = await FollowsDAL.isFollowed(followedUser, userId);
+    const isFollowed = await FollowsDAL.isFollowed(userToBeFollowed, userId);
     if (isFollowed)
-      throw new OperationalError('User is already being followed', 400);
+      throw OperationNotAllowedError(USER_FOLLOWED);
 
-    await FollowsDAL.create(followedUser, userId);
+    await FollowsDAL.create(userToBeFollowed, userId);
 
     return res.status(201).json();
   } catch (error) {

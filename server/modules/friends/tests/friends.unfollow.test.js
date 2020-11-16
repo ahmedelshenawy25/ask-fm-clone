@@ -3,6 +3,7 @@ const request = require('supertest');
 const UsersDAL = require('@UsersDAL');
 const FollowsDAL = require('@FollowsDAL');
 const { usersGenerator, random } = require('../../../fake-data-generator');
+const { USER_NOT_FOLLOWED, USER_NOT_FOUND, USER_CANT_UNFOLLOW } = require('../errors');
 
 let app;
 
@@ -32,16 +33,19 @@ describe('Unfollow a user -> #DELETE /api/unfollow/:username', () => {
 
     done();
   });
+
   it('Invalid username, expect to fail', async (done) => {
     const user = await usersGenerator();
     const token = `Bearer ${UsersDAL.generateAuthToken(user)}`;
     const invalidUsername = random.randomUsername();
 
-    await request(app)
+    const res = await request(app)
       .delete(`/api/unfollow/${invalidUsername}`)
       .set('Authorization', token)
-      .expect(400);
+      .expect(404);
 
+    expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toBe(USER_NOT_FOUND);
     done();
   });
 
@@ -50,11 +54,28 @@ describe('Unfollow a user -> #DELETE /api/unfollow/:username', () => {
     const token = `Bearer ${UsersDAL.generateAuthToken(user1)}`;
     const { username } = user2;
 
-    await request(app)
+    const res = await request(app)
       .delete(`/api/unfollow/${username}`)
       .set('Authorization', token)
-      .expect(400);
+      .expect(403);
 
+    expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toBe(USER_NOT_FOLLOWED);
+    done();
+  });
+
+  it('User unfollowing him/herself, expect to fail', async (done) => {
+    const user = await usersGenerator();
+    const token = `Bearer ${UsersDAL.generateAuthToken(user)}`;
+    const { username } = user;
+
+    const res = await request(app)
+      .delete(`/api/unfollow/${username}`)
+      .set('Authorization', token)
+      .expect(403);
+
+    expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toBe(USER_CANT_UNFOLLOW);
     done();
   });
 });

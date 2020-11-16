@@ -1,4 +1,5 @@
 const joi = require('joi');
+const { INVALID_PASSWORD } = require('../errors');
 
 const bodySchema = joi.object({
   firstName: joi.string()
@@ -28,7 +29,7 @@ const bodySchema = joi.object({
   password: joi.string()
     .pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,64}$/)
     .required()
-    .error(() => new Error('Invalid password'))
+    .error(() => new Error(INVALID_PASSWORD))
 });
 
 module.exports = {
