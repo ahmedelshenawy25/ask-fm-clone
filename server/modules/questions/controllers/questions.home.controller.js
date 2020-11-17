@@ -13,14 +13,12 @@ module.exports = async (req, res, next) => {
     const questionsCount = await QuestionsDAL.findFollowedUsersAnsweredQuestionsCount({
       recipientIds: followedUsersIds
     });
-    if (!questionsCount)
-      return res.status(200).json({ questions, questionsCount });
-
-    questions = await QuestionsDAL.findFollowedUsersAnsweredQuestions({
-      recipientIds: followedUsersIds,
-      skip,
-      limit
-    });
+    if (questionsCount)
+      questions = await QuestionsDAL.findFollowedUsersAnsweredQuestions({
+        recipientIds: followedUsersIds,
+        skip,
+        limit
+      });
 
     return res.status(200).json({ questions, questionsCount });
   } catch (error) {
