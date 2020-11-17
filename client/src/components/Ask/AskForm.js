@@ -5,8 +5,9 @@ import axiosInstance from '../../axiosInstance/axiosInstance';
 import Follow from '../Follow/Follow';
 import askFormValidationSchema from './askForm.validationSchema';
 
-const AskForm = ({ username, isFollowed, renderButton }) => {
+const AskForm = ({ username, isFollowed }) => {
   const [error, setError] = useState('');
+  const renderFollowButton = username !== localStorage.username;
 
   return (
     <>
@@ -66,15 +67,14 @@ const AskForm = ({ username, isFollowed, renderButton }) => {
           </Form>
         )}
       </Formik>
-      {renderButton && <Follow key={isFollowed} username={username} isFollowed={isFollowed} />}
+      {renderFollowButton && <Follow key={isFollowed} username={username} isFollowed={isFollowed} />}
     </>
   );
 };
 
 AskForm.propTypes = {
   username: PropTypes.string.isRequired,
-  isFollowed: PropTypes.bool.isRequired,
-  renderButton: PropTypes.bool.isRequired
+  isFollowed: PropTypes.bool.isRequired
 };
 
 export default AskForm;

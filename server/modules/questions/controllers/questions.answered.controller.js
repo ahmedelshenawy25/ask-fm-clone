@@ -26,13 +26,10 @@ module.exports = async (req, res, next) => {
         limit
       });
 
-    // TODO: remove renderFollowButton
-    const renderFollowButton = userId !== recipient._id.toString();
-    if (renderFollowButton)
+    if (userId !== recipient._id.toString())
       isFollowed = await FollowsDAL.isFollowed(recipient, userId);
 
-
-    return res.status(200).json({ questions, questionsCount, isFollowed, renderFollowButton });
+    return res.status(200).json({ questions, questionsCount, isFollowed });
   } catch (error) {
     next(error);
   }

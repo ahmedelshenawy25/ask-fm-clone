@@ -11,7 +11,6 @@ const AnsweredQuestionsList = ({ logout }) => {
   const { username } = useParams();
   const [questions, setQuestions] = useState([]);
   const [isFollowed, setIsFollowed] = useState(true);
-  const [renderButton, setRenderButton] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState('');
@@ -27,7 +26,6 @@ const AnsweredQuestionsList = ({ logout }) => {
 
       setQuestions((prevState) => [...prevState, ...response.data.questions]);
       setIsFollowed(response.data.isFollowed);
-      setRenderButton(response.data.renderFollowButton);
       setPage(pageNum + 1);
 
       if (response.data.questionsCount === questions.length + response.data.questions.length) {
@@ -55,7 +53,6 @@ const AnsweredQuestionsList = ({ logout }) => {
         <AskForm
           username={username}
           isFollowed={isFollowed}
-          renderButton={renderButton}
         />
         <InfiniteScroll
           dataLength={questions.length}

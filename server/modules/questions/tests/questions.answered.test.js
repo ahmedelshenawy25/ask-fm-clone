@@ -46,7 +46,6 @@ describe('Get answered questions for a user by username -> #GET /api/user/:usern
       .expect(200);
 
     expect(res.body).toHaveProperty('isFollowed');
-    expect(res.body).toHaveProperty('renderFollowButton');
     expect(res.body).toHaveProperty('questions');
     expect(res.body).toHaveProperty('questionsCount');
     expect(res.body.isFollowed).toBeTruthy();
@@ -87,7 +86,6 @@ describe('Get answered questions for a user by username -> #GET /api/user/:usern
       .expect(200);
 
     expect(res.body).toHaveProperty('isFollowed');
-    expect(res.body).toHaveProperty('renderFollowButton');
     expect(res.body).toHaveProperty('questions');
     expect(res.body).toHaveProperty('questionsCount');
     res.body.questions.forEach((question) => {
