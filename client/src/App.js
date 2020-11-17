@@ -1,5 +1,5 @@
-import './App.css';
 import React, { useState, useEffect } from 'react';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import AppRouter from './router/AppRouter';
 import Navbar from './components/Navigation/Navbar';
 import AuthContext from './context/AuthContext/AuthContext';
@@ -44,10 +44,9 @@ const App = () => {
 
   return (
     <AuthContext.Provider value={isAuth}>
-      <div>
-        <Navbar username={username} onLogout={logoutHandler} />
-        <AppRouter authHandler={authHandler} logoutHandler={logoutHandler} />
-      </div>
+      <CssBaseline />
+      <Navbar username={username} onLogout={logoutHandler} />
+      <AppRouter authHandler={authHandler} logoutHandler={logoutHandler} />
     </AuthContext.Provider>
   );
 };

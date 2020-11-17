@@ -23,16 +23,16 @@ const UnansweredQuestion = ({
   };
 
   return (
-    <div className="ui divided items">
-      <div style={{ minWidth: '100%' }} className="ui card QuestionItem">
-        <div className="content">
+    <div>
+      <div>
+        <div>
           <QuestionLayout
             question={question}
             time={time}
             sender={sender}
           />
-          <div style={{ padding: '0' }} className="ui vertical segment" />
-          <div className="description">
+          <div />
+          <div>
             <AnswerForm
               id={id}
               removeQuestion={removeQuestion}

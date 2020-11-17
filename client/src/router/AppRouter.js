@@ -11,7 +11,7 @@ import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
 
 const AppRouter = ({ authHandler, logoutHandler }) => (
-  <div className="ui container">
+  <div>
     <Switch>
       <Redirect from="/" to="/home" exact />
       <Redirect from="/logout" to="/login" />
@@ -37,7 +37,7 @@ const AppRouter = ({ authHandler, logoutHandler }) => (
       </PrivateRoute>
 
       <Route>
-        <h1 style={{ textAlign: 'center' }}>404 Page not found</h1>
+        <h1>404 Page not found</h1>
       </Route>
     </Switch>
   </div>

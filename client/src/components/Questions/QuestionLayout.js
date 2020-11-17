@@ -1,28 +1,24 @@
-import './QuestionLayout.css';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 const QuestionLayout = ({ question, time, sender }) => (
   <div>
-    <div className="header QuestionLayout">
+    <div>
       {question}
     </div>
-    <div className="meta">
+    <div>
       <span>
         Sent by:
       </span>
 
       {sender ? (
-        <NavLink
-          className="ui item"
-          to={`/user/${sender.username}`}
-        >
+        <NavLink to={`/user/${sender.username}`}>
           {`${sender.firstName} ${sender.lastName}`}
         </NavLink>
       ) : 'Anonymous'}
 
-      <span className="right floated time">
+      <span>
         {time}
       </span>
     </div>

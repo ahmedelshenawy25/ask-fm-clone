@@ -36,44 +36,44 @@ const Signup = () => {
       {({ isValid, dirty, isSubmitting }) => (
         <>
           {error && (
-          <div className="ui warning message">
-            <div className="header">
+          <div>
+            <div>
               {error}
             </div>
           </div>
           )}
-          <Form className="ui form">
-            <div className="field">
+          <Form>
+            <div>
               <Field name="firstName" placeholder="First name" />
               <ErrorMessage name="firstName" />
             </div>
 
-            <div className="field">
+            <div>
               <Field name="lastName" placeholder="Last name" />
               <ErrorMessage name="lastName" />
             </div>
 
-            <div className="field">
+            <div>
               <Field name="username" placeholder="Username" />
               <ErrorMessage name="username" />
             </div>
 
-            <div className="field">
+            <div>
               <Field name="email" placeholder="Email" />
               <ErrorMessage name="email" />
             </div>
 
-            <div className="field">
+            <div>
               <Field type="password" name="password" placeholder="Password" />
               <ErrorMessage name="password" />
             </div>
 
-            <div className="field">
+            <div>
               <Field type="password" name="confirmPassword" placeholder="Confirm password" />
               <ErrorMessage name="confirmPassword" />
             </div>
 
-            <button className="ui button" disabled={!(isValid && dirty) || isSubmitting} type="submit">Submit</button>
+            <button disabled={!(isValid && dirty) || isSubmitting} type="submit">Submit</button>
           </Form>
         </>
       )}

@@ -14,8 +14,8 @@ const Login = ({ onLogin }) => {
   return (
     <>
       {error && (
-        <div className="ui warning message">
-          <div className="header">
+        <div>
+          <div>
             {error}
           </div>
         </div>
@@ -43,18 +43,18 @@ const Login = ({ onLogin }) => {
         }}
       >
         {({ isValid, dirty, isSubmitting }) => (
-          <Form className="ui form">
-            <div className="field">
+          <Form>
+            <div>
               <Field name="usernameOrEmail" placeholder="Username or email" />
               <ErrorMessage name="usernameOrEmail" />
             </div>
 
-            <div className="field">
+            <div>
               <Field type="password" name="password" placeholder="Password" />
               <ErrorMessage name="password" />
             </div>
 
-            <button className="ui button" disabled={!(isValid && dirty) || isSubmitting} type="submit">Login</button>
+            <button disabled={!(isValid && dirty) || isSubmitting} type="submit">Login</button>
           </Form>
         )}
       </Formik>

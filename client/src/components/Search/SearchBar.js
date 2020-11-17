@@ -15,11 +15,8 @@ const SearchBar = () => {
       }}
     >
       <Form>
-        <div style={{ margin: '0 50%' }} className="ui search">
-          <div className="ui icon input">
-            <Field className="prompt" name="search" placeholder="Search" />
-            <i className="search icon" />
-          </div>
+        <div>
+          <Field name="search" placeholder="Search" />
         </div>
       </Form>
     </Formik>

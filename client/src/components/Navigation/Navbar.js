@@ -7,7 +7,7 @@ import PublicNavbar from './PublicNavbar';
 const Navbar = ({ onLogout, username }) => {
   const isAuth = useContext(AuthContext);
   return (
-    <div style={{ marginBottom: '0.5%' }}>
+    <div>
       { isAuth ? <PrivateNavbar username={username} onLogout={onLogout} /> : <PublicNavbar /> }
     </div>
   );

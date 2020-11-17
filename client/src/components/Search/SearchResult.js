@@ -1,4 +1,3 @@
-import './SearchResult.css';
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -50,7 +49,7 @@ const SearchResult = ({ logout }) => {
 
   return (
     <div>
-      <div className="ui info message">
+      <div>
         {`"${searchResultsCount}" search results for "${search.replace('?q=', '')}"`}
       </div>
       <InfiniteScroll
@@ -58,10 +57,10 @@ const SearchResult = ({ logout }) => {
         next={() => fetchSearchResult({ searchQuery: search, pageNum: page })}
         hasMore={hasMore}
         scrollThreshold={1}
-        loader={<h2 style={{ textAlign: 'center' }}>Loading...</h2>}
-        endMessage={<p style={{ textAlign: 'center' }}><strong>No more content</strong></p>}
+        loader={<h2>Loading...</h2>}
+        endMessage={<p><strong>No more content</strong></p>}
       >
-        <div className="ui relaxed divided list results">
+        <div>
           {searchResults.map(({ _id, username, fullName }) => (
             <UserItem
               key={_id}

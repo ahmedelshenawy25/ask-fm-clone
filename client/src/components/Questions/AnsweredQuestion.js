@@ -5,17 +5,16 @@ import QuestionLayout from './QuestionLayout';
 const AnsweredQuestion = ({
   question, answer, sender, time
 }) => (
-  <div className="ui divided items">
-    <div style={{ minWidth: '100%' }} className="ui card QuestionItem">
-      <div className="content">
+  <div>
+    <div>
+      <div>
         <QuestionLayout
           question={question}
           time={time}
           sender={sender}
         />
-        <div style={{ padding: '0' }} className="ui vertical segment" />
-        <div className="description">
-          <p style={{ fontSize: '1.2rem', lineHeight: '1.5rem' }}>
+        <div>
+          <p>
             {answer}
           </p>
         </div>

@@ -1,4 +1,3 @@
-import './AnsweredQuestionsList.css';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -51,8 +50,8 @@ const AnsweredQuestionsList = ({ logout }) => {
   }, [username]);
 
   return (
-    <div className="FlexParent">
-      <div className="leftFlexChild">
+    <div>
+      <div>
         <AskForm
           username={username}
           isFollowed={isFollowed}
@@ -63,8 +62,8 @@ const AnsweredQuestionsList = ({ logout }) => {
           next={() => fetchProfile({ pageNum: page })}
           hasMore={hasMore}
           scrollThreshold={1}
-          loader={<h2 style={{ textAlign: 'center' }}>Loading...</h2>}
-          endMessage={<p style={{ textAlign: 'center' }}><strong>No more content</strong></p>}
+          loader={<h2>Loading...</h2>}
+          endMessage={<p><strong>No more content</strong></p>}
         >
           {questions.map(({
             _id, question, answer, sender, updatedAt

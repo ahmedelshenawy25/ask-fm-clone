@@ -21,7 +21,7 @@ const Discover = () => {
   }, []);
 
   return (
-    <div className="right section">
+    <div >
       {discoveredUsers.map(({
         _id, username, firstName, lastName
       }) => (

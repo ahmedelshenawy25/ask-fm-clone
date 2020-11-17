@@ -5,12 +5,14 @@ import PropTypes from 'prop-types';
 const UserItem = ({
   username, fullName
 }) => (
-  <div className="item red">
-    <i className="large user icon" />
-    <div className="content">
+  <div>
+    <div>
+      user icon
+    </div>
+    <div>
       <NavLink to={`/user/${username}`}>
-        <div className="userInfo fullname">{fullName}</div>
-        <div className="userInfo">{`@${username}`}</div>
+        <div>{fullName}</div>
+        <div>{`@${username}`}</div>
       </NavLink>
     </div>
     <br />

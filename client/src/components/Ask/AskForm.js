@@ -33,35 +33,31 @@ const AskForm = ({ username, isFollowed, renderButton }) => {
         {({
           values, isValid, dirty, isSubmitting
         }) => (
-          <Form className="ui form">
-            <div className="field">
+          <Form>
+            <div>
               <Field
                 as="textarea"
                 rows="4"
-                className="item"
                 name="question"
               />
             </div>
 
-            <div className="ui left floated">
+            <div>
               <label htmlFor="anonymous">
                 <Field
                   id="anonymous"
-                  style={{ marginRight: '5px' }}
                   type="checkbox"
                   name="isAnonymous"
                 />
                 Ask Anonymously
               </label>
 
-              <div style={{ float: 'right', marginRight: '10%' }}>
+              <div>
                 {300 - values.question.length}
               </div>
             </div>
 
             <button
-              style={{ marginTop: '-3.2%', marginBottom: '1%' }}
-              className="ui right floated button"
               disabled={!(isValid && dirty) || isSubmitting}
               type="submit"
             >

@@ -22,7 +22,7 @@ const Follow = ({ isFollowed: isUserFollowed, username }) => {
   };
 
   return (
-    <div className="ui right floated button follow" onClick={followHandler}>
+    <div onClick={followHandler}>
       {isFollowed ? 'Unfollow' : 'Follow'}
     </div>
   );

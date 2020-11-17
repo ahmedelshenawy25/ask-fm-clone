@@ -28,39 +28,26 @@ const AnswerForm = ({
     {({
       values, isValid, dirty, isSubmitting
     }) => (
-      <Form className="ui form">
-        <div className="field">
+      <Form>
+        <div>
           <Field
             as="textarea"
             rows="2"
-            className="item"
             name="answer"
           />
 
           <button
-            style={{ marginTop: '10px' }}
-            className="ui right floated button"
             disabled={!(isValid && dirty) || isSubmitting}
             type="submit"
           >
             Answer
           </button>
 
-          <div
-            style={{
-              paddingTop: '17px',
-              paddingRight: '10px'
-            }}
-            className="ui right floated"
-          >
+          <div>
             {3000 - values.answer.length}
           </div>
 
-          <div
-            style={{ marginTop: '10px' }}
-            className="ui left floated button"
-            onClick={questionDeleteHandler}
-          >
+          <div onClick={questionDeleteHandler}>
             Delete
           </div>
         </div>

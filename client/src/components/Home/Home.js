@@ -1,4 +1,3 @@
-import './Home.css';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -48,20 +47,20 @@ const Home = ({ logout }) => {
   }, [location.key]);
 
   return (
-    <div className="FlexParent">
-      <div className="ui relaxed divided list questionBox leftFlexChild">
+    <div>
+      <div>
         <InfiniteScroll
           dataLength={questions.length}
           next={() => fetchHomePage({ pageNum: page })}
           hasMore={hasMore}
           scrollThreshold={1}
-          loader={<h2 style={{ textAlign: 'center' }}>Loading...</h2>}
-          endMessage={<p style={{ textAlign: 'center' }}><strong>No more content</strong></p>}
+          loader={<h2>Loading...</h2>}
+          endMessage={<p><strong>No more content</strong></p>}
         >
           {questions.map(({
             _id, question, answer, sender, recipient, updatedAt
           }) => (
-            <div key={_id} className="ui card Home">
+            <div key={_id}>
               <UserItem
                 key={`${_id}${recipient.username}`}
                 username={recipient.username}

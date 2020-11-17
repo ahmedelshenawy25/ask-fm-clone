@@ -50,15 +50,15 @@ const Inbox = ({ logout }) => {
   };
 
   return (
-    <div className="FlexParent">
-      <div className="leftFlexChild">
+    <div>
+      <div>
         <InfiniteScroll
           dataLength={questions.length}
           next={() => fetchInbox({ pageNum: page })}
           hasMore={hasMore}
           scrollThreshold={1}
-          loader={<h2 style={{ textAlign: 'center' }}>Loading...</h2>}
-          endMessage={<p style={{ textAlign: 'center' }}><strong>No more content</strong></p>}
+          loader={<h2>Loading...</h2>}
+          endMessage={<p><strong>No more content</strong></p>}
         >
           {questions.map(({
             _id, question, sender, createdAt

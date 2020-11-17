@@ -20,7 +20,7 @@ const Friends = () => {
   }, []);
 
   return (
-    <div className="right section">
+    <div >
       {friends.map(({
         followedUser: {
           _id, username, firstName, lastName
