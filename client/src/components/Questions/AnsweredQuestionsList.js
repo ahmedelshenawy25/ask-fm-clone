@@ -32,7 +32,7 @@ const AnsweredQuestionsList = ({ logout }) => {
         setHasMore(false);
       }
     } catch (e) {
-      if (e.response.status === 401) return logout();
+      if (e.response && e.response.status === 401) return logout();
 
       setError(e.response ? e.response.data.message : e.message);
     }
