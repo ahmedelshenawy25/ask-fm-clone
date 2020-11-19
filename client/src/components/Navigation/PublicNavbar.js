@@ -1,10 +1,11 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
 
 const PublicNavbar = () => (
   <div>
-    <NavLink to="/signup">Signup</NavLink>
-    <NavLink to="/login">Login</NavLink>
+    <Button component={Link} to="/signup">Signup</Button>
+    <Button component={Link} to="/login">Login</Button>
   </div>
 );
 
