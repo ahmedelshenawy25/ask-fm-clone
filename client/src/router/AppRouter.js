@@ -11,36 +11,34 @@ import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
 
 const AppRouter = ({ authHandler, logoutHandler }) => (
-  <div>
-    <Switch>
-      <Redirect from="/" to="/home" exact />
-      <Redirect from="/logout" to="/login" />
+  <Switch>
+    <Redirect from="/" to="/home" exact />
+    <Redirect from="/logout" to="/login" />
 
-      <PublicRoute path="/signup">
-        <Signup />
-      </PublicRoute>
-      <PublicRoute path="/login">
-        <Login onLogin={authHandler} />
-      </PublicRoute>
+    <PublicRoute path="/signup">
+      <Signup />
+    </PublicRoute>
+    <PublicRoute path="/login">
+      <Login onLogin={authHandler} />
+    </PublicRoute>
 
-      <PrivateRoute path="/home">
-        <Home logout={logoutHandler} />
-      </PrivateRoute>
-      <PrivateRoute path="/account/inbox">
-        <Inbox logout={logoutHandler} />
-      </PrivateRoute>
-      <PrivateRoute path="/user/:username">
-        <AnsweredQuestionsList logout={logoutHandler} />
-      </PrivateRoute>
-      <PrivateRoute path="/search">
-        <SearchResult logout={logoutHandler} />
-      </PrivateRoute>
+    <PrivateRoute path="/home">
+      <Home logout={logoutHandler} />
+    </PrivateRoute>
+    <PrivateRoute path="/account/inbox">
+      <Inbox logout={logoutHandler} />
+    </PrivateRoute>
+    <PrivateRoute path="/user/:username">
+      <AnsweredQuestionsList logout={logoutHandler} />
+    </PrivateRoute>
+    <PrivateRoute path="/search">
+      <SearchResult logout={logoutHandler} />
+    </PrivateRoute>
 
-      <Route>
-        <h1>404 Page not found</h1>
-      </Route>
-    </Switch>
-  </div>
+    <Route>
+      <h1>404 Page not found</h1>
+    </Route>
+  </Switch>
 );
 
 AppRouter.propTypes = {

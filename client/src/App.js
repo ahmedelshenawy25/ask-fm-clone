@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Container from '@material-ui/core/Container';
 import AppRouter from './router/AppRouter';
 import Navbar from './components/Navigation/Navbar';
 import AuthContext from './context/AuthContext/AuthContext';
@@ -36,7 +37,7 @@ const App = () => {
     setIsAuth(true);
     setUsername(tokenUsername);
     setIsLoadingInitialState(false);
-  }, [localStorage.token]);
+  }, []);
 
   if (isLoadingInitialState) {
     return <div>Spinner placeholder...</div>;
@@ -46,7 +47,9 @@ const App = () => {
     <AuthContext.Provider value={isAuth}>
       <CssBaseline />
       <Navbar username={username} onLogout={logoutHandler} />
-      <AppRouter authHandler={authHandler} logoutHandler={logoutHandler} />
+      <Container maxWidth="md">
+        <AppRouter authHandler={authHandler} logoutHandler={logoutHandler} />
+      </Container>
     </AuthContext.Provider>
   );
 };
