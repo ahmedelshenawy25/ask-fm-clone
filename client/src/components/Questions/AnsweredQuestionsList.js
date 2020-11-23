@@ -2,12 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { makeStyles } from '@material-ui/core/styles';
 import axiosInstance from '../../axiosInstance/axiosInstance';
-import AnsweredQuestion from './AnsweredQuestion';
-import RightSideBox from '../RightSideBox/RightSideBox';
+import QuestionLayout from './QuestionLayout/QuestionLayout';
+import Sidebar from '../Sidebar/Sidebar';
 import AskForm from '../Ask/AskForm';
 
+const useStyles = makeStyles({
+  loading: {
+    display: 'block',
+    margin: 'auto'
+  }
+});
+
 const AnsweredQuestionsList = ({ logout }) => {
+  const classes = useStyles();
   const { username } = useParams();
   const [questions, setQuestions] = useState([]);
   const [isFollowed, setIsFollowed] = useState(true);
@@ -20,7 +32,7 @@ const AnsweredQuestionsList = ({ logout }) => {
       const response = await axiosInstance.get(`/user/${username}`, {
         params: {
           page: pageNum,
-          limit: 5
+          limit: 25
         }
       });
 
@@ -34,6 +46,7 @@ const AnsweredQuestionsList = ({ logout }) => {
     } catch (e) {
       if (e.response && e.response.status === 401) return logout();
 
+      setHasMore(false);
       setError(e.response ? e.response.data.message : e.message);
     }
   }
@@ -43,29 +56,30 @@ const AnsweredQuestionsList = ({ logout }) => {
 
     return () => {
       setQuestions([]);
+      setIsFollowed(true);
       setHasMore(true);
     };
   }, [username]);
 
   return (
-    <div>
-      <div>
+    <Grid container spacing={2}>
+      <Grid item sm={7} xs={12}>
         <AskForm
           username={username}
           isFollowed={isFollowed}
         />
         <InfiniteScroll
+          style={{ overflow: 'hidden' }}
           dataLength={questions.length}
           next={() => fetchProfile({ pageNum: page })}
           hasMore={hasMore}
           scrollThreshold={1}
-          loader={<h2>Loading...</h2>}
-          endMessage={<p><strong>No more content</strong></p>}
+          loader={<CircularProgress className={classes.loading} />}
         >
           {questions.map(({
             _id, question, answer, sender, updatedAt
           }) => (
-            <AnsweredQuestion
+            <QuestionLayout
               key={_id}
               question={question}
               answer={answer}
@@ -74,9 +88,13 @@ const AnsweredQuestionsList = ({ logout }) => {
             />
           ))}
         </InfiniteScroll>
-      </div>
-      <RightSideBox />
-    </div>
+      </Grid>
+      <Hidden xsDown>
+        <Grid item sm={4}>
+          <Sidebar />
+        </Grid>
+      </Hidden>
+    </Grid>
   );
 };
 
