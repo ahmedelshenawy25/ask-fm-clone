@@ -2,11 +2,23 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useLocation } from 'react-router-dom';
+import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { makeStyles } from '@material-ui/core/styles';
 import axiosInstance from '../../axiosInstance/axiosInstance';
 import UnansweredQuestion from './UnansweredQuestion';
-import RightSideBox from '../RightSideBox/RightSideBox';
+import Sidebar from '../Sidebar/Sidebar';
+
+const useStyles = makeStyles({
+  loading: {
+    display: 'block',
+    margin: 'auto'
+  }
+});
 
 const Inbox = ({ logout }) => {
+  const classes = useStyles();
   const location = useLocation();
   const [questions, setQuestions] = useState([]);
   const [page, setPage] = useState(1);
@@ -18,7 +30,7 @@ const Inbox = ({ logout }) => {
       const response = await axiosInstance.get('/account/inbox', {
         params: {
           page: pageNum,
-          limit: 5
+          limit: 25
         }
       });
 
@@ -31,6 +43,7 @@ const Inbox = ({ logout }) => {
     } catch (e) {
       if (e.response && e.response.status === 401) return logout();
 
+      setHasMore(false);
       setError(e.response ? e.response.data.message : e.message);
     }
   }
@@ -50,15 +63,15 @@ const Inbox = ({ logout }) => {
   };
 
   return (
-    <div>
-      <div>
+    <Grid container spacing={2}>
+      <Grid item sm={7} xs={12}>
         <InfiniteScroll
+          style={{ overflow: 'hidden' }}
           dataLength={questions.length}
           next={() => fetchInbox({ pageNum: page })}
           hasMore={hasMore}
           scrollThreshold={1}
-          loader={<h2>Loading...</h2>}
-          endMessage={<p><strong>No more content</strong></p>}
+          loader={<CircularProgress className={classes.loading} />}
         >
           {questions.map(({
             _id, question, sender, createdAt
@@ -73,9 +86,13 @@ const Inbox = ({ logout }) => {
             />
           ))}
         </InfiniteScroll>
-      </div>
-      <RightSideBox />
-    </div>
+      </Grid>
+      <Hidden xsDown>
+        <Grid item sm={4}>
+          <Sidebar />
+        </Grid>
+      </Hidden>
+    </Grid>
   );
 };
 

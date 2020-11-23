@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import axiosInstance from '../../axiosInstance/axiosInstance';
-import QuestionLayout from './QuestionLayout';
-import AnswerForm from '../Answer/AnswerForm';
+import QuestionLayout from './QuestionLayout/QuestionLayout';
 
 const UnansweredQuestion = ({
   id, removeQuestion, question, sender, time
@@ -23,26 +22,15 @@ const UnansweredQuestion = ({
   };
 
   return (
-    <div>
-      <div>
-        <div>
-          <QuestionLayout
-            question={question}
-            time={time}
-            sender={sender}
-          />
-          <div />
-          <div>
-            <AnswerForm
-              id={id}
-              removeQuestion={removeQuestion}
-              questionDeleteHandler={questionDeleteHandler}
-              answerErrorHandler={answerErrorHandler}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
+    <QuestionLayout
+      question={question}
+      time={time}
+      sender={sender}
+      id={id}
+      removeQuestion={removeQuestion}
+      questionDeleteHandler={questionDeleteHandler}
+      answerErrorHandler={answerErrorHandler}
+    />
   );
 };
 
