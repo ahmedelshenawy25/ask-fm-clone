@@ -37,7 +37,7 @@ class QuestionsDAL {
       .sort('-createdAt')
       .skip(skip)
       .limit(limit)
-      .populate('sender', '-_id firstName lastName');
+      .populate('sender', '-_id firstName lastName username');
 
     return this._removeAnonymousSender(unansweredQuestions);
   }
