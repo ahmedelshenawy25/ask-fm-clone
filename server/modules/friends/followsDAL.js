@@ -15,13 +15,23 @@ class FollowsDAL {
     });
   }
 
-  async findUserFriends (userId) {
+  async findUserFriends ({ userId, skip, limit }) {
     const followedUsers = await Follow.find({
       followingUser: userId
     }, '-_id followedUser')
+      .skip(skip)
+      .limit(limit)
       .populate('followedUser', 'username firstName lastName');
 
     return followedUsers;
+  }
+
+  async findUserFriendsCount (userId) {
+    const followedUsersCount = await Follow.countDocuments({
+      followingUser: userId
+    });
+
+    return followedUsersCount;
   }
 
   async findUserFriendsIds (userId) {

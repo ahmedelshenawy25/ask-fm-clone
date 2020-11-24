@@ -19,7 +19,7 @@ describe('Get unfollowed users -> #GET /api/discover', () => {
   });
 
   it('User logged in, expect to get unfollowed users', async (done) => {
-    const usersCount = 10;
+    const usersCount = 5;
     const [user1] = await usersGenerator(usersCount);
     const token = `Bearer ${UsersDAL.generateAuthToken(user1)}`;
 
@@ -28,13 +28,16 @@ describe('Get unfollowed users -> #GET /api/discover', () => {
       .set('Authorization', token)
       .expect(200);
 
-    expect(res.body).toHaveLength(usersCount - 1);
-    res.body.forEach((user) => {
+    expect(res.body).toHaveProperty('users');
+    expect(res.body).toHaveProperty('usersCount');
+    res.body.users.forEach((user) => {
       expect(user).toHaveProperty('_id');
       expect(user).toHaveProperty('username');
       expect(user).toHaveProperty('firstName');
       expect(user).toHaveProperty('lastName');
     });
+    expect(res.body.users).toHaveLength(usersCount - 1);
+    expect(res.body.usersCount).toEqual(usersCount - 1);
     done();
   });
 });

@@ -97,13 +97,24 @@ class UsersDAL {
     return usersCount.length === 0 ? 0 : usersCount[0].usersCount;
   }
 
-  async suggestUnfollowedUsers (followedUsersIds) {
+  async suggestUnfollowedUsers ({ followedUsersIds, skip, limit }) {
     const suggestedUsers = await User.find({
       _id: { $nin: followedUsersIds }
     },
     { username: 1, firstName: 1, lastName: 1 }
-    );
+    )
+      .skip(skip)
+      .limit(limit);
+
     return suggestedUsers;
+  }
+
+  async suggestUnfollowedUsersCount (followedUsersIds) {
+    const suggestedUsersCount = await User.countDocuments({
+      _id: { $nin: followedUsersIds }
+    });
+
+    return suggestedUsersCount;
   }
 }
 

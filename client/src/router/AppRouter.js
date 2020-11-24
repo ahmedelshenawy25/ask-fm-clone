@@ -11,6 +11,8 @@ import SearchResult from '../components/Search/SearchResult';
 import Home from '../components/Home/Home';
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
+import Friends from '../components/Friends/Friends';
+import Discover from '../components/Discover/Discover';
 
 const AppRouter = ({ authHandler, logoutHandler }) => {
   const location = useLocation();
@@ -37,6 +39,12 @@ const AppRouter = ({ authHandler, logoutHandler }) => {
       </PrivateRoute>
       <PrivateRoute path="/search">
         <SearchResult logout={logoutHandler} />
+      </PrivateRoute>
+      <PrivateRoute path="/friends">
+        <Friends />
+      </PrivateRoute>
+      <PrivateRoute path="/discover">
+        <Discover />
       </PrivateRoute>
 
       <Route>

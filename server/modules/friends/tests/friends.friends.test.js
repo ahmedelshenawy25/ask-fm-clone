@@ -30,13 +30,17 @@ describe('Get followed users -> #GET /api/friends', () => {
       .set('Authorization', token)
       .expect(200);
 
-    res.body.forEach((user) => {
+    expect(res.body).toHaveProperty('users');
+    expect(res.body).toHaveProperty('usersCount');
+    res.body.users.forEach((user) => {
       expect(user).toHaveProperty('followedUser');
       expect(user.followedUser).toHaveProperty('_id');
       expect(user.followedUser).toHaveProperty('username');
       expect(user.followedUser).toHaveProperty('firstName');
       expect(user.followedUser).toHaveProperty('lastName');
     });
+    expect(res.body.users.length).toBeGreaterThan(0);
+    expect(res.body.usersCount).toBeGreaterThan(0);
     done();
   });
 
@@ -49,7 +53,10 @@ describe('Get followed users -> #GET /api/friends', () => {
       .set('Authorization', token)
       .expect(200);
 
-    expect(res.body).toHaveLength(0);
+    expect(res.body).toHaveProperty('users');
+    expect(res.body).toHaveProperty('usersCount');
+    expect(res.body.users).toHaveLength(0);
+    expect(res.body.usersCount).toEqual(0);
     done();
   });
 });

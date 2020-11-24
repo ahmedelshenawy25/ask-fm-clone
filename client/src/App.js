@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
 import AppRouter from './router/AppRouter';
 import Navbar from './components/Navigation/Navbar';
@@ -40,7 +41,11 @@ const App = () => {
   }, []);
 
   if (isLoadingInitialState) {
-    return <div>Spinner placeholder...</div>;
+    return (
+      <div style={{ position: 'fixed', top: '50%', left: '50%' }}>
+        <CircularProgress />
+      </div>
+    );
   }
 
   return (
