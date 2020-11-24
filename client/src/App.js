@@ -1,142 +1,62 @@
-import './App.css';
-import React from 'react';
-import {
-  Route, Switch, withRouter, Redirect
-} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Container from '@material-ui/core/Container';
+import AppRouter from './router/AppRouter';
 import Navbar from './components/Navigation/Navbar';
-import Signup from './components/Auth/Signup';
-import Login from './components/Auth/Login';
-import DisplayAnsweredQuestions from './components/Questions/DisplayAnsweredQuestions';
-import Inbox from './components/Questions/Inbox';
-import SearchResult from './components/Search/SearchResult';
-import Home from './components/Home/Home';
+import AuthContext from './context/AuthContext/AuthContext';
 
-class App extends React.Component {
-  state = {
-    isAuth: false,
-    token: '',
-    username: ''
-  }
+const App = () => {
+  const [isAuth, setIsAuth] = useState(false);
+  const [username, setUsername] = useState('');
+  const [isLoadingInitialState, setIsLoadingInitialState] = useState(true);
 
-  componentDidMount() {
-    const token = localStorage.getItem('token');
-    const username = localStorage.getItem('username');
-    if (!token || !username) {
-      return this.logoutHandler();
+  const authHandler = () => {
+    setIsAuth(true);
+    setUsername(localStorage.username);
+  };
+
+  const logoutHandler = () => {
+    localStorage.clear();
+    setIsAuth(false);
+    setIsLoadingInitialState(false);
+  };
+
+  useEffect(() => {
+    const { token } = localStorage;
+    const parsedToken = token && token.split('.')[1] ? JSON.parse(
+      atob(token.split('.')[1])
+    ) : null;
+    const tokenExpirationTime = parsedToken && parsedToken.exp;
+    const tokenUsername = parsedToken && parsedToken.username;
+
+    const currentTime = Math.trunc(new Date() / 1000);
+
+    if (!token || currentTime > tokenExpirationTime) {
+      return logoutHandler();
     }
-    return this.setState({
-      isAuth: true,
-      token,
-      username
-    });
-  }
+    setIsAuth(true);
+    setUsername(tokenUsername);
+    setIsLoadingInitialState(false);
+  }, []);
 
-  AuthHandler = () => {
-    this.setState({
-      isAuth: true,
-      token: localStorage.getItem('token'),
-      username: localStorage.getItem('username')
-    });
-  }
-
-  logoutHandler = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    this.setState({
-      isAuth: false,
-      token: ''
-    });
-    this.props.history.push('/login');
-  }
-
-  render() {
-    let routes;
-    if (!this.state.isAuth) {
-      routes = (
-        <Switch>
-          <Route
-            path="/signup"
-            render={props => (
-              <Signup {...props} />
-            )}
-          />
-          <Route
-            path="/login"
-            render={props => (
-              <Login {...props} onLogin={this.AuthHandler} />
-            )}
-          />
-          <Redirect to="/login" />
-        </Switch>
-      );
-    }
+  if (isLoadingInitialState) {
     return (
-      <div>
-        <Navbar
-          isAuth={this.state.isAuth}
-          username={this.state.username}
-          onLogout={this.logoutHandler}
-        />
-
-        <div className="ui container">
-          <Switch>
-            <Route
-              path="/"
-              exact
-              render={() => <Redirect to="/home" />}
-            />
-            <Route
-              path="/home"
-              render={props => (
-                <Home
-                  key={props.location.key}
-                  {...props}
-                  logout={this.logoutHandler}
-                  token={this.state.token}
-                />
-              )}
-            />
-            <Route
-              path="/account/inbox"
-              render={props => (
-                <Inbox
-                  {...props}
-                  logout={this.logoutHandler}
-                  token={this.state.token}
-                  username={this.state.username}
-                />
-              )}
-            />
-            <Route
-              path="/user/:username"
-              render={props => (
-                <DisplayAnsweredQuestions
-                  key={this.props.location.pathname}
-                  {...props}
-                  logout={this.logoutHandler}
-                  token={this.state.token}
-                />
-              )}
-            />
-            <Route
-              path="/search"
-              render={props => (
-                <SearchResult
-                  key={props.history.location.search}
-                  search={props.history.location.search.replace('?q=', '')}
-                  {...props}
-                  logout={this.logoutHandler}
-                  token={this.state.token}
-                />
-              )}
-            />
-            {routes}
-            <Route render={() => <h1 style={{ textAlign: 'center' }}>404 Page not found</h1>} />
-          </Switch>
-        </div>
+      <div style={{ position: 'fixed', top: '50%', left: '50%' }}>
+        <CircularProgress />
       </div>
     );
   }
-}
 
-export default withRouter(App);
+  return (
+    <AuthContext.Provider value={isAuth}>
+      <CssBaseline />
+      <Navbar username={username} onLogout={logoutHandler} />
+      <Container maxWidth="md">
+        <AppRouter authHandler={authHandler} logoutHandler={logoutHandler} />
+      </Container>
+    </AuthContext.Provider>
+  );
+};
+
+export default App;

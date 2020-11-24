@@ -21,5 +21,13 @@
         "react"
     ],
     "rules": {
+        "linebreak-style": ["error", "windows"],
+        "comma-dangle": ["error", "never"],
+        "no-underscore-dangle": "off",
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+        "consistent-return": "off",
+        "jsx-a11y/label-has-associated-control": [ 2, {
+            "assert": "either"
+          }]
     }
 }

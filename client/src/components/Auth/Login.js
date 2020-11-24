@@ -1,78 +1,106 @@
-import React from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+import {
+  Formik, Form, Field, ErrorMessage
+} from 'formik';
+import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import TextField from '@material-ui/core/TextField';
+import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import axiosInstance from '../../axiosInstance/axiosInstance';
+import loginValidationSchema from './login.validationSchema';
 
-class Login extends React.Component {
-    state = {
-      login: '',
-      password: '',
-      error: ''
-    }
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2)
+  }
+}));
 
-    loginHandler = async (event) => {
-      event.preventDefault();
-      try {
-        const response = await axios.post('/api/login', {
-          ...this.state
-        });
-        if (response.status !== 200) {
-          throw new Error('Login failed');
-        }
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('username', response.data.username);
-        this.props.onLogin();
-        this.props.history.push('/');
-      } catch (e) {
-        this.setState({
-          isAuth: false,
-          token: '',
-          username: '',
-          error: e.response ? e.response.data.message : e.message
-        });
-      }
-    }
+const Login = ({ onLogin }) => {
+  const classes = useStyles();
+  const history = useHistory();
+  const [error, setError] = useState('');
 
-    handleInputChange = (event) => {
-      const { name, value } = event.target;
-      this.setState({
-        [name]: value
-      });
-    }
+  return (
+    <Container maxWidth="xs">
+      <div className={classes.paper}>
+        <Typography component="h1" variant="h5">
+          Log in
+        </Typography>
+        { error }
+        <Formik
+          initialValues={{
+            usernameOrEmail: '',
+            password: ''
+          }}
+          validationSchema={loginValidationSchema}
+          onSubmit={async (values) => {
+            const castValues = loginValidationSchema.cast(values);
+            try {
+              const response = await axiosInstance.post('/login', {
+                ...castValues
+              });
+              localStorage.token = response.data.token;
+              localStorage.username = response.data.username;
 
-    render() {
-      const { login, password } = this.state;
-      return (
-        <div>
-          { this.state.error && (
-            <div className="ui warning message">
-              <div className="header">
-                {this.state.error}
-              </div>
-            </div>
-          )}
-          <form onSubmit={this.loginHandler} className="ui form">
-            <div className="field">
-              <input
-                type="text"
-                name="login"
-                value={login}
-                onChange={this.handleInputChange}
-                placeholder="Username"
+              onLogin();
+              history.push('/home');
+            } catch (e) {
+              setError(e.response ? e.response.data.message : e.message);
+            }
+          }}
+        >
+          {({ isValid, dirty, isSubmitting }) => (
+            <Form>
+              <Field
+                name="usernameOrEmail"
+                placeholder="Username or email"
+                as={TextField}
+                variant="outlined"
+                size="small"
+                fullWidth
+                margin="normal"
               />
-            </div>
-            <div className="field">
-              <input
+              <ErrorMessage name="usernameOrEmail" />
+              <Field
                 type="password"
                 name="password"
-                value={password}
-                onChange={this.handleInputChange}
                 placeholder="Password"
+                as={TextField}
+                variant="outlined"
+                size="small"
+                fullWidth
+                margin="normal"
               />
-            </div>
-            <button className="ui button" type="submit">Login</button>
-          </form>
-        </div>
-      );
-    }
-}
+              <ErrorMessage name="password" />
+              <Button
+                disabled={!(isValid && dirty) || isSubmitting}
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Log In
+              </Button>
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </Container>
+  );
+};
+
+Login.propTypes = {
+  onLogin: PropTypes.func.isRequired
+};
 
 export default Login;

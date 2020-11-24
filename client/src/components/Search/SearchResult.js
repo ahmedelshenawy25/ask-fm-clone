@@ -1,66 +1,113 @@
-import './SearchResult.css';
-import React from 'react';
-import axios from 'axios';
-import SearchItem from './SearchItem';
+import React, { useState } from 'react';
+import { useLocation, Link as RouterLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import Avatar from '@material-ui/core/Avatar';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
+import Link from '@material-ui/core/Link';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Follow from '../Follow/Follow';
+import fetchSearch from '../../axiosInstance/fetchSearch';
+import useFetch from '../../hooks/useFetch';
+import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
 
-class SearchResult extends React.Component {
-  state = {
-    searchResult: [],
-    error: ''
+const useStyles = makeStyles((theme) => ({
+  flex: {
+    display: 'flex',
+    paddingTop: 20
+  },
+  padding: {
+    padding: '15px 20px'
+  },
+  avatar: {
+    width: 35,
+    height: 35,
+    marginRight: 15
+  },
+  fullname: {
+    color: theme.palette.text.primary,
+    fontWeight: 'bold',
+    fontSize: 14,
+    lineHeight: 1
+  },
+  username: {
+    color: theme.palette.text.secondary,
+    fontSize: 12
+  },
+  content: {
+    flexGrow: 1,
+    lineHeight: 1,
+    wordWrap: 'break-word'
+  },
+  loading: {
+    display: 'block',
+    margin: 'auto'
+  }
+}));
+const SearchResult = ({ logout }) => {
+  const classes = useStyles();
+  const { search } = useLocation();
+  const [page, setPage] = useState(1);
+  const updatePage = () => {
+    setPage((prevPage) => prevPage + 1);
   };
+  const {
+    data: users, isLoading, hasMore, error
+  } = useFetch({
+    apiCall: fetchSearch,
+    page,
+    limit: 10,
+    urlParam: search
+  });
+  const infiniteScrollingRef = useInfiniteScrolling(isLoading, hasMore, updatePage);
 
-  async componentDidMount() {
-    try {
-      const response = await axios.get('/api/search',
-        {
-          params: {
-            search: this.props.search
-          },
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        });
-      if (response.status === 200) {
-        this.setState({
-          searchResult: response.data,
-          error: ''
-        });
-      } else {
-        throw new Error('Search for user failed');
-      }
-    } catch (e) {
-      if (e.response.status === 401) {
-        this.props.logout();
-      }
-      this.setState({
-        error: e.response ? e.response.data.message : e.message
-      });
-    }
-  }
 
-  render() {
-    const renderedSearchResults = this.state.searchResult.map(({
-      _id, username, fullName, isFollowed
-    }) => (
-      <SearchItem
-        key={_id}
-        username={username}
-        fullName={fullName}
-        isFollowed={isFollowed}
-        renderButtons
-      />
-    ));
-    return (
-      <div>
-        <div className="ui info message">
-          {`"${this.state.searchResult.length}" search results for "${this.props.search}"`}
+  return (
+    <Paper className={classes.padding} variant="outlined">
+      {/* <Typography>
+        {`"${usersCount}" search results for "${search.replace('?q=', '')}"`}
+      </Typography> */}
+      {users.map(({
+        _id, username, fullName, isFollowed
+      }, i) => ((users.length === i + 1) ? (
+        <div className={classes.flex} key={_id} ref={infiniteScrollingRef}>
+          <Avatar className={classes.avatar} />
+          <div className={classes.content}>
+            <Link component={RouterLink} to={`/user/${username}`} underline="none">
+              <Typography className={classes.fullname}>
+                {`${fullName}`}
+              </Typography>
+              <Typography className={classes.username}>
+                {`@${username}`}
+              </Typography>
+            </Link>
+          </div>
+          <Follow isFollowed={isFollowed} username={username} />
         </div>
-        <div className="ui relaxed divided list results">
-          { renderedSearchResults }
+      ) : (
+        <div className={classes.flex} key={_id}>
+          <Avatar className={classes.avatar} />
+          <div className={classes.content}>
+            <Link component={RouterLink} to={`/user/${username}`} underline="none">
+              <Typography className={classes.fullname}>
+                {`${fullName}`}
+              </Typography>
+              <Typography className={classes.username}>
+                {`@${username}`}
+              </Typography>
+            </Link>
+          </div>
+          <Follow isFollowed={isFollowed} username={username} />
         </div>
-      </div>
-    );
-  }
-}
+      )))}
+      <div>{isLoading && <CircularProgress className={classes.loading} />}</div>
+    </Paper>
+  );
+};
+
+SearchResult.propTypes = {
+  logout: PropTypes.func.isRequired
+};
 
 export default SearchResult;

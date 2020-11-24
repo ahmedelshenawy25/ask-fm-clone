@@ -1,36 +1,34 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import SearchBar from '../Search/SearchBar';
+import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import { makeStyles } from '@material-ui/core/styles';
+import AuthContext from '../../context/AuthContext/AuthContext';
+import PrivateNavbar from './PrivateNavbar';
+import PublicNavbar from './PublicNavbar';
 
-const Navbar = ({ isAuth, onLogout, username }) => {
-  let authNavItems;
-  if (!isAuth) {
-    authNavItems = (
-      <div className="ui secondary pointing menu">
-        <div className="right menu">
-          <NavLink to="/signup" className="ui item">Signup</NavLink>
-          <NavLink to="/login" className="ui item">Login</NavLink>
-        </div>
-      </div>
-    );
-  } else {
-    authNavItems = (
-      <div className="ui secondary pointing menu">
-        <NavLink to="/home" exact className="item">Home</NavLink>
-        <NavLink to={`/user/${username}`} className="item">Profile</NavLink>
-        <NavLink to="/account/inbox" className="item">Inbox</NavLink>
-        <SearchBar />
-        <div className="right menu">
-          <NavLink to="/logout" className="ui item" onClick={() => onLogout()}>Logout</NavLink>
-        </div>
-      </div>
-    );
+const useStyles = makeStyles({
+  navbar: {
+    marginBottom: '80px'
   }
+});
+const Navbar = ({ onLogout, username }) => {
+  const classes = useStyles();
+  const isAuth = useContext(AuthContext);
   return (
-    <div style={{ marginBottom: '0.5%' }}>
-      { authNavItems }
+    <div className={classes.navbar}>
+      <AppBar>
+        <Toolbar>
+          { isAuth ? <PrivateNavbar username={username} onLogout={onLogout} /> : <PublicNavbar /> }
+        </Toolbar>
+      </AppBar>
     </div>
   );
+};
+
+Navbar.propTypes = {
+  onLogout: PropTypes.func.isRequired,
+  username: PropTypes.string.isRequired
 };
 
 export default Navbar;

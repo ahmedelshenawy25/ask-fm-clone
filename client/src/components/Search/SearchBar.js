@@ -1,38 +1,33 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import { Formik, Form, Field } from 'formik';
+import TextField from '@material-ui/core/TextField';
+import { Paper } from '@material-ui/core';
 
-class SearchBar extends React.Component {
-  state = {
-    search: ''
-  }
+const SearchBar = () => {
+  const history = useHistory();
 
-  searchHandler = (event) => {
-    event.preventDefault();
-    this.props.history.push(`/search?q=${this.state.search}`);
-    this.setState({
-      search: ''
-    });
-  }
+  return (
+    <Paper>
+      <Formik
+        initialValues={{ search: '' }}
+        onSubmit={(values, { resetForm }) => {
+          history.push(`/search?q=${values.search}`);
+          resetForm();
+        }}
+      >
+        <Form>
+          <Field
+            name="search"
+            placeholder="Search"
+            as={TextField}
+            variant="outlined"
+            size="small"
+          />
+        </Form>
+      </Formik>
+    </Paper>
+  );
+};
 
-  render() {
-    return (
-      <form method="GET" onSubmit={this.searchHandler}>
-        <div style={{ margin: '0 50%' }} className="ui search">
-          <div className="ui icon input">
-            <input
-              className="prompt"
-              name="search"
-              type="text"
-              placeholder="Search"
-              value={this.state.search}
-              onChange={e => this.setState({ search: e.target.value })}
-            />
-            <i className="search icon" />
-          </div>
-        </div>
-      </form>
-    );
-  }
-}
-
-export default withRouter(SearchBar);
+export default SearchBar;

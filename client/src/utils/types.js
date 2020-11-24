@@ -1,0 +1,7 @@
+const TYPES = {
+  FETCH: 'FETCH',
+  FETCH_SUCCESS: 'FETCH_SUCCESS',
+  FETCH_FAILURE: 'FETCH_FAILURE'
+};
+
+export default TYPES;
