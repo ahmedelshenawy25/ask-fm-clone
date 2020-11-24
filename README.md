@@ -14,8 +14,7 @@ cd ask-fm-clone
 2. Install Dependencies
 
 ```sh
-cd server && npm install
-cd ../client && npm install
+npm install && cd client && npm install
 ```
 
 # Usage
@@ -23,18 +22,18 @@ cd ../client && npm install
 1. Set Environment variables
 
 ```sh
-# In server directory
-$ export SECRET_KEY=<YOUR_SECRET_KEY>
-$ export DATABASE_URI=<YOUR_MONGODB_DATABASE_URI>
+export SECRET_KEY=<YOUR_SECRET_KEY>
+export DATABASE_URI=<YOUR_MONGODB_DATABASE_URI>
 ```
 
 2. Running the app
 
+    In root directory
+
 ```sh
-# In server directory
-$ npm run dev
-# In client directory
-$ npm start
+npm run dev
+cd client
+npm start
 ```
 
 Visit [http://localhost:3000](http://localhost:3000)
