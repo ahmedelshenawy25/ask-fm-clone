@@ -1,86 +1,77 @@
-import './AnsweredQuestionsList.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import axiosInstance from '../../axiosInstance/axiosInstance';
-import AnsweredQuestion from './AnsweredQuestion';
-import RightSideBox from '../RightSideBox/RightSideBox';
+import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { makeStyles } from '@material-ui/core/styles';
+import QuestionLayout from './QuestionLayout/QuestionLayout';
+import Sidebar from '../Sidebar/Sidebar';
 import AskForm from '../Ask/AskForm';
+import useFetch from '../../hooks/useFetch';
+import fetchAnsweredQuestions from '../../axiosInstance/fetchAnsweredQuestions';
+import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
+
+const useStyles = makeStyles({
+  loading: {
+    display: 'block',
+    margin: 'auto'
+  }
+});
 
 const AnsweredQuestionsList = ({ logout }) => {
+  const classes = useStyles();
   const { username } = useParams();
-  const [questions, setQuestions] = useState([]);
-  const [isFollowed, setIsFollowed] = useState(true);
-  const [renderButton, setRenderButton] = useState(false);
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [error, setError] = useState('');
-
-  async function fetchProfile({ pageNum }) {
-    try {
-      const response = await axiosInstance.get(`/user/${username}`, {
-        params: {
-          page: pageNum,
-          limit: 5
-        }
-      });
-
-      setQuestions((prevState) => [...prevState, ...response.data.questions]);
-      setIsFollowed(response.data.isFollowed);
-      setRenderButton(response.data.renderFollowButton);
-      setPage(pageNum + 1);
-
-      if (response.data.questionsCount === questions.length + response.data.questions.length) {
-        setHasMore(false);
-      }
-    } catch (e) {
-      if (e.response.status === 401) return logout();
-
-      setError(e.response ? e.response.data.message : e.message);
-    }
-  }
-
-  useEffect(() => {
-    fetchProfile({ pageNum: 1 });
-
-    return () => {
-      setQuestions([]);
-      setHasMore(true);
-    };
-  }, [username]);
+  const updatePage = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
+  const {
+    data: questions, isLoading, hasMore, isFollowed, error
+  } = useFetch({
+    apiCall: fetchAnsweredQuestions,
+    page,
+    limit: 10,
+    urlParam: username
+  });
+  const infiniteScrollingRef = useInfiniteScrolling(isLoading, hasMore, updatePage);
 
   return (
-    <div className="FlexParent">
-      <div className="leftFlexChild">
+    <Grid container spacing={2}>
+      <Grid item sm={7} xs={12}>
         <AskForm
           username={username}
           isFollowed={isFollowed}
-          renderButton={renderButton}
         />
-        <InfiniteScroll
-          dataLength={questions.length}
-          next={() => fetchProfile({ pageNum: page })}
-          hasMore={hasMore}
-          scrollThreshold={1}
-          loader={<h2 style={{ textAlign: 'center' }}>Loading...</h2>}
-          endMessage={<p style={{ textAlign: 'center' }}><strong>No more content</strong></p>}
-        >
-          {questions.map(({
-            _id, question, answer, sender, updatedAt
-          }) => (
-            <AnsweredQuestion
-              key={_id}
+        {questions.map(({
+          _id, question, answer, sender, updatedAt
+        }, i) => ((questions.length === i + 1) ? (
+          <div key={_id} ref={infiniteScrollingRef}>
+            <QuestionLayout
               question={question}
               answer={answer}
               sender={sender}
               time={new Date(updatedAt).toLocaleString()}
             />
-          ))}
-        </InfiniteScroll>
-      </div>
-      <RightSideBox />
-    </div>
+          </div>
+        ) : (
+          <div key={_id}>
+            <QuestionLayout
+              question={question}
+              answer={answer}
+              sender={sender}
+              time={new Date(updatedAt).toLocaleString()}
+            />
+          </div>
+        )))}
+        <div>{isLoading && <CircularProgress className={classes.loading} />}</div>
+      </Grid>
+      <Hidden xsDown>
+        <Grid item sm={4}>
+          <Sidebar />
+        </Grid>
+      </Hidden>
+    </Grid>
   );
 };
 

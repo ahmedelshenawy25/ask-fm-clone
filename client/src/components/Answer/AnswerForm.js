@@ -1,73 +1,78 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 import React from 'react';
 import { Formik, Form, Field } from 'formik';
 import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 import answerFormValidationSchema from './answerForm.validationSchema';
 import axiosInstance from '../../axiosInstance/axiosInstance';
 
+const useStyles = makeStyles({
+  flex: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  grow: {
+    flexGrow: 1
+  }
+});
+
 const AnswerForm = ({
   id, removeQuestion, questionDeleteHandler, answerErrorHandler
-}) => (
-  <Formik
-    initialValues={{
-      answer: ''
-    }}
-    validationSchema={answerFormValidationSchema}
-    onSubmit={async (values) => {
-      try {
-        await axiosInstance.put(`/answer/${id}`, {
-          ...values
-        });
-        removeQuestion(id);
-      } catch (e) {
-        answerErrorHandler(e);
-      }
-    }}
-  >
-    {({
-      values, isValid, dirty, isSubmitting
-    }) => (
-      <Form className="ui form">
-        <div className="field">
+}) => {
+  const classes = useStyles();
+
+  return (
+    <Formik
+      initialValues={{
+        answer: ''
+      }}
+      validationSchema={answerFormValidationSchema}
+      onSubmit={async (values) => {
+        try {
+          await axiosInstance.put(`/answer/${id}`, {
+            ...values
+          });
+          removeQuestion(id);
+        } catch (e) {
+          answerErrorHandler(e);
+        }
+      }}
+    >
+      {({
+        values, isValid, dirty, isSubmitting
+      }) => (
+        <Form>
           <Field
-            as="textarea"
-            rows="2"
-            className="item"
+            as={TextField}
+            rowsMax={7}
+            multiline
+            fullWidth
+            variant="outlined"
             name="answer"
           />
-
-          <button
-            style={{ marginTop: '10px' }}
-            className="ui right floated button"
-            disabled={!(isValid && dirty) || isSubmitting}
-            type="submit"
-          >
-            Answer
-          </button>
-
-          <div
-            style={{
-              paddingTop: '17px',
-              paddingRight: '10px'
-            }}
-            className="ui right floated"
-          >
-            {3000 - values.answer.length}
+          <div className={classes.flex}>
+            <div className={classes.grow}>
+              <Button onClick={questionDeleteHandler}>
+                Delete
+              </Button>
+            </div>
+            <Typography variant="caption">
+              {3000 - values.answer.length}
+            </Typography>
+            <Button
+              disabled={!(isValid && dirty) || isSubmitting}
+              type="submit"
+            >
+              Answer
+            </Button>
           </div>
-
-          <div
-            style={{ marginTop: '10px' }}
-            className="ui left floated button"
-            onClick={questionDeleteHandler}
-          >
-            Delete
-          </div>
-        </div>
-      </Form>
-    )}
-  </Formik>
-);
+        </Form>
+      )}
+    </Formik>
+  );
+};
 
 AnswerForm.propTypes = {
   id: PropTypes.string.isRequired,

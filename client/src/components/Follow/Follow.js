@@ -1,7 +1,6 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
 import axiosInstance from '../../axiosInstance/axiosInstance';
 
 const Follow = ({ isFollowed: isUserFollowed, username }) => {
@@ -22,9 +21,9 @@ const Follow = ({ isFollowed: isUserFollowed, username }) => {
   };
 
   return (
-    <div className="ui right floated button follow" onClick={followHandler}>
+    <Button onClick={followHandler}>
       {isFollowed ? 'Unfollow' : 'Follow'}
-    </div>
+    </Button>
   );
 };
 

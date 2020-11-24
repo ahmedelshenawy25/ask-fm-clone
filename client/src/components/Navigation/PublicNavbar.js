@@ -1,12 +1,11 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
 
 const PublicNavbar = () => (
-  <div className="ui secondary pointing menu">
-    <div className="right menu">
-      <NavLink to="/signup" className="ui item">Signup</NavLink>
-      <NavLink to="/login" className="ui item">Login</NavLink>
-    </div>
+  <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'flex-end' }}>
+    <Button component={RouterLink} to="/signup">Signup</Button>
+    <Button component={RouterLink} to="/login">Login</Button>
   </div>
 );
 
