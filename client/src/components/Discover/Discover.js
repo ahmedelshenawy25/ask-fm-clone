@@ -10,6 +10,7 @@ import Follow from '../Follow/Follow';
 import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
 import useFetch from '../../hooks/useFetch';
 import fetchDiscoverUsers from '../../axiosInstance/fetchDiscoverUsers';
+import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
 
 const useStyles = makeStyles((theme) => ({
   flex: {
@@ -79,41 +80,30 @@ const Discover = () => {
         </Typography>
         {users.map(({
           _id, username, firstName, lastName
-        }, i) => ((!isSidebar && users.length === i + 1) ? (
-          <div className={classes.flex} key={_id} ref={infiniteScrollingRef}>
-            <Avatar className={classes.avatar}>
-              {`${firstName[0]}${lastName[0]}`.toUpperCase()}
-            </Avatar>
-            <div className={isSidebar ? classes.contentSidebar : classes.content}>
-              <Link className={classes.sender} component={RouterLink} to={`/user/${username}`} underline="none">
-                <Typography className={classes.fullname}>
-                  {`${firstName} ${lastName}`}
-                </Typography>
-                <Typography className={classes.username}>
-                  {`@${username}`}
-                </Typography>
-              </Link>
+        }, i) => (
+          <InfiniteScroll
+            key={_id}
+            isLastElement={!isSidebar && users.length === i + 1}
+            ref={infiniteScrollingRef}
+          >
+            <div className={classes.flex}>
+              <Avatar className={classes.avatar}>
+                {`${firstName[0]}${lastName[0]}`.toUpperCase()}
+              </Avatar>
+              <div className={isSidebar ? classes.contentSidebar : classes.content}>
+                <Link className={classes.sender} component={RouterLink} to={`/user/${username}`} underline="none">
+                  <Typography className={classes.fullname}>
+                    {`${firstName} ${lastName}`}
+                  </Typography>
+                  <Typography className={classes.username}>
+                    {`@${username}`}
+                  </Typography>
+                </Link>
+              </div>
+              <Follow isFollowed={false} username={username} />
             </div>
-            <Follow isFollowed={false} username={username} />
-          </div>
-        ) : (
-          <div className={classes.flex} key={_id}>
-            <Avatar className={classes.avatar}>
-              {`${firstName[0]}${lastName[0]}`.toUpperCase()}
-            </Avatar>
-            <div className={isSidebar ? classes.contentSidebar : classes.content}>
-              <Link className={classes.sender} component={RouterLink} to={`/user/${username}`} underline="none">
-                <Typography className={classes.fullname}>
-                  {`${firstName} ${lastName}`}
-                </Typography>
-                <Typography className={classes.username}>
-                  {`@${username}`}
-                </Typography>
-              </Link>
-            </div>
-            <Follow isFollowed={false} username={username} />
-          </div>
-        )))}
+          </InfiniteScroll>
+        ))}
         {isSidebar && (
           <Link className={classes.sender} component={RouterLink} to="/discover">
             See all recommendations...
