@@ -12,7 +12,7 @@
   },
   "scripts": {
     "test": "jest --detectOpenHandles --forceExit",
-    "dev": "NODE_ENV=development|| set NODE_ENV=development&& nodemon index.js",
+    "dev": "NODE_ENV=development|| set NODE_ENV=development&& nodemon --ignore client/ index.js",
     "start": "NODE_ENV=production|| set NODE_ENV=production&& node index.js",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },

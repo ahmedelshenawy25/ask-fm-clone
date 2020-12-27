@@ -11,6 +11,7 @@ import Follow from '../Follow/Follow';
 import fetchSearch from '../../axiosInstance/fetchSearch';
 import useFetch from '../../hooks/useFetch';
 import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
+import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
 
 const useStyles = makeStyles((theme) => ({
   flex: {
@@ -45,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
     margin: 'auto'
   }
 }));
+
 const SearchResult = ({ logout }) => {
   const classes = useStyles();
   const { search } = useLocation();
@@ -62,45 +64,32 @@ const SearchResult = ({ logout }) => {
   });
   const infiniteScrollingRef = useInfiniteScrolling(isLoading, hasMore, updatePage);
 
-
   return (
     <Paper className={classes.padding} variant="outlined">
-      {/* <Typography>
-        {`"${usersCount}" search results for "${search.replace('?q=', '')}"`}
-      </Typography> */}
       {users.map(({
         _id, username, fullName, isFollowed
-      }, i) => ((users.length === i + 1) ? (
-        <div className={classes.flex} key={_id} ref={infiniteScrollingRef}>
-          <Avatar className={classes.avatar} />
-          <div className={classes.content}>
-            <Link component={RouterLink} to={`/user/${username}`} underline="none">
-              <Typography className={classes.fullname}>
-                {`${fullName}`}
-              </Typography>
-              <Typography className={classes.username}>
-                {`@${username}`}
-              </Typography>
-            </Link>
+      }, i) => (
+        <InfiniteScroll
+          key={_id}
+          isLastElement={users.length === i + 1}
+          ref={infiniteScrollingRef}
+        >
+          <div className={classes.flex}>
+            <Avatar className={classes.avatar} />
+            <div className={classes.content}>
+              <Link component={RouterLink} to={`/user/${username}`} underline="none">
+                <Typography className={classes.fullname}>
+                  {`${fullName}`}
+                </Typography>
+                <Typography className={classes.username}>
+                  {`@${username}`}
+                </Typography>
+              </Link>
+            </div>
+            <Follow isFollowed={isFollowed} username={username} />
           </div>
-          <Follow isFollowed={isFollowed} username={username} />
-        </div>
-      ) : (
-        <div className={classes.flex} key={_id}>
-          <Avatar className={classes.avatar} />
-          <div className={classes.content}>
-            <Link component={RouterLink} to={`/user/${username}`} underline="none">
-              <Typography className={classes.fullname}>
-                {`${fullName}`}
-              </Typography>
-              <Typography className={classes.username}>
-                {`@${username}`}
-              </Typography>
-            </Link>
-          </div>
-          <Follow isFollowed={isFollowed} username={username} />
-        </div>
-      )))}
+        </InfiniteScroll>
+      ))}
       <div>{isLoading && <CircularProgress className={classes.loading} />}</div>
     </Paper>
   );

@@ -9,6 +9,7 @@ import Sidebar from '../Sidebar/Sidebar';
 import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
 import useFetch from '../../hooks/useFetch';
 import fetchUnansweredQuestions from '../../axiosInstance/fetchUnansweredQuestions';
+import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
 
 const useStyles = makeStyles({
   loading: {
@@ -42,8 +43,12 @@ const Inbox = ({ logout }) => {
       <Grid item sm={7} xs={12}>
         {questions.map(({
           _id, question, sender, createdAt
-        }, i) => ((questions.length === i + 1) ? (
-          <div key={_id} ref={infiniteScrollingRef}>
+        }, i) => (
+          <InfiniteScroll
+            key={_id}
+            isLastElement={questions.length === i + 1}
+            ref={infiniteScrollingRef}
+          >
             <UnansweredQuestion
               id={_id}
               question={question}
@@ -51,18 +56,8 @@ const Inbox = ({ logout }) => {
               time={new Date(createdAt).toLocaleString()}
               removeQuestion={removeQuestion}
             />
-          </div>
-        ) : (
-          <div key={_id}>
-            <UnansweredQuestion
-              id={_id}
-              question={question}
-              sender={sender}
-              time={new Date(createdAt).toLocaleString()}
-              removeQuestion={removeQuestion}
-            />
-          </div>
-        )))}
+          </InfiniteScroll>
+        ))}
         <div>{isLoading && <CircularProgress className={classes.loading} />}</div>
       </Grid>
       <Hidden xsDown>

@@ -11,6 +11,7 @@ import AskForm from '../Ask/AskForm';
 import useFetch from '../../hooks/useFetch';
 import fetchAnsweredQuestions from '../../axiosInstance/fetchAnsweredQuestions';
 import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
+import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
 
 const useStyles = makeStyles({
   loading: {
@@ -45,25 +46,20 @@ const AnsweredQuestionsList = ({ logout }) => {
         />
         {questions.map(({
           _id, question, answer, sender, updatedAt
-        }, i) => ((questions.length === i + 1) ? (
-          <div key={_id} ref={infiniteScrollingRef}>
+        }, i) => (
+          <InfiniteScroll
+            key={_id}
+            isLastElement={questions.length === i + 1}
+            ref={infiniteScrollingRef}
+          >
             <QuestionLayout
               question={question}
               answer={answer}
               sender={sender}
               time={new Date(updatedAt).toLocaleString()}
             />
-          </div>
-        ) : (
-          <div key={_id}>
-            <QuestionLayout
-              question={question}
-              answer={answer}
-              sender={sender}
-              time={new Date(updatedAt).toLocaleString()}
-            />
-          </div>
-        )))}
+          </InfiniteScroll>
+        ))}
         <div>{isLoading && <CircularProgress className={classes.loading} />}</div>
       </Grid>
       <Hidden xsDown>
