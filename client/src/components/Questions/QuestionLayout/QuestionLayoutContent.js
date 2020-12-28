@@ -16,7 +16,7 @@ const useStyles = makeStyles({
 });
 
 const QuestionLayoutContent = ({
-  answer, id, removeQuestion, questionDeleteHandler, answerErrorHandler
+  answer, questionDeleteHandler, answerHandler, id
 }) => {
   const classes = useStyles();
 
@@ -29,9 +29,8 @@ const QuestionLayoutContent = ({
       ) : (
         <AnswerForm
           id={id}
-          removeQuestion={removeQuestion}
+          answerHandler={answerHandler}
           questionDeleteHandler={questionDeleteHandler}
-          answerErrorHandler={answerErrorHandler}
         />
       )}
     </div>
@@ -39,11 +38,10 @@ const QuestionLayoutContent = ({
 };
 
 QuestionLayoutContent.propTypes = {
-  answer: PropTypes.string,
   id: PropTypes.string,
-  removeQuestion: PropTypes.func,
+  answer: PropTypes.string,
   questionDeleteHandler: PropTypes.func,
-  answerErrorHandler: PropTypes.func
+  answerHandler: PropTypes.func
 };
 
 export default QuestionLayoutContent;

@@ -4,12 +4,14 @@ import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
-import UnansweredQuestion from './UnansweredQuestion';
 import Sidebar from '../Sidebar/Sidebar';
 import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
 import useFetch from '../../hooks/useFetch';
 import fetchUnansweredQuestions from '../../axiosInstance/fetchUnansweredQuestions';
 import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
+import QuestionLayout from './QuestionLayout/QuestionLayout';
+import deleteQuestion from '../../axiosInstance/deleteQuestion';
+import answerQuestion from '../../axiosInstance/answerQuestion';
 
 const useStyles = makeStyles({
   loading: {
@@ -25,7 +27,7 @@ const Inbox = ({ logout }) => {
     setPage((prevPage) => prevPage + 1);
   };
   const {
-    data: questions, isLoading, hasMore, error
+    data: questions, isLoading, hasMore, error, dispatch
   } = useFetch({
     apiCall: fetchUnansweredQuestions,
     page,
@@ -33,9 +35,12 @@ const Inbox = ({ logout }) => {
   });
   const infiniteScrollingRef = useInfiniteScrolling(isLoading, hasMore, updatePage);
 
-  const removeQuestion = (id) => {
-    const filteredQuestions = questions.filter((question) => question._id !== id);
-    // setQuestions(filteredQuestions);
+  const questionDeleteHandler = async (id) => {
+    await deleteQuestion({ dispatch, id });
+  };
+
+  const answerHandler = async (id, answer) => {
+    await answerQuestion({ dispatch, id, answer });
   };
 
   return (
@@ -49,12 +54,13 @@ const Inbox = ({ logout }) => {
             isLastElement={questions.length === i + 1}
             ref={infiniteScrollingRef}
           >
-            <UnansweredQuestion
+            <QuestionLayout
               id={_id}
               question={question}
-              sender={sender}
               time={new Date(createdAt).toLocaleString()}
-              removeQuestion={removeQuestion}
+              sender={sender}
+              answerHandler={answerHandler}
+              questionDeleteHandler={questionDeleteHandler}
             />
           </InfiniteScroll>
         ))}
