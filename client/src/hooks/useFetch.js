@@ -25,6 +25,12 @@ const reducer = (state, action) => {
         data: [...state.data, ...action.data],
         isFollowed: action.isFollowed
       };
+    case TYPES.DELETE_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        data: state.data.filter((question) => question._id !== action.id)
+      };
     case TYPES.FETCH_FAILURE:
       return {
         ...state,
@@ -46,7 +52,7 @@ const useFetch = ({
     apiCall({ dispatch, params: { page, limit }, urlParam });
   }, [page]);
 
-  return { ...state };
+  return { ...state, dispatch };
 };
 
 export default useFetch;
