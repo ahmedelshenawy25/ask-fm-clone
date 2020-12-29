@@ -3,8 +3,6 @@ import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { makeStyles } from '@material-ui/core/styles';
 import QuestionLayout from './QuestionLayout/QuestionLayout';
 import Sidebar from '../Sidebar/Sidebar';
 import AskForm from '../Ask/AskForm';
@@ -12,16 +10,9 @@ import useFetch from '../../hooks/useFetch';
 import fetchAnsweredQuestions from '../../axiosInstance/fetchAnsweredQuestions';
 import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
 import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
-
-const useStyles = makeStyles({
-  loading: {
-    display: 'block',
-    margin: 'auto'
-  }
-});
+import Spinner from '../Spinner/Spinner';
 
 const AnsweredQuestionsList = ({ logout }) => {
-  const classes = useStyles();
   const { username } = useParams();
   const [page, setPage] = useState(1);
   const updatePage = () => {
@@ -60,7 +51,7 @@ const AnsweredQuestionsList = ({ logout }) => {
             />
           </InfiniteScroll>
         ))}
-        <div>{isLoading && <CircularProgress className={classes.loading} />}</div>
+        <Spinner isLoading={isLoading} />
       </Grid>
       <Hidden xsDown>
         <Grid item sm={4}>

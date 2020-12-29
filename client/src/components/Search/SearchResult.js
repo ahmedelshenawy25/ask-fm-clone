@@ -3,13 +3,13 @@ import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Follow from '../Follow/Follow';
 import fetchSearch from '../../axiosInstance/fetchSearch';
 import useFetch from '../../hooks/useFetch';
 import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
 import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
 import User from '../User/User';
+import Spinner from '../Spinner/Spinner';
 
 const useStyles = makeStyles({
   flex: {
@@ -18,10 +18,6 @@ const useStyles = makeStyles({
   },
   padding: {
     padding: '15px 20px'
-  },
-  loading: {
-    display: 'block',
-    margin: 'auto'
   }
 });
 
@@ -62,7 +58,7 @@ const SearchResult = ({ logout }) => {
           </div>
         </InfiniteScroll>
       ))}
-      <div>{isLoading && <CircularProgress className={classes.loading} />}</div>
+      <Spinner isLoading={isLoading} />
     </Paper>
   );
 };

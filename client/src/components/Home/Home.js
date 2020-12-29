@@ -2,24 +2,15 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { makeStyles } from '@material-ui/core/styles';
 import Sidebar from '../Sidebar/Sidebar';
 import QuestionLayout from '../Questions/QuestionLayout/QuestionLayout';
 import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
 import useFetch from '../../hooks/useFetch';
 import fetchFriendsQuestions from '../../axiosInstance/fetchFriendsQuestions';
 import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
-
-const useStyles = makeStyles({
-  loading: {
-    display: 'block',
-    margin: 'auto'
-  }
-});
+import Spinner from '../Spinner/Spinner';
 
 const Home = ({ logout }) => {
-  const classes = useStyles();
   const [page, setPage] = useState(1);
   const updatePage = () => {
     setPage((prevPage) => prevPage + 1);
@@ -53,7 +44,7 @@ const Home = ({ logout }) => {
             />
           </InfiniteScroll>
         ))}
-        <div>{isLoading && <CircularProgress className={classes.loading} />}</div>
+        <Spinner isLoading={isLoading} />
       </Grid>
       <Hidden xsDown>
         <Grid item sm={4}>

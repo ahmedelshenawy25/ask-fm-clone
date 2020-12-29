@@ -4,12 +4,12 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
 import useFetch from '../../hooks/useFetch';
 import fetchFriends from '../../axiosInstance/fetchFriends';
 import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
 import User from '../User/User';
+import Spinner from '../Spinner/Spinner';
 
 const useStyles = makeStyles({
   flex: {
@@ -21,10 +21,6 @@ const useStyles = makeStyles({
   },
   paper: {
     marginBottom: 20
-  },
-  loading: {
-    display: 'block',
-    margin: 'auto'
   }
 });
 
@@ -70,12 +66,12 @@ const Friends = () => {
             </div>
           </InfiniteScroll>
         ))}
+        <Spinner isLoading={isLoading} />
         {isSidebar && (
           <Link component={RouterLink} to="/friends">
             See all friends...
           </Link>
         )}
-        <div>{isLoading && <CircularProgress className={classes.loading} />}</div>
       </div>
     </Paper>
   );

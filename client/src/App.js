@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Container from '@material-ui/core/Container';
 import AppRouter from './router/AppRouter';
 import Navbar from './components/Navigation/Navbar';
 import AuthContext from './context/AuthContext/AuthContext';
+import Spinner from './components/Spinner/Spinner';
 
 const App = () => {
   const [isAuth, setIsAuth] = useState(false);
   const [username, setUsername] = useState('');
-  const [isLoadingInitialState, setIsLoadingInitialState] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const authHandler = () => {
     setIsAuth(true);
@@ -19,7 +19,7 @@ const App = () => {
   const logoutHandler = () => {
     localStorage.clear();
     setIsAuth(false);
-    setIsLoadingInitialState(false);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -37,16 +37,8 @@ const App = () => {
     }
     setIsAuth(true);
     setUsername(tokenUsername);
-    setIsLoadingInitialState(false);
+    setIsLoading(false);
   }, []);
-
-  if (isLoadingInitialState) {
-    return (
-      <div style={{ position: 'fixed', top: '50%', left: '50%' }}>
-        <CircularProgress />
-      </div>
-    );
-  }
 
   return (
     <AuthContext.Provider value={isAuth}>
@@ -55,6 +47,9 @@ const App = () => {
       <Container maxWidth="md">
         <AppRouter authHandler={authHandler} logoutHandler={logoutHandler} />
       </Container>
+      <div style={{ position: 'fixed', top: '50%', left: '50%' }}>
+        <Spinner isLoading={isLoading} />
+      </div>
     </AuthContext.Provider>
   );
 };
