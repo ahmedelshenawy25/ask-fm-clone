@@ -23,8 +23,14 @@ const QuestionLayout = ({
   return (
     <Paper className={classes.paper} variant="outlined">
       <div className={classes.padding}>
-        <QuestionLayoutHeader question={question} sender={sender} />
-        <QuestionLayoutMeta recipient={recipient} time={time} />
+        <QuestionLayoutHeader
+          question={question}
+          sender={sender}
+        />
+        <QuestionLayoutMeta
+          recipient={recipient}
+          time={time}
+        />
         <QuestionLayoutContent
           id={id}
           answer={answer}

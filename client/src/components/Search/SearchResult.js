@@ -1,19 +1,17 @@
 import React, { useState } from 'react';
-import { useLocation, Link as RouterLink } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
-import Link from '@material-ui/core/Link';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Follow from '../Follow/Follow';
 import fetchSearch from '../../axiosInstance/fetchSearch';
 import useFetch from '../../hooks/useFetch';
 import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
 import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
+import User from '../User/User';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   flex: {
     display: 'flex',
     paddingTop: 20
@@ -21,31 +19,11 @@ const useStyles = makeStyles((theme) => ({
   padding: {
     padding: '15px 20px'
   },
-  avatar: {
-    width: 35,
-    height: 35,
-    marginRight: 15
-  },
-  fullname: {
-    color: theme.palette.text.primary,
-    fontWeight: 'bold',
-    fontSize: 14,
-    lineHeight: 1
-  },
-  username: {
-    color: theme.palette.text.secondary,
-    fontSize: 12
-  },
-  content: {
-    flexGrow: 1,
-    lineHeight: 1,
-    wordWrap: 'break-word'
-  },
   loading: {
     display: 'block',
     margin: 'auto'
   }
-}));
+});
 
 const SearchResult = ({ logout }) => {
   const classes = useStyles();
@@ -75,17 +53,11 @@ const SearchResult = ({ logout }) => {
           ref={infiniteScrollingRef}
         >
           <div className={classes.flex}>
-            <Avatar className={classes.avatar} />
-            <div className={classes.content}>
-              <Link component={RouterLink} to={`/user/${username}`} underline="none">
-                <Typography className={classes.fullname}>
-                  {`${fullName}`}
-                </Typography>
-                <Typography className={classes.username}>
-                  {`@${username}`}
-                </Typography>
-              </Link>
-            </div>
+            <User
+              fullName={fullName}
+              username={username}
+              isSidebar={false}
+            />
             <Follow isFollowed={isFollowed} username={username} />
           </div>
         </InfiniteScroll>
