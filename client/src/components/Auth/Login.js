@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   Formik, Form, Field, ErrorMessage
 } from 'formik';
-import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import Container from '@material-ui/core/Container';
@@ -24,9 +23,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Login = ({ onLogin }) => {
+const Login = ({ loginHandler }) => {
   const classes = useStyles();
-  const history = useHistory();
   const [error, setError] = useState('');
 
   return (
@@ -48,11 +46,8 @@ const Login = ({ onLogin }) => {
               const response = await axiosInstance.post('/login', {
                 ...castValues
               });
-              localStorage.token = response.data.token;
-              localStorage.username = response.data.username;
 
-              onLogin();
-              history.push('/home');
+              loginHandler(response.data.token);
             } catch (e) {
               setError(e.response ? e.response.data.message : e.message);
             }
@@ -100,7 +95,7 @@ const Login = ({ onLogin }) => {
 };
 
 Login.propTypes = {
-  onLogin: PropTypes.func.isRequired
+  loginHandler: PropTypes.func.isRequired
 };
 
 export default Login;

@@ -12,14 +12,15 @@ const useStyles = makeStyles({
     marginBottom: '80px'
   }
 });
-const Navbar = ({ onLogout, username }) => {
+
+const Navbar = ({ username }) => {
   const classes = useStyles();
   const isAuth = useContext(AuthContext);
   return (
     <div className={classes.navbar}>
       <AppBar>
         <Toolbar>
-          { isAuth ? <PrivateNavbar username={username} onLogout={onLogout} /> : <PublicNavbar /> }
+          { isAuth ? <PrivateNavbar username={username} /> : <PublicNavbar /> }
         </Toolbar>
       </AppBar>
     </div>
@@ -27,7 +28,6 @@ const Navbar = ({ onLogout, username }) => {
 };
 
 Navbar.propTypes = {
-  onLogout: PropTypes.func.isRequired,
   username: PropTypes.string.isRequired
 };
 

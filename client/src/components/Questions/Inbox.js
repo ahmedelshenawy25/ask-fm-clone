@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import Sidebar from '../Sidebar/Sidebar';
@@ -12,7 +11,7 @@ import deleteQuestion from '../../axiosInstance/deleteQuestion';
 import answerQuestion from '../../axiosInstance/answerQuestion';
 import Spinner from '../Spinner/Spinner';
 
-const Inbox = ({ logout }) => {
+const Inbox = () => {
   const [page, setPage] = useState(1);
   const updatePage = () => {
     setPage((prevPage) => prevPage + 1);
@@ -64,10 +63,6 @@ const Inbox = ({ logout }) => {
       </Hidden>
     </Grid>
   );
-};
-
-Inbox.propTypes = {
-  logout: PropTypes.func.isRequired
 };
 
 export default Inbox;

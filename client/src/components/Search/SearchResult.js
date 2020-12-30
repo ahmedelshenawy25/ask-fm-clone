@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Follow from '../Follow/Follow';
@@ -21,7 +20,7 @@ const useStyles = makeStyles({
   }
 });
 
-const SearchResult = ({ logout }) => {
+const SearchResult = () => {
   const classes = useStyles();
   const { search } = useLocation();
   const [page, setPage] = useState(1);
@@ -61,10 +60,6 @@ const SearchResult = ({ logout }) => {
       <Spinner isLoading={isLoading} />
     </Paper>
   );
-};
-
-SearchResult.propTypes = {
-  logout: PropTypes.func.isRequired
 };
 
 export default SearchResult;

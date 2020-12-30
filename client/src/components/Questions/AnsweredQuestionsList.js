@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import QuestionLayout from './QuestionLayout/QuestionLayout';
@@ -12,7 +11,7 @@ import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
 import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
 import Spinner from '../Spinner/Spinner';
 
-const AnsweredQuestionsList = ({ logout }) => {
+const AnsweredQuestionsList = () => {
   const { username } = useParams();
   const [page, setPage] = useState(1);
   const updatePage = () => {
@@ -60,10 +59,6 @@ const AnsweredQuestionsList = ({ logout }) => {
       </Hidden>
     </Grid>
   );
-};
-
-AnsweredQuestionsList.propTypes = {
-  logout: PropTypes.func.isRequired
 };
 
 export default AnsweredQuestionsList;

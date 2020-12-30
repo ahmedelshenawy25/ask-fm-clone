@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import Sidebar from '../Sidebar/Sidebar';
@@ -10,7 +9,7 @@ import fetchFriendsQuestions from '../../axiosInstance/fetchFriendsQuestions';
 import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
 import Spinner from '../Spinner/Spinner';
 
-const Home = ({ logout }) => {
+const Home = () => {
   const [page, setPage] = useState(1);
   const updatePage = () => {
     setPage((prevPage) => prevPage + 1);
@@ -53,10 +52,6 @@ const Home = ({ logout }) => {
       </Hidden>
     </Grid>
   );
-};
-
-Home.propTypes = {
-  logout: PropTypes.func.isRequired
 };
 
 export default Home;
