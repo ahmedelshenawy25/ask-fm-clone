@@ -45,11 +45,20 @@ const reducer = (state, action) => {
 const useFetch = ({
   apiCall, page, limit, urlParam
 }) => {
+  const cancel = {
+    request: false
+  };
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     dispatch({ type: TYPES.FETCH });
-    apiCall({ dispatch, params: { page, limit }, urlParam });
+    apiCall({
+      dispatch, params: { page, limit }, urlParam, cancel
+    });
+
+    return () => {
+      cancel.request = true;
+    };
   }, [page]);
 
   return { ...state, dispatch };
