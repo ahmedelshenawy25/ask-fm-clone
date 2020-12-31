@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
@@ -10,8 +10,10 @@ import fetchAnsweredQuestions from '../../axiosInstance/fetchAnsweredQuestions';
 import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
 import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
 import Spinner from '../Spinner/Spinner';
+import ErrorContext from '../../context/ErrorContext';
 
 const AnsweredQuestionsList = () => {
+  const errorHandler = useContext(ErrorContext);
   const { username } = useParams();
   const [page, setPage] = useState(1);
   const updatePage = () => {
@@ -26,6 +28,12 @@ const AnsweredQuestionsList = () => {
     urlParam: username
   });
   const infiniteScrollingRef = useInfiniteScrolling(isLoading, hasMore, updatePage);
+
+  useEffect(() => {
+    if (error) {
+      errorHandler(error);
+    }
+  }, [error]);
 
   return (
     <Grid container spacing={2}>

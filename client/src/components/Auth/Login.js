@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import {
   Formik, Form, Field, ErrorMessage
 } from 'formik';
@@ -10,6 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import axiosInstance from '../../axiosInstance/axiosInstance';
 import loginValidationSchema from './login.validationSchema';
+import ErrorContext from '../../context/ErrorContext';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -25,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Login = ({ loginHandler }) => {
   const classes = useStyles();
-  const [error, setError] = useState('');
+  const errorHandler = useContext(ErrorContext);
 
   return (
     <Container maxWidth="xs">
@@ -33,7 +34,6 @@ const Login = ({ loginHandler }) => {
         <Typography component="h1" variant="h5">
           Log in
         </Typography>
-        { error }
         <Formik
           initialValues={{
             usernameOrEmail: '',
@@ -49,7 +49,8 @@ const Login = ({ loginHandler }) => {
 
               loginHandler(response.data.token);
             } catch (e) {
-              setError(e.response ? e.response.data.message : e.message);
+              const error = e.response ? e.response.data.message : e.message;
+              errorHandler(error);
             }
           }}
         >

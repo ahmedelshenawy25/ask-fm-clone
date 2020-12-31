@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import Sidebar from '../Sidebar/Sidebar';
@@ -8,8 +8,10 @@ import useFetch from '../../hooks/useFetch';
 import fetchFriendsQuestions from '../../axiosInstance/fetchFriendsQuestions';
 import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
 import Spinner from '../Spinner/Spinner';
+import ErrorContext from '../../context/ErrorContext';
 
 const Home = () => {
+  const errorHandler = useContext(ErrorContext);
   const [page, setPage] = useState(1);
   const updatePage = () => {
     setPage((prevPage) => prevPage + 1);
@@ -22,6 +24,12 @@ const Home = () => {
     limit: 10
   });
   const infiniteScrollingRef = useInfiniteScrolling(isLoading, hasMore, updatePage);
+
+  useEffect(() => {
+    if (error) {
+      errorHandler(error);
+    }
+  }, [error]);
 
   return (
     <Grid container spacing={2}>

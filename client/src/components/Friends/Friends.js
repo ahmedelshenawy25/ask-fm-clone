@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,6 +10,7 @@ import fetchFriends from '../../axiosInstance/fetchFriends';
 import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
 import User from '../User/User';
 import Spinner from '../Spinner/Spinner';
+import ErrorContext from '../../context/ErrorContext';
 
 const useStyles = makeStyles({
   flex: {
@@ -26,6 +27,7 @@ const useStyles = makeStyles({
 
 const Friends = () => {
   const classes = useStyles();
+  const errorHandler = useContext(ErrorContext);
   const { pathname } = useLocation();
   const isSidebar = pathname !== '/friends';
   const [page, setPage] = useState(1);
@@ -40,6 +42,12 @@ const Friends = () => {
     limit: isSidebar ? 5 : 30
   });
   const infiniteScrollingRef = useInfiniteScrolling(isLoading, hasMore, updatePage);
+
+  useEffect(() => {
+    if (error) {
+      errorHandler(error);
+    }
+  }, [error]);
 
   return (
     <Paper className={classes.paper} variant="outlined">

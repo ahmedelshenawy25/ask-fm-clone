@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import {
   Formik, Form, Field, ErrorMessage
 } from 'formik';
@@ -10,6 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import axiosInstance from '../../axiosInstance/axiosInstance';
 import signupValidationSchema from './signup.validationSchema';
+import ErrorContext from '../../context/ErrorContext';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 const Signup = () => {
   const classes = useStyles();
   const history = useHistory();
-  const [error, setError] = useState('');
+  const errorHandler = useContext(ErrorContext);
 
   return (
     <Container maxWidth="xs">
@@ -52,13 +53,13 @@ const Signup = () => {
               });
               history.push('/login');
             } catch (e) {
-              setError(e.response ? e.response.data.message : e.message);
+              const error = e.response ? e.response.data.message : e.message;
+              errorHandler(error);
             }
           }}
         >
           {({ isValid, dirty, isSubmitting }) => (
             <div>
-              { error }
               <Form>
                 <Field
                   name="firstName"

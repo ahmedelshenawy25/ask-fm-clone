@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import Sidebar from '../Sidebar/Sidebar';
@@ -10,8 +10,10 @@ import QuestionLayout from './QuestionLayout/QuestionLayout';
 import deleteQuestion from '../../axiosInstance/deleteQuestion';
 import answerQuestion from '../../axiosInstance/answerQuestion';
 import Spinner from '../Spinner/Spinner';
+import ErrorContext from '../../context/ErrorContext';
 
 const Inbox = () => {
+  const errorHandler = useContext(ErrorContext);
   const [page, setPage] = useState(1);
   const updatePage = () => {
     setPage((prevPage) => prevPage + 1);
@@ -32,6 +34,12 @@ const Inbox = () => {
   const answerHandler = async (id, answer) => {
     await answerQuestion({ dispatch, id, answer });
   };
+
+  useEffect(() => {
+    if (error) {
+      errorHandler(error);
+    }
+  }, [error]);
 
   return (
     <Grid container spacing={2}>

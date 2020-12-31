@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
@@ -9,6 +9,7 @@ import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
 import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
 import User from '../User/User';
 import Spinner from '../Spinner/Spinner';
+import ErrorContext from '../../context/ErrorContext';
 
 const useStyles = makeStyles({
   flex: {
@@ -22,6 +23,7 @@ const useStyles = makeStyles({
 
 const SearchResult = () => {
   const classes = useStyles();
+  const errorHandler = useContext(ErrorContext);
   const { search } = useLocation();
   const [page, setPage] = useState(1);
   const updatePage = () => {
@@ -36,6 +38,12 @@ const SearchResult = () => {
     urlParam: search
   });
   const infiniteScrollingRef = useInfiniteScrolling(isLoading, hasMore, updatePage);
+
+  useEffect(() => {
+    if (error) {
+      errorHandler(error);
+    }
+  }, [error]);
 
   return (
     <Paper className={classes.padding} variant="outlined">
