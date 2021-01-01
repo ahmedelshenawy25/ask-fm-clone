@@ -4,8 +4,9 @@ import decodeToken from '../utils/decodeToken';
 
 const useAuth = () => {
   const history = useHistory();
-  const [isAuth, setIsAuth] = useState(true);
+  const [isAuth, setIsAuth] = useState(false);
   const [username, setUsername] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   const loginHandler = (token) => {
     const parsedToken = decodeToken(token);
@@ -34,19 +35,22 @@ const useAuth = () => {
       const currentTime = Math.trunc(new Date() / 1000);
 
       if (!exp || currentTime > exp) {
+        setIsLoading(false);
         return logoutHandler();
       }
       localStorage.username = parsedToken.username;
       setUsername(parsedToken.username);
       setIsAuth(true);
     }
+    setIsLoading(false);
   }, []);
 
   return {
     isAuth,
     username,
     loginHandler,
-    logoutHandler
+    logoutHandler,
+    isLoading
   };
 };
 

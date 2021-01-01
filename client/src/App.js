@@ -8,14 +8,23 @@ import useAuth from './hooks/useAuth';
 import ErrorContext from './context/ErrorContext';
 import useError from './hooks/useError';
 import ErrorAlert from './components/Alert/ErrorAlert';
+import Spinner from './components/Spinner/Spinner';
 
 const App = () => {
   const {
-    isAuth, username, loginHandler, logoutHandler
+    isAuth, username, loginHandler, logoutHandler, isLoading
   } = useAuth();
   const {
     open, error, errorHandler, closeHandler
   } = useError();
+
+  if (isLoading) {
+    return (
+      <div style={{ position: 'fixed', top: '50%', left: '50%' }}>
+        <Spinner isLoading={isLoading} />
+      </div>
+    );
+  }
 
   return (
     <AuthContext.Provider value={isAuth}>
