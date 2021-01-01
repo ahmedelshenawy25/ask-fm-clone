@@ -1,7 +1,5 @@
 import React, { useContext } from 'react';
-import {
-  Formik, Form, Field, ErrorMessage
-} from 'formik';
+import { Formik, Form, Field } from 'formik';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import Container from '@material-ui/core/Container';
@@ -54,7 +52,9 @@ const Login = ({ loginHandler }) => {
             }
           }}
         >
-          {({ isValid, dirty, isSubmitting }) => (
+          {({
+            isValid, dirty, isSubmitting, errors, touched
+          }) => (
             <Form>
               <Field
                 name="usernameOrEmail"
@@ -64,8 +64,9 @@ const Login = ({ loginHandler }) => {
                 size="small"
                 fullWidth
                 margin="normal"
+                error={touched.usernameOrEmail && errors.usernameOrEmail}
+                helperText={touched.usernameOrEmail && errors.usernameOrEmail}
               />
-              <ErrorMessage name="usernameOrEmail" />
               <Field
                 type="password"
                 name="password"
@@ -75,8 +76,9 @@ const Login = ({ loginHandler }) => {
                 size="small"
                 fullWidth
                 margin="normal"
+                error={touched.password && errors.password}
+                helperText={touched.password && errors.password}
               />
-              <ErrorMessage name="password" />
               <Button
                 disabled={!(isValid && dirty) || isSubmitting}
                 type="submit"

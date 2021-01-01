@@ -1,7 +1,5 @@
 import React, { useContext } from 'react';
-import {
-  Formik, Form, Field, ErrorMessage
-} from 'formik';
+import { Formik, Form, Field } from 'formik';
 import { useHistory } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import Container from '@material-ui/core/Container';
@@ -58,7 +56,9 @@ const Signup = () => {
             }
           }}
         >
-          {({ isValid, dirty, isSubmitting }) => (
+          {({
+            isValid, dirty, isSubmitting, errors, touched
+          }) => (
             <div>
               <Form>
                 <Field
@@ -69,13 +69,8 @@ const Signup = () => {
                   size="small"
                   fullWidth
                   margin="normal"
-                />
-                <ErrorMessage
-                  name="firstName"
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                  margin="normal"
+                  error={touched.firstName && errors.firstName}
+                  helperText={touched.firstName && errors.firstName}
                 />
                 <Field
                   name="lastName"
@@ -85,8 +80,9 @@ const Signup = () => {
                   size="small"
                   fullWidth
                   margin="normal"
+                  error={touched.lastName && errors.lastName}
+                  helperText={touched.lastName && errors.lastName}
                 />
-                <ErrorMessage name="lastName" />
                 <Field
                   name="username"
                   placeholder="Username"
@@ -95,8 +91,9 @@ const Signup = () => {
                   size="small"
                   fullWidth
                   margin="normal"
+                  error={touched.username && errors.username}
+                  helperText={touched.username && errors.username}
                 />
-                <ErrorMessage name="username" />
                 <Field
                   name="email"
                   placeholder="Email"
@@ -105,8 +102,9 @@ const Signup = () => {
                   size="small"
                   fullWidth
                   margin="normal"
+                  error={touched.email && errors.email}
+                  helperText={touched.email && errors.email}
                 />
-                <ErrorMessage name="email" />
                 <Field
                   type="password"
                   name="password"
@@ -116,8 +114,9 @@ const Signup = () => {
                   size="small"
                   fullWidth
                   margin="normal"
+                  error={touched.password && errors.password}
+                  helperText={touched.password && errors.password}
                 />
-                <ErrorMessage name="password" />
                 <Field
                   type="password"
                   name="confirmPassword"
@@ -127,8 +126,9 @@ const Signup = () => {
                   size="small"
                   fullWidth
                   margin="normal"
+                  error={touched.confirmPassword && errors.confirmPassword}
+                  helperText={touched.confirmPassword && errors.confirmPassword}
                 />
-                <ErrorMessage name="confirmPassword" />
                 <Button
                   disabled={!(isValid && dirty) || isSubmitting}
                   type="submit"
