@@ -5,8 +5,7 @@ import Hidden from '@material-ui/core/Hidden';
 import QuestionLayout from './QuestionLayout/QuestionLayout';
 import Sidebar from '../Sidebar/Sidebar';
 import AskForm from '../Ask/AskForm';
-import useFetch from '../../hooks/useFetch';
-import fetchAnsweredQuestions from '../../axiosInstance/fetchAnsweredQuestions';
+import useFetchAnsweredQuestions from '../../hooks/api/useFetchAnsweredQuestions';
 import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
 import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
 import Spinner from '../Spinner/Spinner';
@@ -20,12 +19,11 @@ const AnsweredQuestionsList = () => {
     setPage((prevPage) => prevPage + 1);
   };
   const {
-    data: questions, isLoading, hasMore, isFollowed, error
-  } = useFetch({
-    apiCall: fetchAnsweredQuestions,
+    questions, isLoading, hasMore, isFollowed, error
+  } = useFetchAnsweredQuestions({
     page,
     limit: 10,
-    urlParam: username
+    username
   });
   const infiniteScrollingRef = useInfiniteScrolling(isLoading, hasMore, updatePage);
 

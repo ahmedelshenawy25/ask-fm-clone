@@ -4,8 +4,8 @@ import Hidden from '@material-ui/core/Hidden';
 import Sidebar from '../Sidebar/Sidebar';
 import QuestionLayout from '../Questions/QuestionLayout/QuestionLayout';
 import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
-import useFetch from '../../hooks/useFetch';
-import fetchFriendsQuestions from '../../axiosInstance/fetchFriendsQuestions';
+import useFetchFriendsQuestions from '../../hooks/api/useFetchFriendsQuestions';
+// import fetchFriendsQuestions from '../../axiosInstance/fetchFriendsQuestions';
 import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
 import Spinner from '../Spinner/Spinner';
 import ErrorContext from '../../context/ErrorContext';
@@ -17,9 +17,8 @@ const Home = () => {
     setPage((prevPage) => prevPage + 1);
   };
   const {
-    data: questions, isLoading, hasMore, error
-  } = useFetch({
-    apiCall: fetchFriendsQuestions,
+    questions, isLoading, hasMore, error
+  } = useFetchFriendsQuestions({
     page,
     limit: 10
   });
