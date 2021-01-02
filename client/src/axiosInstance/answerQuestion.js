@@ -1,18 +1,22 @@
-import TYPES from '../utils/types';
+import { ANSWER_QUESTION, ANSWER_QUESTION_FAILURE, ANSWER_QUESTION_SUCCESS } from '../utils/types';
 import axiosInstance from './axiosInstance';
 
 async function answerQuestion({ dispatch, id, answer }) {
-  const { FETCH, DELETE_SUCCESS, FETCH_FAILURE } = TYPES;
-  dispatch({ type: FETCH });
+  dispatch({ type: ANSWER_QUESTION });
   try {
     await axiosInstance.put(`/answer/${id}`, {
       answer
     });
 
-    dispatch({ type: DELETE_SUCCESS, id });
+    dispatch({
+      type: ANSWER_QUESTION_SUCCESS,
+      id
+    });
   } catch (e) {
-    const error = e.response ? e.response.data.message : e.message;
-    dispatch({ type: FETCH_FAILURE, error });
+    dispatch({
+      type: ANSWER_QUESTION_FAILURE,
+      error: e.response ? e.response.data.message : e.message
+    });
   }
 }
 

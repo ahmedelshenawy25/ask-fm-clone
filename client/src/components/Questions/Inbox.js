@@ -3,8 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import Sidebar from '../Sidebar/Sidebar';
 import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
-import useFetch from '../../hooks/useFetch';
-import fetchUnansweredQuestions from '../../axiosInstance/fetchUnansweredQuestions';
+import useFetchUnansweredQuestions from '../../hooks/api/useFetchUnansweredQuestions';
 import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
 import QuestionLayout from './QuestionLayout/QuestionLayout';
 import deleteQuestion from '../../axiosInstance/deleteQuestion';
@@ -19,9 +18,8 @@ const Inbox = () => {
     setPage((prevPage) => prevPage + 1);
   };
   const {
-    data: questions, isLoading, hasMore, error, dispatch
-  } = useFetch({
-    apiCall: fetchUnansweredQuestions,
+    questions, isLoading, hasMore, error, dispatch
+  } = useFetchUnansweredQuestions({
     page,
     limit: 10
   });

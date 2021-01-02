@@ -3,8 +3,7 @@ import { useLocation } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import Follow from '../Follow/Follow';
-import fetchSearch from '../../axiosInstance/fetchSearch';
-import useFetch from '../../hooks/useFetch';
+import useFetchSearch from '../../hooks/api/useFetchSearch';
 import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
 import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
 import User from '../User/User';
@@ -30,12 +29,11 @@ const SearchResult = () => {
     setPage((prevPage) => prevPage + 1);
   };
   const {
-    data: users, isLoading, hasMore, error
-  } = useFetch({
-    apiCall: fetchSearch,
+    users, isLoading, hasMore, error
+  } = useFetchSearch({
     page,
     limit: 10,
-    urlParam: search
+    searchQuery: search
   });
   const infiniteScrollingRef = useInfiniteScrolling(isLoading, hasMore, updatePage);
 

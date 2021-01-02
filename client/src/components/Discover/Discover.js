@@ -6,8 +6,7 @@ import Link from '@material-ui/core/Link';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import Follow from '../Follow/Follow';
 import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
-import useFetch from '../../hooks/useFetch';
-import fetchDiscoverUsers from '../../axiosInstance/fetchDiscoverUsers';
+import useDiscoverUsers from '../../hooks/api/useDiscoverUsers';
 import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
 import User from '../User/User';
 import Spinner from '../Spinner/Spinner';
@@ -36,12 +35,12 @@ const Discover = () => {
     setPage((prevPage) => prevPage + 1);
   };
   const {
-    data: users, isLoading, hasMore, error
-  } = useFetch({
-    apiCall: fetchDiscoverUsers,
+    users, isLoading, hasMore, error
+  } = useDiscoverUsers({
     page,
     limit: isSidebar ? 5 : 30
   });
+
   const infiniteScrollingRef = useInfiniteScrolling(isLoading, hasMore, updatePage);
 
   useEffect(() => {

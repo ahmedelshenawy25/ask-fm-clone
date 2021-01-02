@@ -5,8 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Link from '@material-ui/core/Link';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
-import useFetch from '../../hooks/useFetch';
-import fetchFriends from '../../axiosInstance/fetchFriends';
+import useFetchFriends from '../../hooks/api/useFetchFriends';
 import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
 import User from '../User/User';
 import Spinner from '../Spinner/Spinner';
@@ -35,12 +34,12 @@ const Friends = () => {
     setPage((prevPage) => prevPage + 1);
   };
   const {
-    data: users, isLoading, hasMore, error
-  } = useFetch({
-    apiCall: fetchFriends,
+    users, isLoading, hasMore, error
+  } = useFetchFriends({
     page,
     limit: isSidebar ? 5 : 30
   });
+
   const infiniteScrollingRef = useInfiniteScrolling(isLoading, hasMore, updatePage);
 
   useEffect(() => {
