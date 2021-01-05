@@ -4,7 +4,7 @@ import axiosInstance from './axiosInstance';
 async function answerQuestion({ dispatch, id, answer }) {
   dispatch({ type: ANSWER_QUESTION });
   try {
-    await axiosInstance.put(`/answer/${id}`, {
+    await axiosInstance.put(`/questions/${id}`, {
       answer
     });
 

@@ -11,9 +11,9 @@ const Follow = ({ isFollowed: isUserFollowed, username }) => {
   const followHandler = async () => {
     try {
       if (isFollowed) {
-        await axiosInstance.delete(`/unfollow/${username}`);
+        await axiosInstance.delete(`/users/${username}/follow`);
       } else {
-        await axiosInstance.post(`/follow/${username}`);
+        await axiosInstance.post(`/users/${username}/follow`);
       }
       setIsFollowed((prevState) => !prevState);
     } catch (e) {

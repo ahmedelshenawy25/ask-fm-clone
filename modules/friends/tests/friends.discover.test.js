@@ -5,7 +5,7 @@ const { usersGenerator } = require('../../../fake-data-generator');
 
 let app;
 
-describe('Get unfollowed users -> #GET /api/discover', () => {
+describe('Get unfollowed users -> #GET /api/users/discover', () => {
   beforeAll(() => {
     app = require('../../../init/init.tests');
   });
@@ -24,7 +24,7 @@ describe('Get unfollowed users -> #GET /api/discover', () => {
     const token = `Bearer ${UsersDAL.generateAuthToken(user1)}`;
 
     const res = await request(app)
-      .get('/api/discover')
+      .get('/api/users/discover')
       .set('Authorization', token)
       .expect(200);
 

@@ -6,7 +6,7 @@ const { usersGenerator, questionsGenerator } = require('../../../fake-data-gener
 
 let app;
 
-describe('Get all answered questions by followed users -> #GET /api/home', () => {
+describe('Get all answered questions by followed users -> #GET /api/questions/answered', () => {
   beforeAll(() => {
     app = require('../../../init/init.tests');
   });
@@ -47,7 +47,7 @@ describe('Get all answered questions by followed users -> #GET /api/home', () =>
     await FollowsDAL.create(user3._id, user1._id);
 
     const res = await request(app)
-      .get('/api/home')
+      .get('/api/questions/answered')
       .set('Authorization', token)
       .expect(200);
 
@@ -96,7 +96,7 @@ describe('Get all answered questions by followed users -> #GET /api/home', () =>
     await FollowsDAL.create(user3._id, user1._id);
 
     const res = await request(app)
-      .get('/api/home')
+      .get('/api/questions/answered')
       .set('Authorization', token)
       .expect(200);
 
@@ -137,7 +137,7 @@ describe('Get all answered questions by followed users -> #GET /api/home', () =>
     await FollowsDAL.create(user3._id, user1._id);
 
     const res = await request(app)
-      .get('/api/home')
+      .get('/api/questions/answered')
       .set('Authorization', token)
       .expect(200);
 

@@ -7,7 +7,6 @@ const usersControllers = require('./controllers');
 
 router.post('/signup', validator(signupValidator), usersControllers.signup);
 router.post('/login', validator(loginValidator), usersControllers.login);
-
-router.get('/search', [auth, validator(searchValidator)], usersControllers.search);
+router.get('/users/search', [auth, validator(searchValidator)], usersControllers.search);
 
 module.exports = router;

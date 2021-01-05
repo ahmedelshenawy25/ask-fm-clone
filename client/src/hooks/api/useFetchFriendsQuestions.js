@@ -12,7 +12,7 @@ const useFetchFriendsQuestions = ({ page, limit }) => {
     const fetchFriendsQuestions = async () => {
       dispatch({ type: FETCH_QUESTIONS });
       try {
-        const response = await axiosInstance.get('/home', {
+        const response = await axiosInstance.get('/questions/answered', {
           params: {
             page,
             limit

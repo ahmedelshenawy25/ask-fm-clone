@@ -12,7 +12,7 @@ const useFetchUnansweredQuestions = ({ page, limit }) => {
     const fetchUnansweredQuestions = async () => {
       dispatch({ type: FETCH_QUESTIONS });
       try {
-        const response = await axiosInstance.get('/account/inbox', {
+        const response = await axiosInstance.get('/questions/unanswered', {
           params: {
             page,
             limit

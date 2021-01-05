@@ -12,7 +12,7 @@ const useFetchSearch = ({ page, limit, searchQuery }) => {
     const fetchSearch = async () => {
       dispatch({ type: FETCH_USERS });
       try {
-        const response = await axiosInstance.get(`/search${searchQuery}`, {
+        const response = await axiosInstance.get(`/users/search${searchQuery}`, {
           params: {
             page,
             limit
@@ -41,7 +41,7 @@ const useFetchSearch = ({ page, limit, searchQuery }) => {
     return () => {
       cancel = true;
     };
-  }, [page, limit]);
+  }, [page, limit, searchQuery]);
 
   return state;
 };

@@ -6,7 +6,7 @@ const { QUESTION_NOT_FOUND, INVALID_QUESTION_ID, ANSWER_LENGTH } = require('../e
 
 let app;
 // TODO: check if you can answer an already answered question
-describe('Answer a question -> #PUT /api/answer/:questionId', () => {
+describe('Answer a question -> #PUT /api/questions/:questionId', () => {
   beforeAll(() => {
     app = require('../../../init/init.tests');
   });
@@ -35,7 +35,7 @@ describe('Answer a question -> #PUT /api/answer/:questionId', () => {
     };
 
     await request(app)
-      .put(`/api/answer/${questionId}`)
+      .put(`/api/questions/${questionId}`)
       .set('Authorization', token)
       .send(answer)
       .expect(204);
@@ -59,7 +59,7 @@ describe('Answer a question -> #PUT /api/answer/:questionId', () => {
     };
 
     const res = await request(app)
-      .put(`/api/answer/${questionId}`)
+      .put(`/api/questions/${questionId}`)
       .set('Authorization', token)
       .send(answer)
       .expect(400);
@@ -85,7 +85,7 @@ describe('Answer a question -> #PUT /api/answer/:questionId', () => {
     };
 
     const res = await request(app)
-      .put(`/api/answer/${questionId}`)
+      .put(`/api/questions/${questionId}`)
       .set('Authorization', token)
       .send(answer)
       .expect(400);
@@ -111,7 +111,7 @@ describe('Answer a question -> #PUT /api/answer/:questionId', () => {
     };
 
     const res = await request(app)
-      .put(`/api/answer/${questionId}`)
+      .put(`/api/questions/${questionId}`)
       .set('Authorization', token)
       .send(answer)
       .expect(404);
@@ -130,7 +130,7 @@ describe('Answer a question -> #PUT /api/answer/:questionId', () => {
     };
 
     const res = await request(app)
-      .put(`/api/answer/${invalidQuestionId}`)
+      .put(`/api/questions/${invalidQuestionId}`)
       .set('Authorization', token)
       .send(answer)
       .expect(404);
@@ -149,7 +149,7 @@ describe('Answer a question -> #PUT /api/answer/:questionId', () => {
     };
 
     const res = await request(app)
-      .put(`/api/answer/${invalidQuestionId}`)
+      .put(`/api/questions/${invalidQuestionId}`)
       .set('Authorization', token)
       .send(answer)
       .expect(400);

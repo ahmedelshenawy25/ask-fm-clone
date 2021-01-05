@@ -7,7 +7,7 @@ const { USER_NOT_FOUND } = require('../errors');
 
 let app;
 
-describe('Get answered questions for a user by username -> #GET /api/user/:username', () => {
+describe('Get answered questions for a user by username -> #GET /api/questions/:username/answered', () => {
   beforeAll(() => {
     app = require('../../../init/init.tests');
   });
@@ -41,7 +41,7 @@ describe('Get answered questions for a user by username -> #GET /api/user/:usern
     await FollowsDAL.create(user2._id, user1._id);
 
     const res = await request(app)
-      .get(`/api/user/${username}`)
+      .get(`/api/questions/${username}/answered`)
       .set('Authorization', token)
       .expect(200);
 
@@ -81,7 +81,7 @@ describe('Get answered questions for a user by username -> #GET /api/user/:usern
     });
 
     const res = await request(app)
-      .get(`/api/user/${username}`)
+      .get(`/api/questions/${username}/answered`)
       .set('Authorization', token)
       .expect(200);
 
@@ -113,7 +113,7 @@ describe('Get answered questions for a user by username -> #GET /api/user/:usern
     });
 
     const res = await request(app)
-      .get(`/api/user/${username}`)
+      .get(`/api/questions/${username}/answered`)
       .set('Authorization', token)
       .expect(200);
 
@@ -129,7 +129,7 @@ describe('Get answered questions for a user by username -> #GET /api/user/:usern
     const invalidUsername = random.randomUsername();
 
     const res = await request(app)
-      .get(`/api/user/${invalidUsername}`)
+      .get(`/api/questions/${invalidUsername}/answered`)
       .set('Authorization', token)
       .expect(404);
 

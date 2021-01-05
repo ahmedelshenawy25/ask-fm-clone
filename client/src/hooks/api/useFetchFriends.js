@@ -12,7 +12,7 @@ const useFetchFriends = ({ page, limit }) => {
     const fetchFriends = async () => {
       dispatch({ type: FETCH_USERS });
       try {
-        const response = await axiosInstance.get('/friends', {
+        const response = await axiosInstance.get('/users/friends', {
           params: {
             page,
             limit

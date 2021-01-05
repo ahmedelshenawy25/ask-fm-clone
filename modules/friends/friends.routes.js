@@ -7,8 +7,7 @@ const friendsControllers = require('./controllers');
 
 router.get('/friends', [auth, validator(friendsValidator)], friendsControllers.friends);
 router.get('/discover', [auth, validator(discoverValidator)], friendsControllers.discover);
-
-router.post('/follow/:username', [auth, validator(followValidator)], friendsControllers.follow);
-router.delete('/unfollow/:username', [auth, validator(unfollowValidator)], friendsControllers.unfollow);
+router.post('/:username/follow', [auth, validator(followValidator)], friendsControllers.follow);
+router.delete('/:username/follow', [auth, validator(unfollowValidator)], friendsControllers.unfollow);
 
 module.exports = router;

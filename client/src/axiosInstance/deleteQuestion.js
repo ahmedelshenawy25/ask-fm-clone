@@ -4,7 +4,7 @@ import axiosInstance from './axiosInstance';
 async function deleteQuestion({ dispatch, id }) {
   dispatch({ type: DELETE_QUESTION });
   try {
-    await axiosInstance.delete(`/delete/${id}`);
+    await axiosInstance.delete(`/questions/${id}`);
 
     dispatch({ type: DELETE_QUESTION_SUCCESS, id });
   } catch (e) {

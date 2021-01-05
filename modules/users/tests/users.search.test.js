@@ -10,7 +10,7 @@ let user3;
 let token;
 
 // TODO: modify test cases (what does this even mean? what were you thinking?)
-describe('Search for users -> #GET /api/search', () => {
+describe('Search for users -> #GET /api/users/search', () => {
   beforeAll(() => {
     app = require('../../../init/init.tests');
   });
@@ -57,7 +57,7 @@ describe('Search for users -> #GET /api/search', () => {
     const searchTerm = 'j';
 
     const res = await request(app)
-      .get('/api/search')
+      .get('/api/users/search')
       .query({
         q: searchTerm,
         page: 1,
@@ -82,7 +82,7 @@ describe('Search for users -> #GET /api/search', () => {
     const searchTerm = 'j';
 
     const res = await request(app)
-      .get('/api/search')
+      .get('/api/users/search')
       .query({
         q: searchTerm,
         page: 1,
@@ -102,7 +102,7 @@ describe('Search for users -> #GET /api/search', () => {
 
   it('No query param, expect to fail', async (done) => {
     await request(app)
-      .get('/api/search')
+      .get('/api/users/search')
       .set('Authorization', token)
       .expect(400);
 

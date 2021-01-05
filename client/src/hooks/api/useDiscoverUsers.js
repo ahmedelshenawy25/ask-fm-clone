@@ -12,7 +12,7 @@ const useDiscoverUsers = ({ page, limit }) => {
     const discoverUsers = async () => {
       dispatch({ type: FETCH_USERS });
       try {
-        const response = await axiosInstance.get('/discover', {
+        const response = await axiosInstance.get('/users/discover', {
           params: {
             page,
             limit

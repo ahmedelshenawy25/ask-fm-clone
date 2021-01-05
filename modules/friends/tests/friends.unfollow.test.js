@@ -7,7 +7,7 @@ const { USER_NOT_FOLLOWED, USER_NOT_FOUND, USER_CANT_UNFOLLOW } = require('../er
 
 let app;
 
-describe('Unfollow a user -> #DELETE /api/unfollow/:username', () => {
+describe('Unfollow a user -> #DELETE /api/users/:username/follow', () => {
   beforeAll(() => {
     app = require('../../../init/init.tests');
   });
@@ -27,7 +27,7 @@ describe('Unfollow a user -> #DELETE /api/unfollow/:username', () => {
     await FollowsDAL.create(user2._id, user1._id);
 
     await request(app)
-      .delete(`/api/unfollow/${username}`)
+      .delete(`/api/users/${username}/follow`)
       .set('Authorization', token)
       .expect(204);
 
@@ -40,7 +40,7 @@ describe('Unfollow a user -> #DELETE /api/unfollow/:username', () => {
     const invalidUsername = random.randomUsername();
 
     const res = await request(app)
-      .delete(`/api/unfollow/${invalidUsername}`)
+      .delete(`/api/users/${invalidUsername}/follow`)
       .set('Authorization', token)
       .expect(404);
 
@@ -55,7 +55,7 @@ describe('Unfollow a user -> #DELETE /api/unfollow/:username', () => {
     const { username } = user2;
 
     const res = await request(app)
-      .delete(`/api/unfollow/${username}`)
+      .delete(`/api/users/${username}/follow`)
       .set('Authorization', token)
       .expect(403);
 
@@ -70,7 +70,7 @@ describe('Unfollow a user -> #DELETE /api/unfollow/:username', () => {
     const { username } = user;
 
     const res = await request(app)
-      .delete(`/api/unfollow/${username}`)
+      .delete(`/api/users/${username}/follow`)
       .set('Authorization', token)
       .expect(403);
 

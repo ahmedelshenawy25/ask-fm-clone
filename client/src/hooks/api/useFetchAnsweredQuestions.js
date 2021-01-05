@@ -12,7 +12,7 @@ const useFetchAnsweredQuestions = ({ page, limit, username }) => {
     const fetchAnsweredQuestions = async () => {
       dispatch({ type: FETCH_QUESTIONS });
       try {
-        const response = await axiosInstance.get(`/user/${username}`, {
+        const response = await axiosInstance.get(`/questions/${username}/answered`, {
           params: {
             page,
             limit
@@ -42,7 +42,7 @@ const useFetchAnsweredQuestions = ({ page, limit, username }) => {
     return () => {
       cancel = true;
     };
-  }, [page, limit]);
+  }, [page, limit, username]);
 
   return state;
 };

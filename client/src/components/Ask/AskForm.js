@@ -51,7 +51,7 @@ const AskForm = ({ username, isFollowed }) => {
           validationSchema={askFormValidationSchema}
           onSubmit={async (values, { resetForm }) => {
             try {
-              await axiosInstance.post(`/${username}/ask`, { ...values });
+              await axiosInstance.post(`/questions/${username}`, { ...values });
               resetForm({
                 values: {
                   question: '',
