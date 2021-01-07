@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
-import {
-  Formik, Form, Field, ErrorMessage
-} from 'formik';
+import React, { useContext } from 'react';
+import { Formik, Form, Field } from 'formik';
 import { useHistory } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import Container from '@material-ui/core/Container';
@@ -10,6 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import axiosInstance from '../../axiosInstance/axiosInstance';
 import signupValidationSchema from './signup.validationSchema';
+import ErrorContext from '../../context/ErrorContext';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -26,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 const Signup = () => {
   const classes = useStyles();
   const history = useHistory();
-  const [error, setError] = useState('');
+  const errorHandler = useContext(ErrorContext);
 
   return (
     <Container maxWidth="xs">
@@ -52,13 +51,15 @@ const Signup = () => {
               });
               history.push('/login');
             } catch (e) {
-              setError(e.response ? e.response.data.message : e.message);
+              const error = e.response ? e.response.data.message : e.message;
+              errorHandler(error);
             }
           }}
         >
-          {({ isValid, dirty, isSubmitting }) => (
+          {({
+            isValid, dirty, isSubmitting, errors, touched
+          }) => (
             <div>
-              { error }
               <Form>
                 <Field
                   name="firstName"
@@ -68,13 +69,8 @@ const Signup = () => {
                   size="small"
                   fullWidth
                   margin="normal"
-                />
-                <ErrorMessage
-                  name="firstName"
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                  margin="normal"
+                  error={touched.firstName && errors.firstName}
+                  helperText={touched.firstName && errors.firstName}
                 />
                 <Field
                   name="lastName"
@@ -84,8 +80,9 @@ const Signup = () => {
                   size="small"
                   fullWidth
                   margin="normal"
+                  error={touched.lastName && errors.lastName}
+                  helperText={touched.lastName && errors.lastName}
                 />
-                <ErrorMessage name="lastName" />
                 <Field
                   name="username"
                   placeholder="Username"
@@ -94,8 +91,9 @@ const Signup = () => {
                   size="small"
                   fullWidth
                   margin="normal"
+                  error={touched.username && errors.username}
+                  helperText={touched.username && errors.username}
                 />
-                <ErrorMessage name="username" />
                 <Field
                   name="email"
                   placeholder="Email"
@@ -104,8 +102,9 @@ const Signup = () => {
                   size="small"
                   fullWidth
                   margin="normal"
+                  error={touched.email && errors.email}
+                  helperText={touched.email && errors.email}
                 />
-                <ErrorMessage name="email" />
                 <Field
                   type="password"
                   name="password"
@@ -115,8 +114,9 @@ const Signup = () => {
                   size="small"
                   fullWidth
                   margin="normal"
+                  error={touched.password && errors.password}
+                  helperText={touched.password && errors.password}
                 />
-                <ErrorMessage name="password" />
                 <Field
                   type="password"
                   name="confirmPassword"
@@ -126,8 +126,9 @@ const Signup = () => {
                   size="small"
                   fullWidth
                   margin="normal"
+                  error={touched.confirmPassword && errors.confirmPassword}
+                  helperText={touched.confirmPassword && errors.confirmPassword}
                 />
-                <ErrorMessage name="confirmPassword" />
                 <Button
                   disabled={!(isValid && dirty) || isSubmitting}
                   type="submit"

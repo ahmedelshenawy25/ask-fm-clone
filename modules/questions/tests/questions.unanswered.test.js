@@ -5,7 +5,7 @@ const { usersGenerator, questionsGenerator } = require('../../../fake-data-gener
 
 let app;
 
-describe('Get unanswered questions for logged in user -> #GET /api/account/inbox', () => {
+describe('Get unanswered questions for logged in user -> #GET /api/questions/unanswered', () => {
   beforeAll(() => {
     app = require('../../../init/init.tests');
   });
@@ -31,7 +31,7 @@ describe('Get unanswered questions for logged in user -> #GET /api/account/inbox
     });
 
     const res = await request(app)
-      .get('/api/account/inbox')
+      .get('/api/questions/unanswered')
       .set('Authorization', token)
       .expect(200);
 
@@ -62,7 +62,7 @@ describe('Get unanswered questions for logged in user -> #GET /api/account/inbox
     });
 
     const res = await request(app)
-      .get('/api/account/inbox')
+      .get('/api/questions/unanswered')
       .set('Authorization', token)
       .expect(200);
 
@@ -85,7 +85,7 @@ describe('Get unanswered questions for logged in user -> #GET /api/account/inbox
     const token = `Bearer ${UsersDAL.generateAuthToken(user)}`;
 
     const res = await request(app)
-      .get('/api/account/inbox')
+      .get('/api/questions/unanswered')
       .set('Authorization', token)
       .expect(200);
 

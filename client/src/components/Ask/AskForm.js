@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { Formik, Form, Field } from 'formik';
 import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
@@ -11,6 +11,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import axiosInstance from '../../axiosInstance/axiosInstance';
 import Follow from '../Follow/Follow';
 import askFormValidationSchema from './askForm.validationSchema';
+import ErrorContext from '../../context/ErrorContext';
 
 const useStyles = makeStyles({
   paper: {
@@ -33,7 +34,7 @@ const useStyles = makeStyles({
 
 const AskForm = ({ username, isFollowed }) => {
   const classes = useStyles();
-  const [error, setError] = useState('');
+  const errorHandler = useContext(ErrorContext);
   const renderFollowButton = username !== localStorage.username;
 
   return (
@@ -50,7 +51,7 @@ const AskForm = ({ username, isFollowed }) => {
           validationSchema={askFormValidationSchema}
           onSubmit={async (values, { resetForm }) => {
             try {
-              await axiosInstance.post(`/${username}/ask`, { ...values });
+              await axiosInstance.post(`/questions/${username}`, { ...values });
               resetForm({
                 values: {
                   question: '',
@@ -58,7 +59,8 @@ const AskForm = ({ username, isFollowed }) => {
                 }
               });
             } catch (e) {
-              setError(e.response ? e.response.data.message : e.message);
+              const error = e.response ? e.response.data.message : e.message;
+              errorHandler(error);
             }
           }}
         >

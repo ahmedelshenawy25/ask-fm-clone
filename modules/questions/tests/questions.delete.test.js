@@ -6,7 +6,7 @@ const { QUESTION_NOT_FOUND, INVALID_QUESTION_ID } = require('../errors');
 
 let app;
 
-describe('Delete a question -> #DELETE /api/delete/:questionId', () => {
+describe('Delete a question -> #DELETE /api/questions/:questionId', () => {
   beforeAll(() => {
     app = require('../../../init/init.tests');
   });
@@ -32,7 +32,7 @@ describe('Delete a question -> #DELETE /api/delete/:questionId', () => {
     const questionId = question._id;
 
     await request(app)
-      .delete(`/api/delete/${questionId}`)
+      .delete(`/api/questions/${questionId}`)
       .set('Authorization', token)
       .expect(204);
 
@@ -52,7 +52,7 @@ describe('Delete a question -> #DELETE /api/delete/:questionId', () => {
     const questionId = question._id;
 
     const res = await request(app)
-      .delete(`/api/delete/${questionId}`)
+      .delete(`/api/questions/${questionId}`)
       .set('Authorization', token)
       .expect(404);
 
@@ -67,7 +67,7 @@ describe('Delete a question -> #DELETE /api/delete/:questionId', () => {
     const token = `Bearer ${UsersDAL.generateAuthToken(user)}`;
 
     const res = await request(app)
-      .delete(`/api/delete/${invalidQuestionId}`)
+      .delete(`/api/questions/${invalidQuestionId}`)
       .set('Authorization', token)
       .expect(404);
 
@@ -82,7 +82,7 @@ describe('Delete a question -> #DELETE /api/delete/:questionId', () => {
     const token = `Bearer ${UsersDAL.generateAuthToken(user)}`;
 
     const res = await request(app)
-      .delete(`/api/delete/${invalidQuestionId}`)
+      .delete(`/api/questions/${invalidQuestionId}`)
       .set('Authorization', token)
       .expect(400);
 

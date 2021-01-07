@@ -21,8 +21,8 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.static(path.join(__dirname, '../client/build')));
 
 app.use('/api', usersRouter);
-app.use('/api', questionsRouter);
-app.use('/api', friendsRouter);
+app.use('/api/questions', questionsRouter);
+app.use('/api/users', friendsRouter);
 new ErrorHandler().registerAllErrorHandlers(app);
 
 app.get('*', (req, res) => {

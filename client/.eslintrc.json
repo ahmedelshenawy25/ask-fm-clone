@@ -4,7 +4,8 @@
         "es6": true
     },
     "extends": [
-        "airbnb"
+        "airbnb",
+        "airbnb/hooks"
     ],
     "globals": {
         "Atomics": "readonly",

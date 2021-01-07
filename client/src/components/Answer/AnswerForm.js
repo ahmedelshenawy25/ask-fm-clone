@@ -6,7 +6,6 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import answerFormValidationSchema from './answerForm.validationSchema';
-import axiosInstance from '../../axiosInstance/axiosInstance';
 
 const useStyles = makeStyles({
   flex: {
@@ -18,9 +17,7 @@ const useStyles = makeStyles({
   }
 });
 
-const AnswerForm = ({
-  id, removeQuestion, questionDeleteHandler, answerErrorHandler
-}) => {
+const AnswerForm = ({ questionDeleteHandler, answerHandler, id }) => {
   const classes = useStyles();
 
   return (
@@ -29,15 +26,8 @@ const AnswerForm = ({
         answer: ''
       }}
       validationSchema={answerFormValidationSchema}
-      onSubmit={async (values) => {
-        try {
-          await axiosInstance.put(`/answer/${id}`, {
-            ...values
-          });
-          removeQuestion(id);
-        } catch (e) {
-          answerErrorHandler(e);
-        }
+      onSubmit={async ({ answer }) => {
+        await answerHandler(id, answer);
       }}
     >
       {({
@@ -54,7 +44,7 @@ const AnswerForm = ({
           />
           <div className={classes.flex}>
             <div className={classes.grow}>
-              <Button onClick={questionDeleteHandler}>
+              <Button onClick={() => questionDeleteHandler(id)}>
                 Delete
               </Button>
             </div>
@@ -76,9 +66,8 @@ const AnswerForm = ({
 
 AnswerForm.propTypes = {
   id: PropTypes.string.isRequired,
-  removeQuestion: PropTypes.func.isRequired,
   questionDeleteHandler: PropTypes.func.isRequired,
-  answerErrorHandler: PropTypes.func.isRequired
+  answerHandler: PropTypes.func.isRequired
 };
 
 export default AnswerForm;

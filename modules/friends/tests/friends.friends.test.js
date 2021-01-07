@@ -6,7 +6,7 @@ const { usersGenerator } = require('../../../fake-data-generator');
 
 let app;
 
-describe('Get followed users -> #GET /api/friends', () => {
+describe('Get followed users -> #GET /api/users/friends', () => {
   beforeAll(() => {
     app = require('../../../init/init.tests');
   });
@@ -26,7 +26,7 @@ describe('Get followed users -> #GET /api/friends', () => {
     await FollowsDAL.create(user3._id, user1._id);
 
     const res = await request(app)
-      .get('/api/friends')
+      .get('/api/users/friends')
       .set('Authorization', token)
       .expect(200);
 
@@ -49,7 +49,7 @@ describe('Get followed users -> #GET /api/friends', () => {
     const token = `Bearer ${UsersDAL.generateAuthToken(user1)}`;
 
     const res = await request(app)
-      .get('/api/friends')
+      .get('/api/users/friends')
       .set('Authorization', token)
       .expect(200);
 

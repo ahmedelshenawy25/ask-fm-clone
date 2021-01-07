@@ -1,8 +1,5 @@
-import React, { useState } from 'react';
-import {
-  Formik, Form, Field, ErrorMessage
-} from 'formik';
-import { useHistory } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Formik, Form, Field } from 'formik';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import Container from '@material-ui/core/Container';
@@ -11,6 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import axiosInstance from '../../axiosInstance/axiosInstance';
 import loginValidationSchema from './login.validationSchema';
+import ErrorContext from '../../context/ErrorContext';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -24,10 +22,9 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Login = ({ onLogin }) => {
+const Login = ({ loginHandler }) => {
   const classes = useStyles();
-  const history = useHistory();
-  const [error, setError] = useState('');
+  const errorHandler = useContext(ErrorContext);
 
   return (
     <Container maxWidth="xs">
@@ -35,7 +32,6 @@ const Login = ({ onLogin }) => {
         <Typography component="h1" variant="h5">
           Log in
         </Typography>
-        { error }
         <Formik
           initialValues={{
             usernameOrEmail: '',
@@ -48,17 +44,17 @@ const Login = ({ onLogin }) => {
               const response = await axiosInstance.post('/login', {
                 ...castValues
               });
-              localStorage.token = response.data.token;
-              localStorage.username = response.data.username;
 
-              onLogin();
-              history.push('/home');
+              loginHandler(response.data.token);
             } catch (e) {
-              setError(e.response ? e.response.data.message : e.message);
+              const error = e.response ? e.response.data.message : e.message;
+              errorHandler(error);
             }
           }}
         >
-          {({ isValid, dirty, isSubmitting }) => (
+          {({
+            isValid, dirty, isSubmitting, errors, touched
+          }) => (
             <Form>
               <Field
                 name="usernameOrEmail"
@@ -68,8 +64,9 @@ const Login = ({ onLogin }) => {
                 size="small"
                 fullWidth
                 margin="normal"
+                error={touched.usernameOrEmail && errors.usernameOrEmail}
+                helperText={touched.usernameOrEmail && errors.usernameOrEmail}
               />
-              <ErrorMessage name="usernameOrEmail" />
               <Field
                 type="password"
                 name="password"
@@ -79,8 +76,9 @@ const Login = ({ onLogin }) => {
                 size="small"
                 fullWidth
                 margin="normal"
+                error={touched.password && errors.password}
+                helperText={touched.password && errors.password}
               />
-              <ErrorMessage name="password" />
               <Button
                 disabled={!(isValid && dirty) || isSubmitting}
                 type="submit"
@@ -100,7 +98,7 @@ const Login = ({ onLogin }) => {
 };
 
 Login.propTypes = {
-  onLogin: PropTypes.func.isRequired
+  loginHandler: PropTypes.func.isRequired
 };
 
 export default Login;

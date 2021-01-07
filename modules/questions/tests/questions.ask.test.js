@@ -6,7 +6,7 @@ const { USER_NOT_FOUND, QUESTION_LENGTH } = require('../errors');
 
 let app;
 
-describe('Ask a question -> #POST /api/:username/ask', () => {
+describe('Ask a question -> #POST /api/questions/:username', () => {
   beforeAll(() => {
     app = require('../../../init/init.tests');
   });
@@ -29,7 +29,7 @@ describe('Ask a question -> #POST /api/:username/ask', () => {
     const { username } = user2;
 
     await request(app)
-      .post(`/api/${username}/ask`)
+      .post(`/api/questions/${username}`)
       .set('Authorization', token)
       .send(question)
       .expect(201);
@@ -47,7 +47,7 @@ describe('Ask a question -> #POST /api/:username/ask', () => {
     const { username } = user;
 
     await request(app)
-      .post(`/api/${username}/ask`)
+      .post(`/api/questions/${username}`)
       .set('Authorization', token)
       .send(question)
       .expect(201);
@@ -65,7 +65,7 @@ describe('Ask a question -> #POST /api/:username/ask', () => {
     const { username } = user;
 
     const res = await request(app)
-      .post(`/api/${username}/ask`)
+      .post(`/api/questions/${username}`)
       .set('Authorization', token)
       .send(question)
       .expect(400);
@@ -85,7 +85,7 @@ describe('Ask a question -> #POST /api/:username/ask', () => {
     const { username } = user;
 
     const res = await request(app)
-      .post(`/api/${username}/ask`)
+      .post(`/api/questions/${username}`)
       .set('Authorization', token)
       .send(question)
       .expect(400);
@@ -105,7 +105,7 @@ describe('Ask a question -> #POST /api/:username/ask', () => {
     const invalidUsername = random.randomUsername();
 
     const res = await request(app)
-      .post(`/api/${invalidUsername}/ask`)
+      .post(`/api/questions/${invalidUsername}`)
       .set('Authorization', token)
       .send(question)
       .expect(404);

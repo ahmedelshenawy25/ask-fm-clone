@@ -7,7 +7,7 @@ const { USER_NOT_FOUND, USER_FOLLOWED, USER_CANT_FOLLOW } = require('../errors')
 
 let app;
 
-describe('Follow a user -> #POST /api/follow/:username', () => {
+describe('Follow a user -> #POST /api/users/:username/follow', () => {
   beforeAll(() => {
     app = require('../../../init/init.tests');
   });
@@ -26,7 +26,7 @@ describe('Follow a user -> #POST /api/follow/:username', () => {
     const { username } = user2;
 
     await request(app)
-      .post(`/api/follow/${username}`)
+      .post(`/api/users/${username}/follow`)
       .set('Authorization', token)
       .expect(201);
 
@@ -39,7 +39,7 @@ describe('Follow a user -> #POST /api/follow/:username', () => {
     const invalidUsername = random.randomUsername();
 
     const res = await request(app)
-      .post(`/api/follow/${invalidUsername}`)
+      .post(`/api/users/${invalidUsername}/follow`)
       .set('Authorization', token)
       .expect(404);
 
@@ -55,7 +55,7 @@ describe('Follow a user -> #POST /api/follow/:username', () => {
     await FollowsDAL.create(user2._id, user1._id);
 
     const res = await request(app)
-      .post(`/api/follow/${username}`)
+      .post(`/api/users/${username}/follow`)
       .set('Authorization', token)
       .expect(403);
 
@@ -70,7 +70,7 @@ describe('Follow a user -> #POST /api/follow/:username', () => {
     const { username } = user;
 
     const res = await request(app)
-      .post(`/api/follow/${username}`)
+      .post(`/api/users/${username}/follow`)
       .set('Authorization', token)
       .expect(403);
 

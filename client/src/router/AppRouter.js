@@ -13,38 +13,41 @@ import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
 import Friends from '../components/Friends/Friends';
 import Discover from '../components/Discover/Discover';
+import Logout from '../components/Auth/Logout';
 
-const AppRouter = ({ authHandler, logoutHandler }) => {
+const AppRouter = ({ loginHandler, logoutHandler }) => {
   const location = useLocation();
   return (
     <Switch key={location.key}>
       <Redirect from="/" to="/home" exact />
-      <Redirect from="/logout" to="/login" />
 
       <PublicRoute path="/signup">
         <Signup />
       </PublicRoute>
       <PublicRoute path="/login">
-        <Login onLogin={authHandler} />
+        <Login loginHandler={loginHandler} />
       </PublicRoute>
 
       <PrivateRoute path="/home">
-        <Home logout={logoutHandler} />
+        <Home />
       </PrivateRoute>
       <PrivateRoute path="/account/inbox">
-        <Inbox logout={logoutHandler} />
+        <Inbox />
       </PrivateRoute>
       <PrivateRoute path="/user/:username">
-        <AnsweredQuestionsList logout={logoutHandler} />
+        <AnsweredQuestionsList />
       </PrivateRoute>
       <PrivateRoute path="/search">
-        <SearchResult logout={logoutHandler} />
+        <SearchResult />
       </PrivateRoute>
       <PrivateRoute path="/friends">
         <Friends />
       </PrivateRoute>
       <PrivateRoute path="/discover">
         <Discover />
+      </PrivateRoute>
+      <PrivateRoute path="/logout">
+        <Logout logoutHandler={logoutHandler} />
       </PrivateRoute>
 
       <Route>
@@ -55,7 +58,7 @@ const AppRouter = ({ authHandler, logoutHandler }) => {
 };
 
 AppRouter.propTypes = {
-  authHandler: PropTypes.func.isRequired,
+  loginHandler: PropTypes.func.isRequired,
   logoutHandler: PropTypes.func.isRequired
 };
 

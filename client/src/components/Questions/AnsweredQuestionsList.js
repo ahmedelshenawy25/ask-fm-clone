@@ -1,40 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { makeStyles } from '@material-ui/core/styles';
 import QuestionLayout from './QuestionLayout/QuestionLayout';
 import Sidebar from '../Sidebar/Sidebar';
 import AskForm from '../Ask/AskForm';
-import useFetch from '../../hooks/useFetch';
-import fetchAnsweredQuestions from '../../axiosInstance/fetchAnsweredQuestions';
+import useFetchAnsweredQuestions from '../../hooks/api/useFetchAnsweredQuestions';
 import useInfiniteScrolling from '../../hooks/useInfiniteScrolling';
+import InfiniteScroll from '../InfiniteScroll/InfiniteScroll';
+import Spinner from '../Spinner/Spinner';
+import ErrorContext from '../../context/ErrorContext';
 
-const useStyles = makeStyles({
-  loading: {
-    display: 'block',
-    margin: 'auto'
-  }
-});
-
-const AnsweredQuestionsList = ({ logout }) => {
-  const classes = useStyles();
+const AnsweredQuestionsList = () => {
+  const errorHandler = useContext(ErrorContext);
   const { username } = useParams();
   const [page, setPage] = useState(1);
   const updatePage = () => {
     setPage((prevPage) => prevPage + 1);
   };
   const {
-    data: questions, isLoading, hasMore, isFollowed, error
-  } = useFetch({
-    apiCall: fetchAnsweredQuestions,
+    questions, isLoading, hasMore, isFollowed, error
+  } = useFetchAnsweredQuestions({
     page,
     limit: 10,
-    urlParam: username
+    username
   });
   const infiniteScrollingRef = useInfiniteScrolling(isLoading, hasMore, updatePage);
+
+  useEffect(() => {
+    if (error) {
+      errorHandler(error);
+    }
+  }, [error]);
 
   return (
     <Grid container spacing={2}>
@@ -45,26 +42,21 @@ const AnsweredQuestionsList = ({ logout }) => {
         />
         {questions.map(({
           _id, question, answer, sender, updatedAt
-        }, i) => ((questions.length === i + 1) ? (
-          <div key={_id} ref={infiniteScrollingRef}>
+        }, i) => (
+          <InfiniteScroll
+            key={_id}
+            isLastElement={questions.length === i + 1}
+            ref={infiniteScrollingRef}
+          >
             <QuestionLayout
               question={question}
               answer={answer}
               sender={sender}
               time={new Date(updatedAt).toLocaleString()}
             />
-          </div>
-        ) : (
-          <div key={_id}>
-            <QuestionLayout
-              question={question}
-              answer={answer}
-              sender={sender}
-              time={new Date(updatedAt).toLocaleString()}
-            />
-          </div>
-        )))}
-        <div>{isLoading && <CircularProgress className={classes.loading} />}</div>
+          </InfiniteScroll>
+        ))}
+        <Spinner isLoading={isLoading} />
       </Grid>
       <Hidden xsDown>
         <Grid item sm={4}>
@@ -73,10 +65,6 @@ const AnsweredQuestionsList = ({ logout }) => {
       </Hidden>
     </Grid>
   );
-};
-
-AnsweredQuestionsList.propTypes = {
-  logout: PropTypes.func.isRequired
 };
 
 export default AnsweredQuestionsList;

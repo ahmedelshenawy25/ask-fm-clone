@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const PrivateNavbar = ({ username, onLogout }) => {
+const PrivateNavbar = ({ username }) => {
   const classes = useStyles();
   return (
     <div className={classes.flex}>
@@ -36,14 +36,13 @@ const PrivateNavbar = ({ username, onLogout }) => {
         <SearchBar />
       </div>
       <div>
-        <Button component={RouterLink} to="/logout" onClick={() => onLogout()}>Logout</Button>
+        <Button component={RouterLink} to="/logout">Logout</Button>
       </div>
     </div>
   );
 };
 
 PrivateNavbar.propTypes = {
-  onLogout: PropTypes.func.isRequired,
   username: PropTypes.string.isRequired
 };
 
